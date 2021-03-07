@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h3 class="light-blue-text text-darken-4 center-align">Review</h3>
+    <div>
+        {% if results %}
+                        {% for result in results %}
+                            <a href="{{ url_for('review', tmdb_id=result.id) }}" 
+                                class="collection-item">{{ result.original_title }}</a>
+                        {% endfor %}
+                    {% else %}
+                        <h3>No Results!</h3>
+                    {% endif %}
+    </div>
+
+
+{% endblock %}
