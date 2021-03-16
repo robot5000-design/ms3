@@ -1,16 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h3 class="light-blue-text text-darken-4 center-align">Review</h3>
+    <h3 class="">Review</h3>
+    <a href="{{ url_for('search_pagination', page_number=page_number) }}" 
+        class="btn-small">Cancel & Go Back</a>
     <div>
-        {% if results %}
-                        {% for result in results %}
-                            <a href="{{ url_for('review', tmdb_id=result.id) }}" 
-                                class="collection-item">{{ result.original_title }}</a>
-                        {% endfor %}
-                    {% else %}
-                        <h3>No Results!</h3>
-                    {% endif %}
+        {% if for_review %}
+            {% if "original_name" in for_review %}
+                <p>{{ for_review.original_name }}</p>
+            {% elif "original_title" in for_review %}                
+                <p>{{ for_review.original_title }}</p>
+            {% endif %}
+
+            {% if "first_air_date" in for_review %}
+                {% if for_review.first_air_date == "" or for_review.first_air_date == None %}
+                    <p>Released: Not available.</p>
+                {% else %}
+                    <p>Released: {{ for_review.first_air_date[0:4] }}</p>
+                {% endif %}
+            {% elif "release_date" in for_review %}
+                {% if for_review.release_date == "" or for_review.release_date == None %}
+                    <p>Released: Not available.</p>
+                {% else %}
+                    <p>Released: {{ for_review.release_date[0:4] }}</p>
+                {% endif %}
+            {% endif %}
+
+            {% if for_review.poster_path %}
+                {% if for_review.poster_path == "" or for_review.poster_path == None %}
+                    <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" alt="">
+                {% else %}
+                    <img src="https://image.tmdb.org/t/p/w500/{{ for_review.poster_path }}" alt="">
+                {% endif %}
+            {% else %}
+                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" alt="">
+            {% endif %}
+
+            {% if "overview" in for_review %}
+                <p>{{ for_review.overview }}</p>
+            {% endif %}
+        {% else %}
+            <h3>No Results!</h3>
+        {% endif %}
     </div>
 
 
