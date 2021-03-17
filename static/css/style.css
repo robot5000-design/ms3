@@ -1,0 +1,101 @@
+
+
+
+/* Import Font */
+@import url("https://fonts.googleapis.com/css2?family=Pangolin&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Pangolin", cursive;
+    font-size: 100%;
+    background-color: #191958;
+    color: #e4dfd5;
+}
+
+.api-search-form {
+    color: #e4dfd5;
+    max-width: 80vw;
+    margin: 0 auto;
+}
+
+.search-api-button {
+    width: 100%;
+}
+
+.page-number {
+    color: #3f3f3f;
+    text-align: center;
+}
+
+.img-thumbnail {
+    width: 10%;
+    background-color: #e4dfd5;
+    min-width: 100px;
+    padding: 0;
+}
+
+.previous-button,
+.next-button {
+    margin-top: 10px;
+    width: 80px;
+    font-size: .9em;
+}
+
+.tmdb-result-list {
+    font-size: .8em;
+}
+
+.thumbnail-title {
+    padding-top: 7px;
+}
+
+.api-results-card {
+    max-width: 70vw;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.search-icon > i {
+    font-size: 38px;
+}
+
+@media screen and (min-width: 576px) {
+    .api-results-card {
+        max-width: 80vw;
+        text-align: start;
+        font-size: 1.2em;
+    }
+
+    .previous-button,
+    .next-button {
+        margin-top: 10px;
+        width: 100px;
+        font-size: 1em;
+    }
+
+    .img-thumbnail {
+        margin-right: 20px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .api-results-card {
+        max-width: 50vw;
+    }
+
+    .api-search-form {
+    max-width: 60vw;
+    }
+
+    .search-api-button {
+        width: 85%;
+    }
+}
+

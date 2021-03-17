@@ -17,28 +17,31 @@
 </head>
 
 <body>
-    <header>
-        <h1>Movie Database</h1>
-        <!-- Top Navbar -->
-        <nav class="nav-extended text-shadow light-blue darken-1">
-            <div class="nav-wrapper">
-                <a href="#" class="brand-logo">ReviewShare</a>
-                <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="fas fa-bars"></i></a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="{{ url_for('search_movies', page_number=1) }}">Search Movies</a></li>
-                </ul>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+                    <a class="nav-link" href="{{ url_for('search_movies', page_number=1) }}">Search Movies</a>
+                    <a class="nav-link" href="#">Pricing</a>
+                </div>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
     <section>
         <!-- flash messages -->
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}
-        <div class="row flashes">
-            <h4 class="light-blue lighten-4 center-align">{{ message }}</h4>
+        <div class="">
+            <h4 class="">{{ message }}</h4>
         </div>
         {% endfor %}
         {% endif %}
@@ -46,7 +49,7 @@
     </section>
 
 
-    <main class="container">
+    <main class="container-fluid">
         {% block content %}
         {% endblock %}
     </main>

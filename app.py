@@ -14,7 +14,8 @@ app.api_key = os.environ.get("API_KEY")
 
 
 @app.route('/')
-def hello_world():
+@app.route('/home')
+def home():
     session.clear()
     return render_template("base.html")
 
@@ -71,10 +72,13 @@ def review(tmdb_id, page_number):
     flash(tmdb_id)
     tv_detail_url = f"https://api.themoviedb.org/3/tv/{tmdb_id}?api_key={app.api_key}&language=en-US"
     movie_detail_url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={app.api_key}&language=en-US"
-    if session["media_type"] == "tv":
-        media_detail = requests.get(tv_detail_url).json()
+    if "media_type" in session:
+        if session["media_type"] == "tv":
+            media_detail = requests.get(tv_detail_url).json()
+        else:
+            media_detail = requests.get(movie_detail_url).json()
     else:
-        media_detail = requests.get(movie_detail_url).json()
+        return redirect(url_for("search_movies", page_number=1))
     if "status_code" in media_detail:
         if media_detail["status_code"] == 34:
             flash("Sorry. This resource cannot be found.")
