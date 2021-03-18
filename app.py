@@ -3,6 +3,7 @@ import requests
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
+from flask_pymongo import PyMongo
 if os.path.exists("env.py"):
     import env
 
@@ -11,13 +12,28 @@ app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY")
 app.api_key = os.environ.get("API_KEY")
+app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
+
+mongo = PyMongo(app)
 
 
 @app.route('/')
-@app.route('/home')
-def home():
-    session.clear()
-    return render_template("base.html")
+@app.route('/index')
+def index():
+    session.pop("search_query", None)
+    session.pop("media_type", None)
+    reviews = list(mongo.db.reviews.find())
+    tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+    return render_template("index.html", reviews=reviews,
+                           tmdb_poster_url=tmdb_poster_url)
+
+
+@app.route('/review_detail/<tmdb_id>')
+def review_detail(tmdb_id):
+    reviews = list(mongo.db.reviews.find({"tmdb_id": tmdb_id}))
+    flash(reviews)
+    return render_template("review_detail.html", tmdb_id=tmdb_id)
 
 
 @app.route("/search/<int:page_number>", methods=["GET", "POST"])
@@ -41,10 +57,10 @@ def search_pagination(page_number):
 
 
 def api_request(page_number):
-    search_url_movie = f"https://api.themoviedb.org/3/search/movie?api_key={app.api_key}&language=en-US&page={page_number}&\
-            include_adult=false&query={session['search_query']}"
-    search_url_tv = f"https://api.themoviedb.org/3/search/tv?api_key={app.api_key}&language=en-US&page={page_number}&\
-        include_adult=false&query={session['search_query']}"
+    search_url_movie = mongo.db.tmdb_urls.find()[0]['search_url_movie'].format(
+        app.api_key, page_number, session['search_query'])
+    search_url_tv = mongo.db.tmdb_urls.find()[0]['search_url_tv'].format(
+        app.api_key, page_number, session['search_query'])
     if session["media_type"] == "tv":
         search_url = search_url_tv
     else:
@@ -67,11 +83,13 @@ def api_request(page_number):
                 from the database at this time. Please try again later.")
 
 
-@app.route("/review/<tmdb_id>/<page_number>", methods=["GET", "POST"])
-def review(tmdb_id, page_number):
+@app.route("/new_review/<tmdb_id>/<page_number>", methods=["GET", "POST"])
+def new_review(tmdb_id, page_number):
     flash(tmdb_id)
-    tv_detail_url = f"https://api.themoviedb.org/3/tv/{tmdb_id}?api_key={app.api_key}&language=en-US"
-    movie_detail_url = f"https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={app.api_key}&language=en-US"
+    tv_detail_url = mongo.db.tmdb_urls.find()[0]['tv_detail_url'].format(
+        tmdb_id, app.api_key)
+    movie_detail_url = mongo.db.tmdb_urls.find()[0]['movie_detail_url'].format(
+        tmdb_id, app.api_key)
     if "media_type" in session:
         if session["media_type"] == "tv":
             media_detail = requests.get(tv_detail_url).json()
@@ -85,8 +103,10 @@ def review(tmdb_id, page_number):
             return redirect(url_for("search_movies", page_number=page_number))
     else:
         for_review = media_detail
+        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         return render_template(
-            "review.html", for_review=for_review, page_number=page_number)
+            "new_review.html", for_review=for_review, page_number=page_number,
+            tmdb_poster_url=tmdb_poster_url)
 
 
 if __name__ == "__main__":

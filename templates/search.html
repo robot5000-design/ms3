@@ -91,7 +91,7 @@
             {% for result in search_results.results %}
             <li class="list-group-item tmdb-result-list">
                 {% if result.original_title and result.id %}
-                <a href="{{ url_for('review', tmdb_id=result.id, page_number=search_results.page) }}"
+                <a href="{{ url_for('new_review', tmdb_id=result.id, page_number=search_results.page) }}"
                     class="text-decoration-none">
                     <div class="row">
                         <div class="col-12 col-sm-3">
@@ -114,7 +114,7 @@
                     </div>
                 </a>
                 {% elif result.name and result.id %}
-                <a href="{{ url_for('review', tmdb_id=result.id, page_number=search_results.page) }}"
+                <a href="{{ url_for('new_review', tmdb_id=result.id, page_number=search_results.page) }}"
                     class="text-decoration-none">
                     <div class="row">
                         <div class="col-12 col-sm-3">

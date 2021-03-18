@@ -2,7 +2,7 @@
 
 
 /* Import Font */
-@import url("https://fonts.googleapis.com/css2?family=Pangolin&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Montserrat:wght@500;700&display=swap');
 
 * {
     padding: 0;
@@ -13,10 +13,14 @@
 }
 
 body {
-    font-family: "Pangolin", cursive;
+    font-family: "Montserrat", sans-serif;
     font-size: 100%;
     background-color: #191958;
     color: #e4dfd5;
+}
+
+.heading {
+    font-family: "Alfa Slab One", cursive;
 }
 
 .api-search-form {
@@ -44,7 +48,7 @@ body {
 .previous-button,
 .next-button {
     margin-top: 10px;
-    width: 80px;
+    width: 100px;
     font-size: .9em;
 }
 
@@ -53,6 +57,7 @@ body {
 }
 
 .thumbnail-title {
+    font-family: "Alfa Slab One", cursive;
     padding-top: 7px;
 }
 
@@ -64,6 +69,19 @@ body {
 
 .search-icon > i {
     font-size: 38px;
+}
+
+.review-image {
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+@media screen and (min-width: 400px) {
+    .review-image {
+        height: 70vh;
+        width: auto;
+    }
 }
 
 @media screen and (min-width: 576px) {
@@ -83,6 +101,8 @@ body {
     .img-thumbnail {
         margin-right: 20px;
     }
+
+    
 }
 
 @media screen and (min-width: 992px) {

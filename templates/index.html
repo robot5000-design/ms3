@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% for review in reviews %}
+<div class="card" style="width: 18rem;">
+  <img src="{{ tmdb_poster_url }}{{ review.poster_path }}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">{{ review.original_title }}</h5>
+    <p class="card-text"></p>
+    <a href="{{ url_for('review_detail', tmdb_id=review.tmdb_id) }}" class="btn btn-primary">Get Reviews</a>
+  </div>
+</div>
+{{ review }}
+{% endfor %}
+
+{% endblock %}
