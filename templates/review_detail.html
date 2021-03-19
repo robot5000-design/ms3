@@ -1,46 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
 
+<a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel & Go Back</a>
+<div>
     <h1 class="">Reviews for:</h1>
     <div>
-        {% if for_review %}
-            {% if "original_name" in for_review %}
-                <h2 class="heading">{{ for_review.original_name }}</h2 >
-            {% elif "original_title" in for_review %}                
-                <h2 class="heading">{{ for_review.original_title }}</h2 >
-            {% endif %}
+        <h2 class="heading">{{ reviews[0].original_title }}</h2>
 
-            {% if "first_air_date" in for_review %}
-                {% if for_review.first_air_date == "" or for_review.first_air_date == None %}
-                    <div>Released: Not available.</div>
-                {% else %}
-                    <div>Released: {{ for_review.first_air_date[0:4] }}</div>
-                {% endif %}
-            {% elif "release_date" in for_review %}
-                {% if for_review.release_date == "" or for_review.release_date == None %}
-                    <div>Released: Not available.</div>
-                {% else %}
-                    <div>Released: {{ for_review.release_date[0:4] }}</div>
-                {% endif %}
-            {% endif %}
-
-            {% if for_review.poster_path %}
-                {% if for_review.poster_path == "" or for_review.poster_path == None %}
-                    <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
-                {% else %}
-                    <img src="{{ tmdb_poster_url }}{{ for_review.poster_path }}" class="review-image" alt="">
-                {% endif %}
-            {% else %}
-                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
-            {% endif %}
-
-            {% if "overview" in for_review %}
-                <div>{{ for_review.overview }}</div>
-            {% endif %}
+        {% if reviews[0].release_date == None %}
+        <div>Released: Not available.</div>
         {% else %}
-            <h3>No Results!</h3>
+        <div>Released: {{ reviews[0].release_date }}</div>
         {% endif %}
+        <div>Overall Rating: {{ overall_rating }} / 5</div>
+
+        {% if reviews[0].poster_path == None %}
+        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
+        {% else %}
+        <img src="{{ tmdb_poster_url }}{{ reviews[0].poster_path }}" class="review-image" alt="">
+        {% endif %}
+
     </div>
+    <div>Most recent reviews first:</div>
+    {% for review in reviews %}
+    <div>{{ review.review_text }}</div>
+    <div>Rating: {{ review.rating }} / 5</div>
+    {% endfor %}
 
-
-{% endblock %}
+    {% endblock %}

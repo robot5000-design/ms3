@@ -23,17 +23,25 @@ mongo = PyMongo(app)
 def index():
     session.pop("search_query", None)
     session.pop("media_type", None)
-    reviews = list(mongo.db.reviews.find())
+    reviews = mongo.db.reviews.find()
+    test = mongo.db.reviews.find().sort("review_date", -1)      #.distinct("tmdb_id")[0:6]
     tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
-    return render_template("index.html", reviews=reviews,
+    return render_template("index.html", reviews=reviews, test=test,
                            tmdb_poster_url=tmdb_poster_url)
 
 
 @app.route('/review_detail/<tmdb_id>')
 def review_detail(tmdb_id):
-    reviews = list(mongo.db.reviews.find({"tmdb_id": tmdb_id}))
-    flash(reviews)
-    return render_template("review_detail.html", tmdb_id=tmdb_id)
+    reviews = list(mongo.db.reviews.find(
+        {"tmdb_id": tmdb_id}).sort("review_date", -1))
+    tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+    overall_rating = 0
+    for review in reviews:
+        overall_rating += int(review["rating"])
+    overall_rating = round((overall_rating / len(reviews)), 2)
+    return render_template("review_detail.html", reviews=reviews,
+                           tmdb_poster_url=tmdb_poster_url,
+                           overall_rating=overall_rating)
 
 
 @app.route("/search/<int:page_number>", methods=["GET", "POST"])
@@ -85,7 +93,7 @@ def api_request(page_number):
 
 @app.route("/new_review/<tmdb_id>/<page_number>", methods=["GET", "POST"])
 def new_review(tmdb_id, page_number):
-    flash(tmdb_id)
+    
     tv_detail_url = mongo.db.tmdb_urls.find()[0]['tv_detail_url'].format(
         tmdb_id, app.api_key)
     movie_detail_url = mongo.db.tmdb_urls.find()[0]['movie_detail_url'].format(
@@ -102,11 +110,40 @@ def new_review(tmdb_id, page_number):
             flash("Sorry. This resource cannot be found.")
             return redirect(url_for("search_movies", page_number=page_number))
     else:
-        for_review = media_detail
+        session.selected_media = {}
+        if "id" in media_detail:
+            session.selected_media["tmdb_id"] = media_detail["id"]
+        if "original_title" in media_detail:
+            session.selected_media[
+                "original_title"] = media_detail["original_title"]
+        elif "original_name" in media_detail:
+            session.selected_media[
+                "original_title"] = media_detail["original_name"]
+        if "first_air_date" in media_detail:
+            session.selected_media[
+                "release_date"] = media_detail["first_air_date"][0:4]
+        elif "release_date" in media_detail:
+            session.selected_media[
+                "release_date"] = media_detail["release_date"][0:4]
+        else:
+            session.selected_media["release_date"] = None
+        if "poster_path" in media_detail:
+            if media_detail["poster_path"] == "" or media_detail[
+                    "poster_path"] is None:
+                session.selected_media["poster_path"] = None
+            else:
+                session.selected_media[
+                    "poster_path"] = media_detail["poster_path"]
+        if "overview" in media_detail:
+            session.selected_media["overview"] = media_detail["overview"]
+        else:
+            session.selected_media["overview"] = None
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         return render_template(
-            "new_review.html", for_review=for_review, page_number=page_number,
+            "new_review.html", media_detail=session.selected_media,
+            page_number=page_number,
             tmdb_poster_url=tmdb_poster_url)
+
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-
+{{ test }}
 {% for review in reviews %}
 <div class="card" style="width: 18rem;">
   <img src="{{ tmdb_poster_url }}{{ review.poster_path }}" class="card-img-top" alt="...">
