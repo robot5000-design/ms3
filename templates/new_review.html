@@ -6,30 +6,58 @@
 <div>
     <h2 class="heading">{{ media_detail.original_title }}</h2>
 
-        {% if media_detail.first_air_date == None %}
-            <div>Released: Not available.</div>
-        {% else %}
-            <div>Released: {{ media_detail.release_date }}</div>
-        {% endif %}
-
-        {% if media_detail.poster_path == None %}
-            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
-        {% else %}
-            <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="">
-        {% endif %}
+    {% if media_detail.release_date == None %}
+    <div>Released: Not available.</div>
+    {% else %}
+    <div>Released: {{ media_detail.release_date }} {{ media_detail.media_type.capitalize() }}</div>
+    {% endif %}
+    <div>Media: {{ media_detail.media_type.capitalize() }}</div>
+    {% if media_detail.poster_path == None %}
+    <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
+    {% else %}
+    <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="">
+    {% endif %}
 
     {% if media_detail.overview != None %}
     <div>{{ media_detail.overview }}</div>
     {% endif %}
 
-    <form class="col s12" method="POST" action="{{ url_for('new_review', tmdb_id=session.tmdb_id, page_number=page_number) }}">
+    <form class="review-form" method="POST"
+        action="{{ url_for('new_review', tmdb_id=media_detail.tmdb_id, page_number=page_number) }}">
+        <select class="select-genre" name="select-genre" aria-label="Select Genre" required>
+            <option value="" selected disabled>Choose a Genre:</option>
+            {% for genre in genres %}
+            <option value="{{ genre.genre_name }}" required>{{ genre.genre_name.title() }}</option>
+            {% endfor %}
+        </select>
         <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            <label for="review-text" class="form-label"></label>
+            <textarea class="form-control" id="review-text" name="review-text" rows="5" placeholder="Write your review here" required></textarea>
+        </div>
+        <div>What's your rating?</div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1" required>
+            <label class="form-check-label" for="inlineRadio1">1</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2" required>
+            <label class="form-check-label" for="inlineRadio2">2</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3" required>
+            <label class="form-check-label" for="inlineRadio3">3</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4" required>
+            <label class="form-check-label" for="inlineRadio4">4</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="5" required>
+            <label class="form-check-label" for="inlineRadio5">5</label>
         </div>
         <div class="col-12">
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
 
     </form>
 

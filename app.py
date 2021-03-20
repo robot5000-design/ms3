@@ -1,9 +1,11 @@
 import os
 import requests
+import datetime
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
 from flask_pymongo import PyMongo
+from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
 
@@ -23,10 +25,23 @@ mongo = PyMongo(app)
 def index():
     session.pop("search_query", None)
     session.pop("media_type", None)
-    reviews = mongo.db.reviews.find()
-    test = mongo.db.reviews.find().sort("review_date", -1)      #.distinct("tmdb_id")[0:6]
+    movie_details = mongo.db.movie_details.find()
+    reviews = list(mongo.db.reviews.find().sort("review_date", -1).limit(20))
+    if reviews:
+        # eliminating review repetition on the home page latest reviews
+        unique_reviews = [reviews[0]]
+        for review in reviews:
+            tmdb_id_list = [
+                unique_review["tmdb_id"] for unique_review in unique_reviews]
+            if review["tmdb_id"] not in tmdb_id_list:
+                unique_reviews.append(review)
+        for i in range(len(unique_reviews)):
+            movie_details = mongo.db.movie_details.find_one(
+                {"tmdb_id": unique_reviews[i]['tmdb_id']})
+            unique_reviews[i]["poster_path"] = movie_details["poster_path"]
     tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
-    return render_template("index.html", reviews=reviews, test=test,
+    return render_template("index.html", reviews=unique_reviews,
+                           movie_details=movie_details,
                            tmdb_poster_url=tmdb_poster_url)
 
 
@@ -34,14 +49,24 @@ def index():
 def review_detail(tmdb_id):
     reviews = list(mongo.db.reviews.find(
         {"tmdb_id": tmdb_id}).sort("review_date", -1))
+    movie_detail = list(mongo.db.movie_details.find(
+        {"tmdb_id": tmdb_id}))
     tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
     overall_rating = 0
     for review in reviews:
         overall_rating += int(review["rating"])
-    overall_rating = round((overall_rating / len(reviews)), 2)
-    return render_template("review_detail.html", reviews=reviews,
-                           tmdb_poster_url=tmdb_poster_url,
-                           overall_rating=overall_rating)
+    try:
+        overall_rating = round((overall_rating / len(reviews)), 2)
+    except ZeroDivisionError:
+        flash("Oops we have a zero division error")
+    if reviews:
+        return render_template("review_detail.html", reviews=reviews,
+                               movie_detail=movie_detail[0],
+                               tmdb_poster_url=tmdb_poster_url,
+                               overall_rating=overall_rating)
+    else:
+        flash(reviews)
+        return render_template("search.html")
 
 
 @app.route("/search/<int:page_number>", methods=["GET", "POST"])
@@ -93,57 +118,93 @@ def api_request(page_number):
 
 @app.route("/new_review/<tmdb_id>/<page_number>", methods=["GET", "POST"])
 def new_review(tmdb_id, page_number):
-    
+    if request.method == "POST":
+        # check if details already exist in db
+        details_exist = mongo.db.movie_details.find_one(
+            {"tmdb_id": session["selected_media"]["tmdb_id"]})
+        if not details_exist:
+            mongo.db.movie_details.insert_one(dict(session["selected_media"]))
+        new_review = {
+            "tmdb_id": str(session["selected_media"]["tmdb_id"]),
+            "genre": request.form.get("select-genre"),
+            "review": request.form.get("review-text"),
+            "rating": request.form.get("inlineRadioOptions"),
+            "review_date": datetime.datetime.now(),
+            "created_by": session["user"]
+        }
+        mongo.db.reviews.insert_one(new_review)
+        session.pop("selected_media")
+        flash("Review Posted Successfully!")
+        return redirect(url_for("search_movies", page_number=1))
+    media_detail = get_choice_detail(tmdb_id)
+    if "status_code" in media_detail:
+        if media_detail["status_code"] == 34:
+            flash("Sorry. This resource cannot be found.")
+            return redirect(url_for("search_movies", page_number=page_number))
+    else:
+        validate_choice(media_detail)
+        genres = mongo.db.genres.find().sort("genre_name", 1)
+        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+        return render_template(
+            "new_review.html", media_detail=session["selected_media"],
+            page_number=page_number,
+            genres=genres,
+            tmdb_poster_url=tmdb_poster_url)
+
+
+def get_choice_detail(tmdb_id):
     tv_detail_url = mongo.db.tmdb_urls.find()[0]['tv_detail_url'].format(
         tmdb_id, app.api_key)
     movie_detail_url = mongo.db.tmdb_urls.find()[0]['movie_detail_url'].format(
         tmdb_id, app.api_key)
     if "media_type" in session:
         if session["media_type"] == "tv":
-            media_detail = requests.get(tv_detail_url).json()
+            return requests.get(tv_detail_url).json()
         else:
-            media_detail = requests.get(movie_detail_url).json()
+            return requests.get(movie_detail_url).json()
     else:
         return redirect(url_for("search_movies", page_number=1))
-    if "status_code" in media_detail:
-        if media_detail["status_code"] == 34:
-            flash("Sorry. This resource cannot be found.")
-            return redirect(url_for("search_movies", page_number=page_number))
-    else:
-        session.selected_media = {}
-        if "id" in media_detail:
-            session.selected_media["tmdb_id"] = media_detail["id"]
-        if "original_title" in media_detail:
-            session.selected_media[
-                "original_title"] = media_detail["original_title"]
-        elif "original_name" in media_detail:
-            session.selected_media[
-                "original_title"] = media_detail["original_name"]
-        if "first_air_date" in media_detail:
-            session.selected_media[
-                "release_date"] = media_detail["first_air_date"][0:4]
-        elif "release_date" in media_detail:
-            session.selected_media[
-                "release_date"] = media_detail["release_date"][0:4]
-        else:
-            session.selected_media["release_date"] = None
-        if "poster_path" in media_detail:
-            if media_detail["poster_path"] == "" or media_detail[
-                    "poster_path"] is None:
-                session.selected_media["poster_path"] = None
-            else:
-                session.selected_media[
-                    "poster_path"] = media_detail["poster_path"]
-        if "overview" in media_detail:
-            session.selected_media["overview"] = media_detail["overview"]
-        else:
-            session.selected_media["overview"] = None
-        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
-        return render_template(
-            "new_review.html", media_detail=session.selected_media,
-            page_number=page_number,
-            tmdb_poster_url=tmdb_poster_url)
 
+
+def validate_choice(media_detail):
+    session["selected_media"] = {}
+    if "id" in media_detail:
+        session["selected_media"]["tmdb_id"] = media_detail["id"]
+    if "original_title" in media_detail:
+        session["selected_media"][
+            "original_title"] = media_detail["original_title"]
+    elif "original_name" in media_detail:
+        session["selected_media"][
+            "original_title"] = media_detail["original_name"]
+    session["selected_media"]["media_type"] = session["media_type"]
+    if "first_air_date" in media_detail:
+        if media_detail["first_air_date"] is None or media_detail[
+                "first_air_date"] == "":
+            session["selected_media"]["release_date"] = ""
+        else:
+            session["selected_media"][
+                "release_date"] = media_detail["first_air_date"][0:4]
+    elif "release_date" in media_detail:
+        if media_detail["release_date"] is None or media_detail[
+                "release_date"] == "":
+            session["selected_media"]["release_date"] = ""
+        else:
+            session["selected_media"][
+                "release_date"] = media_detail["release_date"][0:4]
+    else:
+        session["selected_media"]["release_date"] = ""
+    if "poster_path" in media_detail:
+        if media_detail["poster_path"] == "" or media_detail[
+                "poster_path"] is None:
+            session["selected_media"]["poster_path"] = None
+        else:
+            session["selected_media"][
+                "poster_path"] = media_detail["poster_path"]
+    if "overview" in media_detail:
+        session["selected_media"]["overview"] = media_detail["overview"]
+    else:
+        session["selected_media"]["overview"] = None
+    flash(list(session))
 
 
 if __name__ == "__main__":

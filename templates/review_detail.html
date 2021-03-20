@@ -5,25 +5,25 @@
 <div>
     <h1 class="">Reviews for:</h1>
     <div>
-        <h2 class="heading">{{ reviews[0].original_title }}</h2>
+        <h2 class="heading">{{ movie_detail.original_title }}</h2>
 
-        {% if reviews[0].release_date == None %}
+        {% if movie_detail.release_date == "" %}
         <div>Released: Not available.</div>
         {% else %}
-        <div>Released: {{ reviews[0].release_date }}</div>
+        <div>Released: {{ movie_detail.release_date }}</div>
         {% endif %}
         <div>Overall Rating: {{ overall_rating }} / 5</div>
 
-        {% if reviews[0].poster_path == None %}
+        {% if movie_detail.poster_path == None %}
         <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
         {% else %}
-        <img src="{{ tmdb_poster_url }}{{ reviews[0].poster_path }}" class="review-image" alt="">
+        <img src="{{ tmdb_poster_url }}{{ movie_detail.poster_path }}" class="review-image" alt="">
         {% endif %}
 
     </div>
     <div>Most recent reviews first:</div>
     {% for review in reviews %}
-    <div>{{ review.review_text }}</div>
+    <div>{{ review.review }}</div>
     <div>Rating: {{ review.rating }} / 5</div>
     {% endfor %}
 
