@@ -29,6 +29,7 @@
                 <div class="navbar-nav">
                     <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
                     <a class="nav-link" href="{{ url_for('search_movies', page_number=1) }}">New Review</a>
+                    <a class="nav-link" href="{{ url_for('browse_reviews') }}">Browse Reviews</a>
                     {% if session.user %}
                     <a class="nav-link" href="{{ url_for('logout') }}">Log
                         Out</a>
@@ -40,8 +41,7 @@
             </div>
         </div>
     </nav>
-
-    <section>
+    <section class="flash text-center">
         <!-- flash messages -->
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -54,8 +54,7 @@
         {% endwith %}
     </section>
 
-
-    <main class="container-fluid">
+    <main class="container-fluid backing-image">
         {% block content %}
         {% endblock %}
     </main>

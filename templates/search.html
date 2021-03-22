@@ -1,85 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container-fluid">
-    <div class="row api-search-form">
-        <div class="col ">
-            <div class="row">
-                <h3 class="col">Search for a movie or tv series to review:</h3>
-            </div>
-            <!-- Search within movie list -->
-            <form action="{{ url_for('search_movies', page_number=1) }}" method="post" class="">
-                <div class="row mb-3">
-                    <div class="">
-                        {% if session["media_type"] == "tv" %}
-                        <div class="form-check">
-                            <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv"
-                                checked>
-                            <label class="form-check-label" for="media-type-tv">
-                                TV
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                id="media-type-movie">
-                            <label class="form-check-label" for="media-type-movie">
-                                Movie
-                            </label>
-                        </div>
-                        {% elif session["media_type"] == "movie" %}
-                        <div class="form-check">
-                            <input name="media_type" value="tv" class="form-check-input" type="radio"
-                                id="media-type-tv">
-                            <label class="form-check-label" for="media-type-tv">
-                                TV
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                id="media-type-movie" checked>
-                            <label class="form-check-label" for="media-type-movie">
-                                Movie
-                            </label>
-                        </div>
-                        {% else %}
-                        <div class="form-check">
-                            <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv"
-                                required>
-                            <label class="form-check-label" for="media-type-tv">
-                                TV
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                id="media-type-movie" required>
-                            <label class="form-check-label" for="media-type-movie">
-                                Movie
-                            </label>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-8 px-1">
-                        <div class="row">
-                            <div class="col-sm-1 d-none d-sm-block search-icon">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <div class="col-12 col-sm-10 mx-auto">
-                                <input type="text" name="query" id="query" minlength="3" maxlength="30"
-                                    class="form-control" value="{{ session['search_query'] }}" required>
-                                <label for="query" class="form-label">Search Movies or TV Series</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4 mx-auto px-1">
-                        <button type="submit" class="btn btn-primary search-api-button">
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                    </div>
-                </div>
-            </form>
+<div class="row api-search-form align-items-center">
+    <div class="col ">
+        <div class="row">
+            <h3 class="col">Search for a movie or tv series to review:</h3>
         </div>
+        <!-- Search within movie list -->
+        <form action="{{ url_for('search_movies', page_number=1) }}" method="post" class="">
+            <div class="row mb-3">
+                <div class="">
+                    {% if session["media_type"] == "tv" %}
+                    <div class="form-check">
+                        <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv"
+                            checked>
+                        <label class="form-check-label" for="media-type-tv">
+                            TV
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input name="media_type" value="movie" class="form-check-input" type="radio"
+                            id="media-type-movie">
+                        <label class="form-check-label" for="media-type-movie">
+                            Movie
+                        </label>
+                    </div>
+                    {% elif session["media_type"] == "movie" %}
+                    <div class="form-check">
+                        <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv">
+                        <label class="form-check-label" for="media-type-tv">
+                            TV
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input name="media_type" value="movie" class="form-check-input" type="radio"
+                            id="media-type-movie" checked>
+                        <label class="form-check-label" for="media-type-movie">
+                            Movie
+                        </label>
+                    </div>
+                    {% else %}
+                    <div class="form-check">
+                        <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv"
+                            required>
+                        <label class="form-check-label" for="media-type-tv">
+                            TV
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input name="media_type" value="movie" class="form-check-input" type="radio"
+                            id="media-type-movie" required>
+                        <label class="form-check-label" for="media-type-movie">
+                            Movie
+                        </label>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8 px-1">
+                    <div class="row">
+                        <div class="col-sm-1 d-none d-sm-block search-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="col-12 col-sm-10 mx-auto">
+                            <input type="text" name="query" id="query" minlength="3" maxlength="30" class="form-control"
+                                value="{{ session['search_query'] }}" required>
+                            <label for="query" class="form-label">Search Movies or TV Series</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 mx-auto px-1">
+                    <button type="submit" class="btn btn-primary search-api-button">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="card api-results-card mt-5">
@@ -91,7 +88,7 @@
             {% for result in search_results.results %}
             <li class="list-group-item tmdb-result-list">
                 {% if result.original_title and result.id %}
-                <a href="{{ url_for('new_review', tmdb_id=result.id, page_number=search_results.page) }}"
+                <a href="{{ url_for('new_review', tmdb_id=result.id, media_type=session.media_type, page_number=search_results.page) }}"
                     class="text-decoration-none">
                     <div class="row">
                         <div class="col-12 col-sm-3">
@@ -114,7 +111,7 @@
                     </div>
                 </a>
                 {% elif result.name and result.id %}
-                <a href="{{ url_for('new_review', tmdb_id=result.id, page_number=search_results.page) }}"
+                <a href="{{ url_for('new_review', tmdb_id=result.id, media_type=session.media_type, page_number=search_results.page) }}"
                     class="text-decoration-none">
                     <div class="row">
                         <div class="col-12 col-sm-3">

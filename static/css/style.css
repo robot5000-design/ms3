@@ -23,6 +23,20 @@ body {
     font-family: "Alfa Slab One", cursive;
 }
 
+.backing-image {
+  background: url(../images/back-image.jpg) repeat top center scroll;
+  background-size: 100% 100%;
+  min-height: 95vh;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .api-search-form {
     color: #e4dfd5;
     max-width: 80vw;
@@ -98,7 +112,7 @@ body {
     .previous-button,
     .next-button {
         margin-top: 10px;
-        width: 100px;
+        width: 120px;
         font-size: 1em;
     }
 
