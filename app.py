@@ -35,14 +35,79 @@ def index():
                 unique_review["tmdb_id"] for unique_review in unique_reviews]
             if review["tmdb_id"] not in tmdb_id_list:
                 unique_reviews.append(review)
+        # get poster paths from the matching movie_details entry in
+        # db using tmdb_id
         for i in range(len(unique_reviews)):
             movie_details = mongo.db.movie_details.find_one(
                 {"tmdb_id": unique_reviews[i]['tmdb_id']})
             unique_reviews[i]["poster_path"] = movie_details["poster_path"]
-    tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
-    return render_template("index.html", reviews=unique_reviews,
-                           movie_details=movie_details,
-                           tmdb_poster_url=tmdb_poster_url)
+        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+        return render_template("index.html", reviews=unique_reviews,
+                               tmdb_poster_url=tmdb_poster_url)
+    return render_template("index.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        # check if username exists in db
+        username = request.form.get("username")
+        existing_user = mongo.db.users.find_one(
+            {"username": username.lower()})
+        if existing_user:
+            # ensure hashed password matches user input
+            if check_password_hash(
+                    existing_user["password"], request.form.get("password")):
+                session["user"] = username.lower()
+                flash(f"Welcome, {username}")
+                return redirect(url_for("index"))
+            else:
+                # invalid password match
+                flash("Incorrect Username and/or Password")
+                return redirect(url_for("index"))
+        else:
+            # username doesn't exist
+            flash("Incorrect Username and/or Password")
+            return redirect(url_for("index"))
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username2")
+        # check if username already exists in db
+        existing_user = mongo.db.users.find_one(
+            {"username": username.lower()})
+
+        if existing_user:
+            flash("Username already exists")
+            return redirect(url_for("index"))
+
+        password1 = request.form.get("password2")
+        password2 = request.form.get("confirm-password2")
+        if password1 != password2:
+            flash("Passwords do not match!")
+            return redirect(url_for("index"))
+
+        register = {
+            "username": username.lower(),
+            "password": generate_password_hash(request.form.get("password2"))
+        }
+        mongo.db.users.insert_one(register)
+
+        # put the new user into 'session' cookie
+        session["user"] = username.lower()
+        flash("Registration Successful!")
+        return redirect(url_for("index"))
+    return render_template("register.html")
+
+
+@app.route("/logout")
+def logout():
+    # remove user from session cookie
+    flash("You have been logged out")
+    session.pop("user")
+    return redirect(url_for("index"))
 
 
 @app.route('/review_detail/<tmdb_id>')
@@ -119,11 +184,12 @@ def api_request(page_number):
 @app.route("/new_review/<tmdb_id>/<page_number>", methods=["GET", "POST"])
 def new_review(tmdb_id, page_number):
     if request.method == "POST":
-        # check if details already exist in db
+        # check if movie details already exist in db and if not, add them
         details_exist = mongo.db.movie_details.find_one(
             {"tmdb_id": session["selected_media"]["tmdb_id"]})
         if not details_exist:
             mongo.db.movie_details.insert_one(dict(session["selected_media"]))
+        # Add new review to db
         new_review = {
             "tmdb_id": str(session["selected_media"]["tmdb_id"]),
             "genre": request.form.get("select-genre"),
@@ -159,9 +225,24 @@ def get_choice_detail(tmdb_id):
         tmdb_id, app.api_key)
     if "media_type" in session:
         if session["media_type"] == "tv":
-            return requests.get(tv_detail_url).json()
+            detail_url = tv_detail_url
         else:
-            return requests.get(movie_detail_url).json()
+            detail_url = movie_detail_url
+        try:
+            detail_request = requests.get(detail_url)
+        except requests.exceptions.ConnectionError:
+            flash("Cannot get results from the database\
+                    at this time. Please try again later.")
+        else:
+            if detail_request.status_code == 200:
+                media_detail = detail_request.json()
+                if "id" in media_detail:
+                    return media_detail
+                else:
+                    flash("There's been a problem. Please try again later.")
+            else:
+                flash("Status " + str(detail_request.status_code) + " " + detail_request.reason + ". Cannot get results \
+                    from the database at this time. Please try again later.")
     else:
         return redirect(url_for("search_movies", page_number=1))
 
@@ -169,7 +250,7 @@ def get_choice_detail(tmdb_id):
 def validate_choice(media_detail):
     session["selected_media"] = {}
     if "id" in media_detail:
-        session["selected_media"]["tmdb_id"] = media_detail["id"]
+        session["selected_media"]["tmdb_id"] = str(media_detail["id"])
     if "original_title" in media_detail:
         session["selected_media"][
             "original_title"] = media_detail["original_title"]
@@ -204,7 +285,6 @@ def validate_choice(media_detail):
         session["selected_media"]["overview"] = media_detail["overview"]
     else:
         session["selected_media"]["overview"] = None
-    flash(list(session))
 
 
 if __name__ == "__main__":

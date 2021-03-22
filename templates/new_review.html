@@ -56,7 +56,11 @@
             <label class="form-check-label" for="inlineRadio5">5</label>
         </div>
         <div class="col-12">
+            {% if session.user %}
             <button type="submit" class="btn btn-primary">Submit</button>
+            {% else %}
+            <a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
+            {% endif %}
         </div>
 
     </form>

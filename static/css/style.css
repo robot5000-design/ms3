@@ -76,6 +76,10 @@ body {
     margin: 0 auto;
 }
 
+.register-wrapper {
+    width: 100%;
+    margin-top: 50px;
+}
 
 @media screen and (min-width: 400px) {
     .review-image {
@@ -102,6 +106,10 @@ body {
         margin-right: 20px;
     }
 
+    .register-wrapper {
+        width: 60%;
+    }
+
     
 }
 
@@ -116,6 +124,10 @@ body {
 
     .search-api-button {
         width: 85%;
+    }
+
+    .register-wrapper {
+        width: 40%;
     }
 }
 
