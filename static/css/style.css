@@ -70,6 +70,14 @@ body {
     font-size: .8em;
 }
 
+.index-card {
+    min-height: 360px;
+}
+
+.get-reviews-btn {
+    font-size: 1em;
+}
+
 .thumbnail-title {
     font-family: "Alfa Slab One", cursive;
     padding-top: 7px;

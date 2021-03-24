@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel & Go Back</a>
+    <a href="#" class="btn btn-secondary go-back">Cancel & Go Back</a>
     <div>
         <h1 class="">Reviews for:</h1>
         <div>
@@ -19,15 +19,20 @@
             {% else %}
             <img src="{{ tmdb_poster_url }}{{ movie_detail.poster_path }}" class="review-image" alt="">
             {% endif %}
-
         </div>
+        {% if not session.user %}
+        <a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
+        {% elif already_reviewed %}
+        <div>You've already reviewed this.</div>
+        {% else %}
+        <a href="{{ url_for('new_review', tmdb_id=movie_detail.tmdb_id, media_type=movie_detail.media_type, page_number=1) }}"
+            class="btn btn-primary">Review This</a>
+        {% endif %}
         <div>Most recent reviews first:</div>
         {% for review in reviews %}
         <div>Reviewed by: {{ review.created_by }} {{ review.review_date }}</div>
         <div>{{ review.review }}</div>
         <div>Rating: {{ review.rating }} / 5</div>
         {% endfor %}
-        <a href="{{ url_for('new_review', tmdb_id=movie_detail.tmdb_id, media_type=movie_detail.media_type, page_number=1) }}"
-            class="btn btn-primary">Review This</a>
     </div>
     {% endblock %}
