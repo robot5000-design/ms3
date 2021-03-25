@@ -28,7 +28,7 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
-                    <a class="nav-link" href="{{ url_for('search_movies', page_number=1) }}">New Review</a>
+                    <a class="nav-link" href="{{ url_for('search_movies', page=1) }}">New Review</a>
                     <a class="nav-link" href="{{ url_for('browse_reviews') }}">Browse Reviews</a>
                     {% if session.user %}
                     <li class="nav-item dropdown">
@@ -37,7 +37,8 @@
                             {{ session.user }}'s Account
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('my_reviews', sort_by='latest', page=0) }}">My Reviews</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('my_reviews') }}">My Reviews</a></li>
+                            <li><a class="dropdown-item" href="#">Change Password</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

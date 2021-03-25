@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container-fluid">
-    {% if movie_details %}
     <div class="row justify-content-center">
         <div class="col">
             <div class="dropdown">
@@ -11,7 +10,7 @@
                     Sort by: Latest
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{{ url_for('browse_reviews', sort_by='oldest', page=0) }}">Sort
+                    <li><a class="dropdown-item" href="{{ url_for('my_reviews') }}">Sort
                             by:
                             Oldest</a>
                     </li>
@@ -22,7 +21,7 @@
                     Sort by: Oldest
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{{ url_for('browse_reviews', sort_by='latest', page=0) }}">Sort
+                    <li><a class="dropdown-item" href="{{ url_for('my_reviews') }}">Sort
                             by:
                             Latest</a>
                     </li>
@@ -31,6 +30,45 @@
             </div>
         </div>
     </div>
+    <div class="row search-box">
+        <form action="{{ url_for('my_reviews') }}" method="post">
+            <div class="mb-3 row">
+                <label for="search-box" class="form-label">Search</label>
+                <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
+                    aria-describedby="search-query">
+                <div id="search-box-text" class="form-text">Search by Name/Title</div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="dropdown">
+                        {% if sort_by == "latest" %}
+                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                            <option value="latest" selected>Sort-by: Latest</option>
+                            <option value="alphabetically">Sort-by: Alphabetically</option>
+                            <option value="oldest">Sort-by: Oldest</option>                            
+                        </select>
+                        {% elif sort_by == "alphabetically" %}
+                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                            <option value="alphabetically" selected>Sort-by: Alphabetically</option>
+                            <option value="latest">Sort-by: Latest</option>
+                            <option value="oldest">Sort-by: Oldest</option>
+                        </select>
+                        {% elif sort_by == "oldest" %}
+                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                            <option value="oldest" selected>Sort-by: Oldest</option>
+                            <option value="latest">Sort-by: Latest</option>
+                            <option value="alphabetically">Sort-by: Alphabetically</option>
+                        </select>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-primary">Update Results</button>
+            </div>
+        </form>
+    </div>
+    {% if movie_details | length() > 0 %}
     <div class="row justify-content-center">
         {% for movie in movie_details %}
         <div class="card index-card col-6 col-sm-4 col-md-3 col-lg-2">
@@ -43,7 +81,7 @@
                 </div>
                 <div class="col-12 text-center">
                     <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id) }}"
-                        class="btn btn-primary get-reviews-btn">Get
+                        class="btn btn-primary get-reviews-btn">Edit/Delete
                         Reviews</a>
                 </div>
             </div>
@@ -52,7 +90,7 @@
     </div>
     <div class="row mx-auto pt-3">
         <div class="col">
-            {% if review_count > 12 %}
+            {% if review_count > 6 %}
             <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
             {% endif %}
         </div>
@@ -60,11 +98,11 @@
     <div class="row mx-auto">
         <div class="col">
             {% if page > 0 %}
-            <a href="{{ url_for('browse_reviews', sort_by=sort_by, page=page-1) }}"
+            <a href="{{ url_for('my_reviews', sort_by=sort_by, page=page-1) }}"
                 class="btn btn-secondary previous-button">Previous</a>
             {% endif %}
             {% if (review_count > 6) and ((page + 1) < (review_count / 6)) %}
-            <a href="{{ url_for('browse_reviews', sort_by=sort_by, page=page+1) }}"
+            <a href="{{ url_for('my_reviews', sort_by=sort_by, page=page+1) }}"
                 class="btn btn-secondary next-button">Next</a>
             {% endif %}
         </div>

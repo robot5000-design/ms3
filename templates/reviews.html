@@ -1,49 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container-fluid">
-    {% if movie_details %}
-    <div class="row justify-content-center">
-        <div class="col">
-            <div class="dropdown">
-                {% if sort_by == "latest" %}
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Sort by: Latest
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{{ url_for('browse_reviews', sort_by='rating', page=0) }}">Sort by:
-                            Highest
-                            Rating</a></li>
-                    <li><a class="dropdown-item" href="{{ url_for('browse_reviews', sort_by='popularity', page=0) }}">Sort by:
-                            Popularity</a></li>
-                </ul>
-                {% elif sort_by == "rating" %}
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Sort by: Highest Rating
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{{ url_for('browse_reviews', sort_by='latest', page=0) }}">Sort by:
-                            Latest</a></li>
-                    <li><a class="dropdown-item" href="{{ url_for('browse_reviews', sort_by='popularity', page=0) }}">Sort by:
-                            Popularity</a></li>
-                </ul>
-                {% elif sort_by == "popularity" %}
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Sort by: Popularity
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{{ url_for('browse_reviews', sort_by='rating', page=0) }}">Sort by:
-                            Highest
-                            Rating</a></li>
-                    <li><a class="dropdown-item" href="{{ url_for('browse_reviews', sort_by='latest', page=0) }}">Sort by:
-                            Latest</a></li>
-                </ul>
-                {% endif %}
+    <div class="row search-box">
+        <form action="{{ url_for('browse_reviews') }}" method="post">
+            <div class="mb-3 row">
+                <label for="search-box" class="form-label">Search</label>
+                <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
+                    aria-describedby="search-query">
+                <div id="search-box-text" class="form-text">Search by Name, Type(movie or tv) or Year of Release(YYYY)</div>
             </div>
-        </div>
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="dropdown">
+                        {% if sort_by == "latest" %}
+                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                            <option value="latest" selected>Sort-by: Latest</option>
+                            <option value="popularity">Sort-by: Popularity</option>
+                            <option value="rating">Sort-by: Rating</option>
+                        </select>
+                        {% elif sort_by == "rating" %}
+                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                            <option value="rating" selected>Sort-by: Rating</option>
+                            <option value="latest">Sort-by: Latest</option>
+                            <option value="popularity">Sort-by: Popularity</option>
+                        </select>
+                        {% elif sort_by == "popularity" %}
+                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                            <option value="popularity" selected>Sort-by: Popularity</option>
+                            <option value="latest">Sort-by: Latest</option>
+                            <option value="rating">Sort-by: Rating</option>
+                        </select>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-primary">Update Results</button>
+            </div>
+        </form>
     </div>
+    {% if movie_details | length() > 0 %}
     <div class="row justify-content-center">
         {% for movie in movie_details %}
         <div class="card index-card col-6 col-sm-4 col-md-3 col-lg-2">
@@ -64,12 +60,12 @@
         {% endfor %}
     </div>
     <div class="row mx-auto pt-3">
-            <div class="col">
-                {% if review_count > 12 %}
-                <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
-                {% endif %}
-            </div>
+        <div class="col">
+            {% if review_count > 12 %}
+            <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
+            {% endif %}
         </div>
+    </div>
     <div class="row mx-auto">
         <div class="col">
             {% if page > 0 %}
@@ -77,7 +73,8 @@
                 class="btn btn-secondary previous-button">Previous</a>
             {% endif %}
             {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %}
-            <a href="{{ url_for('browse_reviews', sort_by=sort_by, page=page+1) }}" class="btn btn-secondary next-button">Next</a>
+            <a href="{{ url_for('browse_reviews', sort_by=sort_by, page=page+1) }}"
+                class="btn btn-secondary next-button">Next</a>
             {% endif %}
         </div>
     </div>
@@ -85,4 +82,5 @@
     <h3>No Results!</h3>
     {% endif %}
 </div>
+
 {% endblock %}
