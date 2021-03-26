@@ -11,11 +11,7 @@
         {% else %}
         <div>Released: {{ media_detail.release_date }} {{ media_detail.media_type.capitalize() }}</div>
         {% endif %}
-        {% if media_detail.overall_rating %}
         <div>Overall Rating: {{ media_detail.overall_rating }} / 5</div>
-        {% else %}
-        <div>Overall Rating: No Rating</div>
-        {% endif %}
         {% if media_detail.poster_path == None %}
         <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
         {% else %}
@@ -26,53 +22,87 @@
         <div>{{ media_detail.overview }}</div>
         {% endif %}
 
-        <form class="review-form" method="POST"
-            action="{{ url_for('new_review', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, page=page) }}">
+        <form class="review-form" method="POST" action="{{ url_for('edit_review', tmdb_id=media_detail.tmdb_id) }}">
             {% if not session.user %}
             <a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
             {% elif already_reviewed %}
             <div>You've already reviewed this.</div>
             {% else %}
             <select class="select-genre" name="select-genre" aria-label="Select Genre" required>
-                <option value="" selected disabled>Choose a Genre:</option>
+                <option disabled>Choose a Genre:</option>
+                <option selected disabled>{{ review_fields.genre.title() }}</option>
                 {% for genre in genres %}
-                <option value="{{ genre.genre_name }}" required>{{ genre.genre_name.title() }}</option>
+                <option required>{{ genre.genre_name.title() }}</option>
                 {% endfor %}
             </select>
             <div class="mb-3">
                 <label for="review-text" class="form-label"></label>
                 <textarea class="form-control" id="review-text" name="review-text" rows="5"
-                    placeholder="Write your review here" required></textarea>
+                    placeholder="Write your review here" required>{{ review_fields.review }}</textarea>
             </div>
             <div>What's your rating?</div>
             <div class="form-check form-check-inline">
+                {% if review_fields.rating == "1" %}
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1"
+                    checked required>
+                {% else %}
                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1"
                     required>
+                {% endif %}
                 <label class="form-check-label" for="inlineRadio1">1</label>
             </div>
             <div class="form-check form-check-inline">
+                {% if review_fields.rating == "2" %}
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2"
+                    checked required>
+                {% else %}
                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2"
                     required>
+                {% endif %}
                 <label class="form-check-label" for="inlineRadio2">2</label>
             </div>
             <div class="form-check form-check-inline">
+                {% if review_fields.rating == "3" %}
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3"
+                    checked required>
+                {% else %}
                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3"
                     required>
+                {% endif %}
                 <label class="form-check-label" for="inlineRadio3">3</label>
             </div>
             <div class="form-check form-check-inline">
+                {% if review_fields.rating == "4" %}
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4"
+                    checked required>
+                {% else %}
                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="4"
                     required>
+                {% endif %}
                 <label class="form-check-label" for="inlineRadio4">4</label>
             </div>
             <div class="form-check form-check-inline">
+                {% if review_fields.rating == "5" %}
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="5"
+                    checked required>
+                {% else %}
                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="5"
                     required>
+                {% endif %}
                 <label class="form-check-label" for="inlineRadio5">5</label>
             </div>
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit Edit</button>
                 {% endif %}
+            </div>
+            <div class="col-12 text-center">
+                <div class="btn btn-primary call-delete">Delete
+                    Review</div>
+            </div>
+            <div class="col-12 text-center">
+                <a href="{{ url_for('delete_review', tmdb_id=review_fields.tmdb_id) }}"
+                    class="btn btn-danger confirm-delete d-none">Confirm Delete
+                </a>
             </div>
         </form>
     </div>

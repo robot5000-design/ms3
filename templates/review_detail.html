@@ -21,7 +21,7 @@
             {% endif %}
         </div>
         {% if not session.user %}
-        <a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
+        <a class="login-modal" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
         {% elif already_reviewed %}
         <div>You've already reviewed this.</div>
         {% else %}
