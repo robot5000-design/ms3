@@ -34,3 +34,9 @@ $(".call-delete").click(function() {
     $(this).addClass("d-none");
     $(this).siblings(".confirm-delete").removeClass("d-none");
 });
+
+$(".likes").click(function() {
+    var val = parseInt($(this).attr("value"));
+    console.log(val)
+    $(this).prop("disabled", true).html(val+1);
+});

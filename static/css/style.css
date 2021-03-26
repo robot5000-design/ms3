@@ -103,6 +103,48 @@ body {
     margin-top: 50px;
 }
 
+/*--------------------------------------------------------Footer */
+
+.footer-container {
+  background-color: #353535;
+  min-height: 140px;
+  text-align: center;
+  position: relative;
+}
+
+.footer-container li a i {
+  color: #e4dfd5;
+  font-size: 28px;
+}
+
+.footer-terms a,
+.footer-terms {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 500;
+  color: #e4dfd5;
+  margin: 0 auto;
+  text-decoration: none;
+}
+
+/* Color change on hover */
+.footer-container li a i,
+.footer-terms a {
+  transition: all 0.15s ease-in-out;
+  -moz-transition: all 0.15s ease-in-out;
+  -webkit-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+}
+
+.footer-terms a:hover,
+.footer-container li a i:hover {
+  color: #d31363;
+}
+
+.footer-terms .footer-terms-item {
+  padding-bottom: 20px;
+}
+
+
 @media screen and (min-width: 400px) {
     .review-image {
         height: 70vh;

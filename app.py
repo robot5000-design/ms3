@@ -7,6 +7,7 @@ from flask import (
     redirect, request, session, url_for)
 from flask_pymongo import PyMongo
 from flask_talisman import Talisman
+from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
@@ -61,7 +62,8 @@ def index():
     if movie_details:
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         return render_template("index.html", movie_details=movie_details,
-                               tmdb_poster_url=tmdb_poster_url)
+                               tmdb_poster_url=tmdb_poster_url,
+                               likes=3)
     return render_template("index.html")
 
 
@@ -100,22 +102,22 @@ def browse_reviews(sort_by, page):
     return render_template("reviews.html")
 
 
-@app.route("/my_reviews/<sort_by>/<int:page>", methods=[
-    "GET", "POST"], defaults={'sort_by': 'latest', 'page': 0})
-def my_reviews(sort_by, page):
+@app.route("/my_reviews/<user>/<sort_by>/<int:page>", methods=[
+    "GET", "POST"])
+def my_reviews(user, sort_by, page):
     if request.method == "POST":
         query = request.form.get("search-box")
         sort_by = request.form.get("sort_by")
         if query:
-            search_term = {"$text": {"$search": query}, "created_by": session[
-                            "user"]}
+            search_term = {"$text": {"$search": query}, "created_by": user}
         else:
-            search_term = {"created_by": session["user"]}
+            search_term = {"created_by": user}
     else:
-        search_term = {"created_by": session["user"]}
+        search_term = {"created_by": user}
+        query = ""
     if sort_by == "alphabetically":
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
-            "original_title", -1).skip(page * 6).limit(6))
+            "original_title", 1).skip(page * 6).limit(6))
     elif sort_by == "oldest":
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
             "review_date", 1).skip(page * 6).limit(6))
@@ -126,8 +128,7 @@ def my_reviews(sort_by, page):
         movie_id_list = []
         for review in my_reviews:
             movie_id_list.append(review["tmdb_id"])
-        review_count = mongo.db.reviews.find({"created_by": session[
-                "user"]}).count()
+        review_count = mongo.db.reviews.find({"created_by": user}).count()
         total_pages = math.ceil(review_count / 6)
         # pick out the movies details that we need
         movie_details = []
@@ -143,8 +144,9 @@ def my_reviews(sort_by, page):
                                tmdb_poster_url=tmdb_poster_url,
                                page=page, sort_by=sort_by,
                                review_count=review_count,
-                               total_pages=total_pages)
-    return render_template("my_reviews.html")
+                               total_pages=total_pages,
+                               user=user, query=query)
+    return render_template("my_reviews.html", user=user)
 
 
 @app.route("/delete_review/<tmdb_id>/<user>")
@@ -236,6 +238,14 @@ def review_detail(tmdb_id):
         return redirect(url_for("index.html"))
 
 
+@app.route("/add_like/<id>/<tmdb_id>")
+def add_like(id, tmdb_id):
+    mongo.db.reviews.update_one(
+                {"_id": ObjectId(id)},
+                {"$addToSet": {"likes": session["user"]}})
+    return redirect(url_for('review_detail', tmdb_id=tmdb_id))
+
+
 @app.route("/search/<int:page>", methods=["GET", "POST"])
 def search_movies(page):
     if request.method == "POST":
@@ -323,7 +333,8 @@ def new_review(tmdb_id, media_type, page):
             "review": request.form.get("review-text"),
             "rating": request.form.get("inlineRadioOptions"),
             "review_date": datetime.datetime.now(),
-            "created_by": session["user"]
+            "created_by": session["user"],
+            "likes": []
         }
         mongo.db.reviews.insert_one(new_review)
         session.pop("selected_media", None)
@@ -439,7 +450,8 @@ def login():
                     existing_user["password"], request.form.get("password")):
                 session["user"] = username.lower()
                 flash(f"Welcome, {username}")
-                return redirect(url_for("my_reviews"))
+                return redirect(url_for("my_reviews", user=session[
+                    'user'], sort_by='latest', page=0))
             else:
                 # invalid password match
                 flash("Incorrect Username and/or Password")

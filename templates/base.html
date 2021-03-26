@@ -37,8 +37,9 @@
                             {{ session.user }}'s Account
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('my_reviews') }}">My Reviews</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('my_reviews', user=session['user'], sort_by='latest', page=0) }}">My Reviews</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -70,6 +71,41 @@
         {% block content %}
         {% endblock %}
     </main>
+
+    <!-- Footer with Social Links and Feedback Form -->
+    <footer>
+        <div class="container-fluid footer-container">
+            <div class="row">
+                <div class="col-12">
+                    <ul class="list-inline social-links pt-4 pb-1">
+                        <li class="list-inline-item p-2">
+                            <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">
+                                <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                                <span class="sr-only">Facebook link</span>
+                            </a>
+                        </li>
+                        <li class="list-inline-item p-2">
+                            <a href="https://twitter.com/" target="_blank" rel="noreferrer">
+                                <i class="fab fa-twitter" aria-hidden="true"></i>
+                                <span class="sr-only">twitter link</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row footer-terms">
+                <div class="col-sm-4 order-sm-1 footer-terms-item">
+                    <a class="feedback-form" href="#" data-toggle="modal" data-target="#resetModal">Feedback Form</a>
+                </div>
+                <div class="col-sm-4 order-sm-3 footer-terms-item">
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div class="col-sm-4 order-sm-2 footer-terms-item">
+                    <p>For Educational Purposes Only</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Modal -->
     <div class="modal fade" id="logInModal" tabindex="-1" aria-labelledby="logInModalLabel" aria-hidden="true">
