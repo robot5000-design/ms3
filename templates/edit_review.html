@@ -91,17 +91,17 @@
                 {% endif %}
                 <label class="form-check-label" for="inlineRadio5">5</label>
             </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Submit Edit</button>
-                {% endif %}
+            <div class="row">
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary">Submit Edit</button>
+                    {% endif %}
+                </div>
             </div>
-            <div class="col-12 text-center">
-                <div class="btn btn-primary call-delete">Delete
+            <div class="row">
+                <div class="btn btn-primary col-4 call-delete">Delete
                     Review</div>
-            </div>
-            <div class="col-12 text-center">
-                <a href="{{ url_for('delete_review', tmdb_id=review_fields.tmdb_id) }}"
-                    class="btn btn-danger confirm-delete d-none">Confirm Delete
+                <a href="{{ url_for('delete_review', tmdb_id=review_fields.tmdb_id, user=session['user']) }}"
+                    class="btn btn-danger confirm-delete col-4 offset-4 d-none">Confirm Delete
                 </a>
             </div>
         </form>
