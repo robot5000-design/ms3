@@ -30,16 +30,18 @@
                     <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
                     <a class="nav-link" href="{{ url_for('search_movies', page=1) }}">New Review</a>
                     <a class="nav-link" href="{{ url_for('browse_reviews') }}">Browse Reviews</a>
-                    {% if session.user %}
+                    {% if "user" in session %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ session.user }}'s Account
+                            {{ session.user.title() }}'s Account
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="{{ url_for('my_reviews', user=session['user'], sort_by='latest', page=0) }}">My Reviews</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a>
-                            </li>
+                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a></li>
+                            {% if session.user == "admin" %}
+                            <li><a class="dropdown-item" href="{{ url_for('admin_controls') }}">Admin Controls</a></li>
+                            {% endif %}
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

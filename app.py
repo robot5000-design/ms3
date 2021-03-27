@@ -193,7 +193,8 @@ def edit_review(tmdb_id):
             {"tmdb_id": tmdb_id, "created_by": session["user"]},
             {"$set": {"review_date": datetime.datetime.now()}})
         flash("Your review has been updated")
-        return redirect(url_for('my_reviews'))
+        return redirect(url_for('my_reviews', user=session['user'],
+                                sort_by='latest', page=0))
     media_detail = list(mongo.db.movie_details.find({"tmdb_id": tmdb_id}))[0]
     review_fields = list(mongo.db.reviews.find(
         {"tmdb_id": tmdb_id, "created_by": session[
@@ -212,6 +213,8 @@ def review_detail(tmdb_id, sort_by):
         reviews = list(mongo.db.reviews.find(
             {"tmdb_id": tmdb_id}).sort("review_date", -1))
     else:
+        # Following aggregate based on information in this thread
+        # https://stackoverflow.com/questions/9040161/mongo-order-by-length-of-array
         reviews = list(mongo.db.reviews.aggregate([
             {
                 "$match": {"tmdb_id": tmdb_id}
@@ -344,7 +347,7 @@ def new_review(tmdb_id, media_type, page):
         new_review = {
             "tmdb_id": str(tmdb_id),
             "original_title": original_title,
-            "genre": request.form.get("select-genre"),
+            "genre": request.form.get("select-genre").title(),
             "review": request.form.get("review-text"),
             "rating": request.form.get("inlineRadioOptions"),
             "review_date": datetime.datetime.now(),
@@ -455,6 +458,49 @@ def validate_choice(media_detail):
     session["selected_media"]["last_review_date"] = datetime.datetime.now()
 
 
+@app.route("/admin_controls", methods=["GET", "POST"])
+def admin_controls():
+    if request.method == "POST":
+        if "submit-form-1" in request.form:
+            remove_genre = request.form.get("select-genre")
+            add_genre = request.form.get("new-genre")
+            if remove_genre:
+                mongo.db.genres.delete_one(
+                    {"genre_name": remove_genre})
+                flash(f"{remove_genre.title()} Deleted & List Updated")
+            if add_genre:
+                already_exist = mongo.db.genres.find_one(
+                    {"genre_name": add_genre.title()})
+                if not already_exist:
+                    mongo.db.genres.insert_one(
+                        {"genre_name": add_genre.title()})
+                    flash(f"{add_genre.title()} Added & List Updated")
+                else:
+                    flash("Entry Already in List")
+            if not add_genre and not remove_genre:
+                flash("Nothing to Update")
+        if "submit-form-2" in request.form:
+            delete_list_users = request.form.getlist("select-user")
+            if len(delete_list_users) == 0:
+                for user in delete_list_users:
+                    mongo.db.users.delete_one(
+                        {"username": user})
+                flash("Users Deleted")
+            else:
+                flash("Nothing to Update")
+    if "user" in session:
+        if session["user"] == "admin":
+            genres = mongo.db.genres.find().sort("genre_name", 1)
+            user_list = [user["username"] for user in mongo.db.users.find(
+                ).sort("username", 1)]
+            return render_template("admin_controls.html", genres=genres,
+                                   user_list=user_list)
+        else:
+            return redirect(url_for("index"))
+    else:
+        return redirect(url_for("index"))
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -533,7 +579,10 @@ def change_password():
         else:
             flash("Passwords do not match!")
             return redirect(url_for("change_password"))
-    return render_template("change_password.html")
+    if "user" in session:
+        return render_template("change_password.html")
+    else:
+        return redirect(url_for("index"))
 
 
 @app.route("/logout")

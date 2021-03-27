@@ -96,6 +96,7 @@
             {{ review.review_date }}
         </div>
         <div>{{ review.review }}</div>
+        <div>Genre: {{ review.genre }}</div>
         <div>Rating: {{ review.rating }} / 5</div>
         {% if "user" in session and session["user"] != review.created_by and session["user"] not in review.likes %}
         <a href="{{ url_for('add_like', id=review._id, tmdb_id=review.tmdb_id) }}"><i class="fas fa-thumbs-up"></i>
@@ -107,5 +108,4 @@
         {% endfor %}
     </div>
 </div>
-{{reviews2}}
 {% endblock %}

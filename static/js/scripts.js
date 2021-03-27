@@ -34,3 +34,7 @@ $(".call-delete").click(function() {
     $(this).addClass("d-none");
     $(this).siblings(".confirm-delete").removeClass("d-none");
 });
+
+$(".delete-user").click(function() {
+    alert("Caution! This is Not Reversible!");
+});

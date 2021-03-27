@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container register-wrapper">
+    <div class="row">
+        <div class="col">
+            <form class="needs-validation" action="{{ url_for('admin_controls') }}" method="POST" novalidate>
+                <select class="form-select select-genre" name="select-genre" size="10" aria-label="Size 10 Select Genre">
+                    <option value="" disabled>Genre List:</option>
+                    <option value="">Select None</option>
+                    {% for genre in genres %}
+                    <option value="{{ genre.genre_name }}">{{ genre.genre_name.title() }}</option>
+                    {% endfor %}
+                </select>
+                <div class="input-group">
+                    <input type="text" name="new-genre" aria-label="Add genre" placeholder="Add a New Genre Here"
+                        class="form-control" minlength="3" pattern="^[a-zA-Z\-]{3,15}$" maxlength="15">
+                    <span class="invalid-feedback">must be 3-15 letters (including '-')</span>
+                </div>
+                <div class="btn btn-primary col-6 call-delete">Add and/or Delete Genre</div>
+                <button type="submit" id="submit-form-1" name="submit-form-1"
+                    class="btn btn-danger confirm-delete col-6 offset-6 d-none">Confirm
+                    Add/Delete Genre
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form class="" action="{{ url_for('admin_controls') }}" method="POST">
+                <select class="form-select select-user" name="select-user" size="10" aria-label="Size 10 Select User" multiple required>
+                    <option value="" disabled>User List:</option>
+                    <option value="">Select None</option>
+                    {% for user in user_list %}
+                    <option value="{{ user }}">{{ user }}</option>
+                    {% endfor %}
+                </select>
+                <div class="btn btn-primary col-6 call-delete delete-user">Delete User</div>
+                <button type="submit" id="submit-form-2" name="submit-form-2"
+                    class="btn btn-danger confirm-delete col-6 offset-6 d-none">Confirm
+                    Delete User
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
