@@ -21,35 +21,42 @@ app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 
 csp = {
-    'default-src': '\'self\'',
+    'default-src': [
+        '\'self\'',
+        '*.w3.org',
+        'data:image/*',
+        'http://www.w3.org/2000/svg'
+    ],
     'script-src': [
         '\'self\'',
         'code.jquery.com',
         'cdn.jsdelivr.net',
+        'cdnjs.cloudflare.com',
+        'fonts.googleapis.com',
+        'data:image/*',
+        'http://www.w3.org/2000/svg'
+    ],
+    'font-src': [
+        '\'self\' themes.googleusercontent.com *.gstatic.com',
+        'fonts.googleapis.com',
         'cdnjs.cloudflare.com'
     ],
-    'font-src': '\'self\' themes.googleusercontent.com *.gstatic.com',
     'style-src': [
-        '\'self\' ajax.googleapis.com fonts.googleapis.com'
-        '*.gstatic.com',
+        '\'self\'',
         'code.jquery.com',
         'cdn.jsdelivr.net',
-        'cdnjs.cloudflare.com'
+        'cdnjs.cloudflare.com',
+        'fonts.googleapis.com',
+        'http://www.w3.org/2000/svg'
     ],
     'img-src': [
         '\'self\'',
-        'image.tmdb.org'
-    ],
-    'media-src': [
-        '\'self\'',
-        'api.themoviedb.org'
+        'image.tmdb.org',
+        '*.w3.org',
+        'http://www.w3.org/2000/svg'
     ]
 }
-'''talisman = Talisman(
-    app,
-    content_security_policy=csp,
-    content_security_policy_nonce_in=['script-src']
-)'''
+talisman = Talisman(    app,    content_security_policy=csp,    content_security_policy_nonce_in=['script-src'])
 
 mongo = PyMongo(app)
 
