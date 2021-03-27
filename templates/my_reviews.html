@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="row search-box">
-        <form action="{{ url_for('my_reviews', user=session['user'], sort_by='latest', page=0) }}" method="post">
+        <form action="{{ url_for('my_reviews', user=user, sort_by=sort_by, page=0) }}" method="post">
             <div class="mb-3 row">
                 <label for="search-box" class="form-label">Search</label>
                 <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"

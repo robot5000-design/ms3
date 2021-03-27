@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row search-box">
-        <form action="{{ url_for('browse_reviews') }}" method="post">
+        <form action="{{ url_for('browse_reviews', sort_by=sort_by, page=0) }}" method="post">
             <div class="mb-3 row">
                 <label for="search-box" class="form-label">Search</label>
                 <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
@@ -11,14 +11,8 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col">
-                    <div class="dropdown">
-                        {% if sort_by == "latest" %}
-                        <select name="sort_by" class="form-select" aria-label="Default select example">
-                            <option value="latest" selected>Sort-by: Latest</option>
-                            <option value="popularity">Sort-by: Popularity</option>
-                            <option value="rating">Sort-by: Rating</option>
-                        </select>
-                        {% elif sort_by == "rating" %}
+                    <div class="dropdown">                        
+                        {% if sort_by == "rating" %}
                         <select name="sort_by" class="form-select" aria-label="Default select example">
                             <option value="rating" selected>Sort-by: Rating</option>
                             <option value="latest">Sort-by: Latest</option>
@@ -28,6 +22,12 @@
                         <select name="sort_by" class="form-select" aria-label="Default select example">
                             <option value="popularity" selected>Sort-by: Popularity</option>
                             <option value="latest">Sort-by: Latest</option>
+                            <option value="rating">Sort-by: Rating</option>
+                        </select>
+                        {% else %}
+                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                            <option value="latest" selected>Sort-by: Latest</option>
+                            <option value="popularity">Sort-by: Popularity</option>
                             <option value="rating">Sort-by: Rating</option>
                         </select>
                         {% endif %}

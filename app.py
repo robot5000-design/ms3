@@ -67,11 +67,12 @@ def index():
 
 
 @app.route("/browse_reviews/<sort_by>/<int:page>", methods=[
-    "GET", "POST"], defaults={'sort_by': 'latest', 'page': 0})
+           "GET", "POST"])
 def browse_reviews(sort_by, page):
     if request.method == "POST":
         query = request.form.get("search-box")
         sort_by = request.form.get("sort_by")
+        print(sort_by)
         if query:
             search_term = {"$text": {"$search": query}}
         else:
@@ -88,6 +89,7 @@ def browse_reviews(sort_by, page):
         movie_details = list(mongo.db.movie_details.find(search_term).sort(
             "number_reviews", -1).skip(page * 12).limit(12))
     else:
+        sort_by = "latest"
         movie_details = list(mongo.db.movie_details.find(search_term).sort(
             "last_review_date", -1).skip(page * 12).limit(12))
     if movie_details:
@@ -98,11 +100,11 @@ def browse_reviews(sort_by, page):
                                review_count=review_count,
                                total_pages=total_pages,
                                query=query)
-    return render_template("reviews.html")
+    return render_template("reviews.html", sort_by=sort_by, page=page)
 
 
 @app.route("/my_reviews/<user>/<sort_by>/<int:page>", methods=[
-    "GET", "POST"])
+           "GET", "POST"])
 def my_reviews(user, sort_by, page):
     if request.method == "POST":
         query = request.form.get("search-box")
@@ -121,6 +123,7 @@ def my_reviews(user, sort_by, page):
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
             "review_date", 1).skip(page * 6).limit(6))
     else:
+        sort_by = "latest"
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
             "review_date", -1).skip(page * 6).limit(6))
     if my_reviews:
@@ -145,7 +148,8 @@ def my_reviews(user, sort_by, page):
                                review_count=review_count,
                                total_pages=total_pages,
                                user=user, query=query)
-    return render_template("my_reviews.html", user=user)
+    return render_template("my_reviews.html", user=user,
+                           sort_by=sort_by, page=page)
 
 
 @app.route("/delete_review/<tmdb_id>/<user>")

@@ -29,7 +29,7 @@
                 <div class="navbar-nav">
                     <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
                     <a class="nav-link" href="{{ url_for('search_movies', page=1) }}">New Review</a>
-                    <a class="nav-link" href="{{ url_for('browse_reviews') }}">Browse Reviews</a>
+                    <a class="nav-link" href="{{ url_for('browse_reviews', sort_by=sort_by, page=0) }}">Browse Reviews</a>
                     {% if "user" in session %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
