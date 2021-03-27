@@ -6,7 +6,7 @@
             <a href="#" class="btn btn-secondary go-back">Cancel & Go Back</a>
         </div>
     </div>
-    {% if session["user"] %}
+    {% if "user" in session %}
     {% if session["user"].lower() == "admin" %}
     <div class="row">
         <div class="btn btn-primary col-4 call-delete">Delete Entry
@@ -45,10 +45,40 @@
             class="btn btn-primary">Review This</a>
         {% endif %}
 
-        <div>Most recent reviews first:</div>
+        <div class="row">
+            <div class="dropdown col">
+                {% if sort_by == "latest" %}
+                <div class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Sort by: Latest
+                </div>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ url_for('review_detail', tmdb_id=movie_detail.tmdb_id, sort_by='popular') }}">
+                            Sort by: Most Popular
+                        </a>
+                    </li>
+                </ul>
+                {% elif sort_by == "popular" %}
+                <div class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Sort by: Most Popular
+                </div>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item"
+                            href="{{ url_for('review_detail', tmdb_id=movie_detail.tmdb_id, sort_by='latest') }}">
+                            Sort by: Latest
+                        </a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
         <hr>
         {% for review in reviews %}
-        {% if session["user"] %}
+        {% if "user" in session %}
         {% if session["user"].lower() == "admin" %}
         <div class="row">
             <a class="btn btn-primary call-delete col-3">
@@ -67,8 +97,9 @@
         </div>
         <div>{{ review.review }}</div>
         <div>Rating: {{ review.rating }} / 5</div>
-        {% if session["user"] and session["user"] != review.created_by and session["user"] not in review.likes %}
-        <a href="{{ url_for('add_like', id=review._id, tmdb_id=review.tmdb_id) }}"><i class="fas fa-thumbs-up"></i> {{ review.likes | length }}</a>
+        {% if "user" in session and session["user"] != review.created_by and session["user"] not in review.likes %}
+        <a href="{{ url_for('add_like', id=review._id, tmdb_id=review.tmdb_id) }}"><i class="fas fa-thumbs-up"></i>
+            {{ review.likes | length }}</a>
         {% else %}
         <div><i class="fas fa-thumbs-up"></i> {{ review.likes|length }}</div>
         {% endif %}
@@ -76,4 +107,5 @@
         {% endfor %}
     </div>
 </div>
+{{reviews2}}
 {% endblock %}

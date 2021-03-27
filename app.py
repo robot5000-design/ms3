@@ -62,8 +62,7 @@ def index():
     if movie_details:
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         return render_template("index.html", movie_details=movie_details,
-                               tmdb_poster_url=tmdb_poster_url,
-                               likes=3)
+                               tmdb_poster_url=tmdb_poster_url)
     return render_template("index.html")
 
 
@@ -85,7 +84,7 @@ def browse_reviews(sort_by, page):
     if sort_by == "rating":
         movie_details = list(mongo.db.movie_details.find(search_term).sort(
             "overall_rating", -1).skip(page * 12).limit(12))
-    elif sort_by == "popularity":   
+    elif sort_by == "popularity":
         movie_details = list(mongo.db.movie_details.find(search_term).sort(
             "number_reviews", -1).skip(page * 12).limit(12))
     else:
@@ -153,10 +152,10 @@ def my_reviews(user, sort_by, page):
 def delete_review(tmdb_id, user):
     if user == session["user"] or session["user"] == "admin":
         mongo.db.reviews.delete_one(
-                    {"tmdb_id": tmdb_id, "created_by": user.lower()})
+            {"tmdb_id": tmdb_id, "created_by": user.lower()})
         flash("Review Successfully Deleted")
         other_reviews = mongo.db.reviews.find_one(
-                {"tmdb_id": tmdb_id})
+            {"tmdb_id": tmdb_id})
         if not other_reviews:
             mongo.db.movie_details.delete_one(
                 {"tmdb_id": tmdb_id})
@@ -170,7 +169,7 @@ def delete_review(tmdb_id, user):
 def delete_all(tmdb_id):
     if session["user"] == "admin":
         mongo.db.reviews.delete_many(
-                {"tmdb_id": tmdb_id})
+            {"tmdb_id": tmdb_id})
         mongo.db.movie_details.delete_one(
             {"tmdb_id": tmdb_id})
         flash("Movie & Reviews Successfully Deleted")
@@ -182,23 +181,23 @@ def delete_all(tmdb_id):
 def edit_review(tmdb_id):
     if request.method == "POST":
         mongo.db.reviews.update_one(
-                {"tmdb_id": tmdb_id, "created_by": session["user"]},
-                {"$set": {"genre": request.form.get("select-genre")}})
+            {"tmdb_id": tmdb_id, "created_by": session["user"]},
+            {"$set": {"genre": request.form.get("select-genre")}})
         mongo.db.reviews.update_one(
-                {"tmdb_id": tmdb_id, "created_by": session["user"]},
-                {"$set": {"review": request.form.get("review-text")}})
+            {"tmdb_id": tmdb_id, "created_by": session["user"]},
+            {"$set": {"review": request.form.get("review-text")}})
         mongo.db.reviews.update_one(
-                {"tmdb_id": tmdb_id, "created_by": session["user"]},
-                {"$set": {"rating": request.form.get("inlineRadioOptions")}})
+            {"tmdb_id": tmdb_id, "created_by": session["user"]},
+            {"$set": {"rating": request.form.get("inlineRadioOptions")}})
         mongo.db.reviews.update_one(
-                {"tmdb_id": tmdb_id, "created_by": session["user"]},
-                {"$set": {"review_date": datetime.datetime.now()}})
+            {"tmdb_id": tmdb_id, "created_by": session["user"]},
+            {"$set": {"review_date": datetime.datetime.now()}})
         flash("Your review has been updated")
         return redirect(url_for('my_reviews'))
     media_detail = list(mongo.db.movie_details.find({"tmdb_id": tmdb_id}))[0]
     review_fields = list(mongo.db.reviews.find(
-                        {"tmdb_id": tmdb_id, "created_by": session[
-                            "user"]}))[0]
+        {"tmdb_id": tmdb_id, "created_by": session[
+            "user"]}))[0]
     tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
     genres = mongo.db.genres.find().sort("genre_name", 1)
     return render_template("edit_review.html", review_fields=review_fields,
@@ -207,13 +206,27 @@ def edit_review(tmdb_id):
                            genres=genres)
 
 
-@app.route('/review_detail/<tmdb_id>')
-def review_detail(tmdb_id):
-    reviews = list(mongo.db.reviews.find(
-        {"tmdb_id": tmdb_id}).sort("review_date", -1))
+@app.route('/review_detail/<tmdb_id>/<sort_by>')
+def review_detail(tmdb_id, sort_by):
+    if sort_by == "latest":
+        reviews = list(mongo.db.reviews.find(
+            {"tmdb_id": tmdb_id}).sort("review_date", -1))
+    else:
+        reviews = list(mongo.db.reviews.aggregate([
+            {
+                "$match": {"tmdb_id": tmdb_id}
+            },
+            {
+                "$addFields": {
+                    "sum_likes": {"$size": {"$ifNull": ["$likes", []]}}}
+            },
+            {
+                "$sort": {"sum_likes": -1}
+            }
+        ]))
     if reviews:
         movie_detail = list(mongo.db.movie_details.find(
-            {"tmdb_id": tmdb_id}))
+            {"tmdb_id": tmdb_id}))[0]
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         if "user" in session:
             already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
@@ -230,10 +243,11 @@ def review_detail(tmdb_id):
         except ZeroDivisionError:
             flash("Oops we have a zero division error")
         return render_template("review_detail.html", reviews=reviews,
-                                movie_detail=movie_detail[0],
-                                tmdb_poster_url=tmdb_poster_url,
-                                overall_rating=overall_rating,
-                                already_reviewed=already_reviewed)
+                               movie_detail=movie_detail,
+                               tmdb_poster_url=tmdb_poster_url,
+                               overall_rating=overall_rating,
+                               already_reviewed=already_reviewed,
+                               sort_by=sort_by)
     else:
         return redirect(url_for("index.html"))
 
@@ -241,9 +255,10 @@ def review_detail(tmdb_id):
 @app.route("/add_like/<id>/<tmdb_id>")
 def add_like(id, tmdb_id):
     mongo.db.reviews.update_one(
-                {"_id": ObjectId(id)},
-                {"$addToSet": {"likes": session["user"]}})
-    return redirect(url_for('review_detail', tmdb_id=tmdb_id))
+        {"_id": ObjectId(id)},
+        {"$addToSet": {"likes": session["user"]}})
+    return redirect(url_for('review_detail', tmdb_id=tmdb_id,
+                            sort_by="popular"))
 
 
 @app.route("/search/<int:page>", methods=["GET", "POST"])
@@ -344,10 +359,13 @@ def new_review(tmdb_id, media_type, page):
         flash("Review Posted Successfully!")
         return redirect(url_for("browse_reviews"))
     # check if media details are already in db
-    already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
-                            "created_by": session["user"]}))
+    if "user" in session:
+        already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
+                                                       "created_by": session["user"]}))
+    else:
+        already_reviewed = None
     details_exist = list(mongo.db.movie_details.find(
-                         {"tmdb_id": tmdb_id}))
+        {"tmdb_id": tmdb_id}))
     if details_exist:
         media_detail = details_exist[0]
     else:

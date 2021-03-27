@@ -62,7 +62,7 @@
                         Review
                     </a>
                     {% else %}
-                    <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id) }}"
+                    <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, sort_by='popular') }}"
                         class="btn btn-primary get-reviews-btn">Get
                         Reviews
                     </a>
