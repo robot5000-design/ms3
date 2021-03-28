@@ -22,22 +22,17 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 
 csp = {
     'default-src': [
-        '\'self\'',
-        '*.w3.org',
-        'data:image/*',
-        'http://www.w3.org/2000/svg'
+        '\'self\''
     ],
     'script-src': [
         '\'self\'',
         'code.jquery.com',
         'cdn.jsdelivr.net',
-        'cdnjs.cloudflare.com',
-        'fonts.googleapis.com',
-        'data:image/*',
-        'http://www.w3.org/2000/svg'
+        'cdnjs.cloudflare.com'
     ],
     'font-src': [
-        '\'self\' themes.googleusercontent.com *.gstatic.com',
+        '\'self\'',
+        'themes.googleusercontent.com *.gstatic.com',
         'fonts.googleapis.com',
         'cdnjs.cloudflare.com'
     ],
@@ -46,17 +41,14 @@ csp = {
         'code.jquery.com',
         'cdn.jsdelivr.net',
         'cdnjs.cloudflare.com',
-        'fonts.googleapis.com',
-        'http://www.w3.org/2000/svg'
+        'fonts.googleapis.com'
     ],
     'img-src': [
         '\'self\'',
-        'image.tmdb.org',
-        '*.w3.org',
-        'http://www.w3.org/2000/svg'
+        'image.tmdb.org'
     ]
 }
-talisman = Talisman(    app,    content_security_policy=csp,    content_security_policy_nonce_in=['script-src'])
+#talisman = Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'])
 
 mongo = PyMongo(app)
 
@@ -226,6 +218,8 @@ def review_detail(tmdb_id, sort_by):
     else:
         # Following aggregate based on information in this thread
         # https://stackoverflow.com/questions/9040161/mongo-order-by-length-of-array
+        # finds reviews matched by tmdb_id, returns all fields sorted by number
+        # of likes
         reviews = list(mongo.db.reviews.aggregate([
             {
                 "$match": {"tmdb_id": tmdb_id}
@@ -501,11 +495,30 @@ def admin_controls():
                 flash("Nothing to Update")
     if "user" in session:
         if session["user"] == "admin":
+            number_users = mongo.db.users.count()
+            number_movies = mongo.db.movie_details.count()
+            number_reviews = mongo.db.reviews.count()
+            most_likes = list(mongo.db.reviews.aggregate([
+                {
+                    "$addFields": {
+                        "sum_likes": {"$size": {"$ifNull": ["$likes", []]}}}
+                },
+                {
+                    "$sort": {"sum_likes": -1}
+                },
+                {
+                    "$limit": 5
+                }
+            ]))
             genres = mongo.db.genres.find().sort("genre_name", 1)
             user_list = [user["username"] for user in mongo.db.users.find(
                 ).sort("username", 1)]
             return render_template("admin_controls.html", genres=genres,
-                                   user_list=user_list)
+                                   user_list=user_list,
+                                   number_users=number_users,
+                                   number_movies=number_movies,
+                                   number_reviews=number_reviews,
+                                   most_likes=most_likes)
         else:
             return redirect(url_for("index"))
     else:
@@ -525,8 +538,11 @@ def login():
                     existing_user["password"], request.form.get("password")):
                 session["user"] = username.lower()
                 flash(f"Welcome, {username}")
-                return redirect(url_for("my_reviews", user=session[
-                    'user'], sort_by='latest', page=0))
+                if username.lower() != "admin":
+                    return redirect(url_for("my_reviews", user=session[
+                        'user'], sort_by='latest', page=0))
+                else:
+                    return redirect(url_for("admin_controls"))
             else:
                 # invalid password match
                 flash("Incorrect Username and/or Password")

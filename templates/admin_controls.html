@@ -1,10 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container register-wrapper">
+<div class="container">
     <div class="row">
-        <div class="col">
+        <div class="col-12 col-lg-6">
+            <h3>Website Stats:</h3>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Total Number of Users:
+                    <span class="badge bg-primary rounded-pill">{{ number_users }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Total Number of Movies/TV Series Reviewed:
+                    <span class="badge bg-primary rounded-pill">{{ number_movies }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Total Number of Reviews:
+                    <span class="badge bg-primary rounded-pill">{{ number_reviews }}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12 col-lg-6">
+            <h3>Most Popular Reviews:</h3>
+            <table class="table table-hover table-secondary table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Likes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index in range(most_likes | length()) %}
+                    <tr>
+                        <th scope="row">{{ index + 1 }}</th>
+                        <td><a
+                                href="{{ url_for('my_reviews', user=most_likes[index].created_by, sort_by='latest', page=0) }}">{{ most_likes[index].created_by }}</a>
+                        </td>
+                        <td><a
+                                href="{{ url_for('review_detail', tmdb_id=most_likes[index].tmdb_id, sort_by='latest') }}">{{ most_likes[index].original_title }}</a>
+                        </td>
+                        <td>{{ most_likes[index].sum_likes }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <h3>Add/Remove Genres:</h3>
             <form class="needs-validation" action="{{ url_for('admin_controls') }}" method="POST" novalidate>
-                <select class="form-select select-genre" name="select-genre" size="10" aria-label="Size 10 Select Genre">
+                <select class="form-select select-genre" name="select-genre" size="10"
+                    aria-label="Size 10 Select Genre">
                     <option value="" disabled>Genre List:</option>
                     <option value="">Select None</option>
                     {% for genre in genres %}
@@ -23,11 +71,11 @@
                 </button>
             </form>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
+        <div class="col-12 col-lg-6">
+            <h3>Permanently Remove User(s):</h3>
             <form class="" action="{{ url_for('admin_controls') }}" method="POST">
-                <select class="form-select select-user" name="select-user" size="10" aria-label="Size 10 Select User" multiple required>
+                <select class="form-select select-user" name="select-user" size="10" aria-label="Size 10 Select User"
+                    multiple required>
                     <option value="" disabled>User List:</option>
                     <option value="">Select None</option>
                     {% for user in user_list %}
