@@ -2,6 +2,7 @@ import os
 import requests
 import datetime
 import math
+import asyncio
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
@@ -65,13 +66,12 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/browse_reviews/<sort_by>/<int:page>", methods=[
+@app.route("/browse_reviews/<int:page>", methods=[
            "GET", "POST"])
-def browse_reviews(sort_by, page):
+def browse_reviews(page):
     if request.method == "POST":
         query = request.form.get("search-box")
-        sort_by = request.form.get("sort_by")
-        print(sort_by)
+        browse_reviews_sort = request.form.get("browse_reviews_sort")
         if query:
             search_term = {"$text": {"$search": query}}
         else:
@@ -79,35 +79,37 @@ def browse_reviews(sort_by, page):
     else:
         search_term = None
         query = ""
+        browse_reviews_sort = "latest"
     review_count = mongo.db.movie_details.find(search_term).count()
     total_pages = math.ceil(review_count / 12)
-    if sort_by == "rating":
+    if browse_reviews_sort == "rating":
         movie_details = list(mongo.db.movie_details.find(search_term).sort(
             "overall_rating", -1).skip(page * 12).limit(12))
-    elif sort_by == "popularity":
+    elif browse_reviews_sort == "popularity":
         movie_details = list(mongo.db.movie_details.find(search_term).sort(
             "number_reviews", -1).skip(page * 12).limit(12))
     else:
-        sort_by = "latest"
         movie_details = list(mongo.db.movie_details.find(search_term).sort(
             "last_review_date", -1).skip(page * 12).limit(12))
     if movie_details:
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         return render_template("reviews.html", movie_details=movie_details,
                                tmdb_poster_url=tmdb_poster_url,
-                               sort_by=sort_by, page=page,
+                               browse_reviews_sort=browse_reviews_sort,
+                               page=page,
                                review_count=review_count,
                                total_pages=total_pages,
                                query=query)
-    return render_template("reviews.html", sort_by=sort_by, page=page)
+    return render_template("reviews.html",
+                           browse_reviews_sort=browse_reviews_sort, page=page)
 
 
-@app.route("/my_reviews/<user>/<sort_by>/<int:page>", methods=[
+@app.route("/my_reviews/<user>/<my_reviews_sort>/<int:page>", methods=[
            "GET", "POST"])
-def my_reviews(user, sort_by, page):
+def my_reviews(user, my_reviews_sort, page):
     if request.method == "POST":
         query = request.form.get("search-box")
-        sort_by = request.form.get("sort_by")
+        my_reviews_sort = request.form.get("my_reviews_sort")
         if query:
             search_term = {"$text": {"$search": query}, "created_by": user}
         else:
@@ -115,14 +117,14 @@ def my_reviews(user, sort_by, page):
     else:
         search_term = {"created_by": user}
         query = ""
-    if sort_by == "alphabetically":
+    if my_reviews_sort == "alphabetically":
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
             "original_title", 1).skip(page * 6).limit(6))
-    elif sort_by == "oldest":
+    elif my_reviews_sort == "oldest":
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
             "review_date", 1).skip(page * 6).limit(6))
     else:
-        sort_by = "latest"
+        my_reviews_sort = "latest"
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
             "review_date", -1).skip(page * 6).limit(6))
     if my_reviews:
@@ -143,12 +145,12 @@ def my_reviews(user, sort_by, page):
             tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         return render_template("my_reviews.html", movie_details=movie_details,
                                tmdb_poster_url=tmdb_poster_url,
-                               page=page, sort_by=sort_by,
+                               page=page, my_reviews_sort=my_reviews_sort,
                                review_count=review_count,
                                total_pages=total_pages,
                                user=user, query=query)
     return render_template("my_reviews.html", user=user,
-                           sort_by=sort_by, page=page)
+                           my_reviews_sort=my_reviews_sort, page=page)
 
 
 @app.route("/delete_review/<tmdb_id>/<user>")
@@ -163,9 +165,10 @@ def delete_review(tmdb_id, user):
             mongo.db.movie_details.delete_one(
                 {"tmdb_id": tmdb_id})
         if session["user"] == "admin":
-            return redirect(url_for('browse_reviews'))
+            return redirect(url_for('browse_reviews', page=0))
         else:
-            return redirect(url_for('my_reviews'))
+            return redirect(url_for('my_reviews', user=user,
+                                    my_reviews_sort='latest', page=0))
 
 
 @app.route("/delete_review/<tmdb_id>")
@@ -179,9 +182,9 @@ def delete_all(tmdb_id):
     return redirect(url_for('browse_reviews'))
 
 
-@app.route("/edit_review/<tmdb_id>",
+@app.route("/edit_review/<tmdb_id>/<my_reviews_sort>",
            methods=["GET", "POST"])
-def edit_review(tmdb_id):
+def edit_review(tmdb_id, my_reviews_sort):
     if request.method == "POST":
         mongo.db.reviews.update_one(
             {"tmdb_id": tmdb_id, "created_by": session["user"]},
@@ -197,7 +200,7 @@ def edit_review(tmdb_id):
             {"$set": {"review_date": datetime.datetime.now()}})
         flash("Your review has been updated")
         return redirect(url_for('my_reviews', user=session['user'],
-                                sort_by='latest', page=0))
+                                my_reviews_sort=my_reviews_sort, page=0))
     media_detail = list(mongo.db.movie_details.find({"tmdb_id": tmdb_id}))[0]
     review_fields = list(mongo.db.reviews.find(
         {"tmdb_id": tmdb_id, "created_by": session[
@@ -207,14 +210,15 @@ def edit_review(tmdb_id):
     return render_template("edit_review.html", review_fields=review_fields,
                            media_detail=media_detail,
                            tmdb_poster_url=tmdb_poster_url,
-                           genres=genres)
+                           genres=genres,
+                           my_reviews_sort=my_reviews_sort)
 
 
-@app.route('/review_detail/<tmdb_id>/<sort_by>')
-def review_detail(tmdb_id, sort_by):
-    if sort_by == "latest":
+@app.route('/review_detail/<tmdb_id>/<media_type>/<review_detail_sort>/<int:page>')
+def review_detail(tmdb_id, media_type, review_detail_sort, page):
+    if review_detail_sort == "latest":
         reviews = list(mongo.db.reviews.find(
-            {"tmdb_id": tmdb_id}).sort("review_date", -1))
+            {"tmdb_id": tmdb_id}).sort("review_date", -1).skip(page * 6).limit(6))
     else:
         # Following aggregate based on information in this thread
         # https://stackoverflow.com/questions/9040161/mongo-order-by-length-of-array
@@ -230,9 +234,17 @@ def review_detail(tmdb_id, sort_by):
             },
             {
                 "$sort": {"sum_likes": -1}
+            },
+            {
+                "$skip": page * 6
+            },
+            {
+                "$limit": 6
             }
         ]))
     if reviews:
+        review_count = mongo.db.reviews.find({"tmdb_id": tmdb_id}).count()
+        total_pages = math.ceil(review_count / 6)
         movie_detail = list(mongo.db.movie_details.find(
             {"tmdb_id": tmdb_id}))[0]
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
@@ -255,9 +267,12 @@ def review_detail(tmdb_id, sort_by):
                                tmdb_poster_url=tmdb_poster_url,
                                overall_rating=overall_rating,
                                already_reviewed=already_reviewed,
-                               sort_by=sort_by)
+                               review_detail_sort=review_detail_sort,
+                               page=page, review_count=review_count,
+                               total_pages=total_pages)
     else:
-        return redirect(url_for("index.html"))
+        return redirect(url_for("new_review", tmdb_id=tmdb_id,
+                                media_type=media_type))
 
 
 @app.route("/add_like/<id>/<tmdb_id>")
@@ -266,28 +281,35 @@ def add_like(id, tmdb_id):
         {"_id": ObjectId(id)},
         {"$addToSet": {"likes": session["user"]}})
     return redirect(url_for('review_detail', tmdb_id=tmdb_id,
-                            sort_by="popular"))
+                            review_detail_sort="popular",
+                            page=0))
 
 
-@app.route("/search/<int:page>", methods=["GET", "POST"])
-def search_movies(page):
+@app.route("/search", methods=["GET", "POST"])
+def search_movies():
     if request.method == "POST":
         session["search"] = True
         session["search_query"] = request.form.get("query")
         session["media_type"] = request.form.get("media_type")
-        return api_request(page)
+        return api_request(page=1)
     session.pop("search_query", None)
     session.pop("media_type", None)
     return render_template("search.html")
 
 
-@app.route("/search_pagination/<int:page>")
+@app.route("/search_pagination/<int:page>", methods=["GET", "POST"])
 def search_pagination(page):
+    if request.method == "POST":
+        session["search"] = True
+        session["search_query"] = request.form.get("query")
+        session["media_type"] = request.form.get("media_type")
+        return api_request(page=1)
     flash("Page " + str(page))
     if "search_query" in session:
         return api_request(page)
     else:
-        return redirect(url_for("search_movies", page=1))
+        flash("Something went wrong!")
+        return redirect(url_for("search_movies"))
 
 
 def api_request(page):
@@ -317,9 +339,9 @@ def api_request(page):
                 from the database at this time. Please try again later.")
 
 
-@app.route("/new_review/<tmdb_id>/<media_type>/<page>",
+@app.route("/new_review/<tmdb_id>/<media_type>",
            methods=["GET", "POST"])
-def new_review(tmdb_id, media_type, page):
+def new_review(tmdb_id, media_type):
     if request.method == "POST":
         # check if movie details already exist in db and if not, add them
         details_exist = mongo.db.movie_details.find_one(
@@ -364,12 +386,13 @@ def new_review(tmdb_id, media_type, page):
         session.pop("search_query", None)
         session.pop("media_type", None)
         session.pop("overall_rating", None)
-        flash("Review Posted Successfully!")
-        return redirect(url_for("browse_reviews"))
+        #flash("Review Posted Successfully!")
+        asyncio.run(clean_db(tmdb_id, session["user"]))
+        return redirect(url_for("browse_reviews", page=0))
     # check if media details are already in db
     if "user" in session:
         already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
-                                                       "created_by": session["user"]}))
+                                "created_by": session["user"]}))
     else:
         already_reviewed = None
     details_exist = list(mongo.db.movie_details.find(
@@ -381,18 +404,28 @@ def new_review(tmdb_id, media_type, page):
         if "status_code" in media_detail:
             if media_detail["status_code"] == 34:
                 flash("Sorry. This resource cannot be found.")
-                return redirect(url_for("search_movies", page=page))
+                return redirect(url_for("search_movies"))
         else:
             validate_choice(media_detail)
             media_detail = session["selected_media"]
     genres = mongo.db.genres.find().sort("genre_name", 1)
     tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
-    return render_template(
-        "new_review.html", media_detail=media_detail,
-        page=page,
-        genres=genres,
-        tmdb_poster_url=tmdb_poster_url,
-        already_reviewed=already_reviewed)
+    return render_template("new_review.html", media_detail=media_detail,
+                           genres=genres,
+                           tmdb_poster_url=tmdb_poster_url,
+                           already_reviewed=already_reviewed)
+
+
+async def clean_db(tmdb_id, user):
+    await asyncio.sleep(.5)
+    details_exist = list(mongo.db.reviews.find(
+            {"tmdb_id": tmdb_id, "created_by": user}))
+    if details_exist:
+        if len(details_exist) > 1:
+            mongo.db.reviews.delete_one(
+                {"tmdb_id": tmdb_id, "created_by": user.lower()})
+    flash("Review Posted Successfully!")
+    return
 
 
 def get_choice_detail(tmdb_id, media_type):
@@ -481,7 +514,7 @@ def admin_controls():
                         {"genre_name": add_genre.title()})
                     flash(f"{add_genre.title()} Added & List Updated")
                 else:
-                    flash("Entry Already in List")
+                    flash("This Entry Already Exists!")
             if not add_genre and not remove_genre:
                 flash("Nothing to Update")
         if "submit-form-2" in request.form:
@@ -510,6 +543,12 @@ def admin_controls():
                     "$limit": 5
                 }
             ]))
+            # find media_type for the top 5 most liked reviews
+            for review in most_likes:
+                tmdb_id = review["tmdb_id"]
+                movie_detail = mongo.db.movie_details.find_one(
+                                {"tmdb_id": tmdb_id})
+                review["media_type"] = movie_detail["media_type"]
             genres = mongo.db.genres.find().sort("genre_name", 1)
             user_list = [user["username"] for user in mongo.db.users.find(
                 ).sort("username", 1)]
@@ -540,7 +579,7 @@ def login():
                 flash(f"Welcome, {username}")
                 if username.lower() != "admin":
                     return redirect(url_for("my_reviews", user=session[
-                        'user'], sort_by='latest', page=0))
+                        'user'], my_reviews_sort='latest', page=0))
                 else:
                     return redirect(url_for("admin_controls"))
             else:

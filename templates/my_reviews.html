@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="row search-box">
-        <form action="{{ url_for('my_reviews', user=user, sort_by=sort_by, page=0) }}" method="post">
+        <form action="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=0) }}" method="post">
             <div class="mb-3 row">
                 <label for="search-box" class="form-label">Search</label>
                 <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
@@ -17,20 +17,20 @@
             <div class="row justify-content-center">
                 <div class="col">
                     <div class="dropdown">
-                        {% if sort_by == "alphabetically" %}
-                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                        {% if my_reviews_sort == "alphabetically" %}
+                        <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
                             <option value="alphabetically" selected>Sort-by: Alphabetically</option>
                             <option value="latest">Sort-by: Latest</option>
                             <option value="oldest">Sort-by: Oldest</option>
                         </select>
-                        {% elif sort_by == "oldest" %}
-                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                        {% elif my_reviews_sort == "oldest" %}
+                        <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
                             <option value="oldest" selected>Sort-by: Oldest</option>
                             <option value="latest">Sort-by: Latest</option>
                             <option value="alphabetically">Sort-by: Alphabetically</option>
                         </select>
                         {% else %}
-                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                        <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
                             <option value="latest" selected>Sort-by: Latest</option>
                             <option value="alphabetically">Sort-by: Alphabetically</option>
                             <option value="oldest">Sort-by: Oldest</option>
@@ -57,12 +57,12 @@
                 </div>
                 <div class="col-12 text-center">
                     {% if user == session['user'] %}
-                    <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id) }}"
+                    <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}"
                         class="btn btn-primary edit-review-btn">Edit/Delete
                         Review
                     </a>
                     {% else %}
-                    <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, sort_by='popular') }}"
+                    <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}"
                         class="btn btn-primary get-reviews-btn">Get
                         Reviews
                     </a>
@@ -82,11 +82,11 @@
     <div class="row mx-auto">
         <div class="col">
             {% if page > 0 %}
-            <a href="{{ url_for('my_reviews', sort_by=sort_by, page=page-1) }}"
+            <a href="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=page-1) }}"
                 class="btn btn-secondary previous-button">Previous</a>
             {% endif %}
             {% if (review_count > 6) and ((page + 1) < (review_count / 6)) %}
-            <a href="{{ url_for('my_reviews', sort_by=sort_by, page=page+1) }}"
+            <a href="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=page+1) }}"
                 class="btn btn-secondary next-button">Next</a>
             {% endif %}
         </div>

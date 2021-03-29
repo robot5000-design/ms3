@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row search-box">
-        <form action="{{ url_for('browse_reviews', sort_by=sort_by, page=0) }}" method="post">
+        <form action="{{ url_for('browse_reviews', page=0) }}" method="post">
             <div class="mb-3 row">
                 <label for="search-box" class="form-label">Search</label>
                 <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
@@ -12,20 +12,20 @@
             <div class="row justify-content-center">
                 <div class="col">
                     <div class="dropdown">                        
-                        {% if sort_by == "rating" %}
-                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                        {% if browse_reviews_sort == "rating" %}
+                        <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
                             <option value="rating" selected>Sort-by: Rating</option>
                             <option value="latest">Sort-by: Latest</option>
                             <option value="popularity">Sort-by: Popularity</option>
                         </select>
-                        {% elif sort_by == "popularity" %}
-                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                        {% elif browse_reviews_sort == "popularity" %}
+                        <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
                             <option value="popularity" selected>Sort-by: Popularity</option>
                             <option value="latest">Sort-by: Latest</option>
                             <option value="rating">Sort-by: Rating</option>
                         </select>
                         {% else %}
-                        <select name="sort_by" class="form-select" aria-label="Default select example">
+                        <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
                             <option value="latest" selected>Sort-by: Latest</option>
                             <option value="popularity">Sort-by: Popularity</option>
                             <option value="rating">Sort-by: Rating</option>
@@ -51,7 +51,7 @@
                     <div class="card-title">{{ movie.original_title }}</div>
                 </div>
                 <div class="col-12 text-center">
-                    <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, sort_by='popular') }}"
+                    <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}"
                         class="btn btn-primary get-reviews-btn">Get
                         Reviews</a>
                 </div>
@@ -69,11 +69,11 @@
     <div class="row mx-auto">
         <div class="col">
             {% if page > 0 %}
-            <a href="{{ url_for('browse_reviews', sort_by=sort_by, page=page-1) }}"
+            <a href="{{ url_for('browse_reviews', page=page-1) }}"
                 class="btn btn-secondary previous-button">Previous</a>
             {% endif %}
             {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %}
-            <a href="{{ url_for('browse_reviews', sort_by=sort_by, page=page+1) }}"
+            <a href="{{ url_for('browse_reviews', page=page+1) }}"
                 class="btn btn-secondary next-button">Next</a>
             {% endif %}
         </div>

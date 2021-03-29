@@ -38,3 +38,15 @@ $(".call-delete").click(function() {
 $(".delete-user").click(function() {
     alert("Caution! This is Not Reversible!");
 });
+
+$(document).on('submit','#search-api',function(event) {    
+    $.ajax({
+    type:'POST',
+    url:'/search',
+    data:{
+        media_type: $(".form-check-input").val(),
+        query: $("#query").val()
+    }
+    })
+    event.preventDefault();
+});
