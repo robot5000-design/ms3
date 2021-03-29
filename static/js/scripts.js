@@ -39,7 +39,11 @@ $(".delete-user").click(function() {
     alert("Caution! This is Not Reversible!");
 });
 
-$(document).on('submit','#search-api',function(event) {    
+$(".review-form").on('submit', function() {
+    $(".submit").prop("disabled", true);
+});
+
+$('#search-api').on('submit','input', function(event) {    
     $.ajax({
     type:'POST',
     url:'/search',

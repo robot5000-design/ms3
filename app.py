@@ -2,7 +2,6 @@ import os
 import requests
 import datetime
 import math
-import asyncio
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
@@ -13,6 +12,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
 
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 
@@ -20,6 +21,12 @@ app.secret_key = os.environ.get("SECRET_KEY")
 app.api_key = os.environ.get("API_KEY")
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
+'''
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
+)'''
 
 csp = {
     'default-src': [
@@ -201,7 +208,11 @@ def edit_review(tmdb_id, my_reviews_sort):
         flash("Your review has been updated")
         return redirect(url_for('my_reviews', user=session['user'],
                                 my_reviews_sort=my_reviews_sort, page=0))
-    media_detail = list(mongo.db.movie_details.find({"tmdb_id": tmdb_id}))[0]
+    try:
+        media_detail = list(mongo.db.movie_details.find(
+                            {"tmdb_id": tmdb_id}))[0]
+    except IndexError:
+        return redirect(url_for("index"))
     review_fields = list(mongo.db.reviews.find(
         {"tmdb_id": tmdb_id, "created_by": session[
             "user"]}))[0]
@@ -341,6 +352,7 @@ def api_request(page):
 
 @app.route("/new_review/<tmdb_id>/<media_type>",
            methods=["GET", "POST"])
+#@limiter.limit("1/second", override_defaults=False)
 def new_review(tmdb_id, media_type):
     if request.method == "POST":
         # check if movie details already exist in db and if not, add them
@@ -386,8 +398,7 @@ def new_review(tmdb_id, media_type):
         session.pop("search_query", None)
         session.pop("media_type", None)
         session.pop("overall_rating", None)
-        #flash("Review Posted Successfully!")
-        asyncio.run(clean_db(tmdb_id, session["user"]))
+        flash("Review Posted Successfully!")
         return redirect(url_for("browse_reviews", page=0))
     # check if media details are already in db
     if "user" in session:
@@ -414,18 +425,6 @@ def new_review(tmdb_id, media_type):
                            genres=genres,
                            tmdb_poster_url=tmdb_poster_url,
                            already_reviewed=already_reviewed)
-
-
-async def clean_db(tmdb_id, user):
-    await asyncio.sleep(.5)
-    details_exist = list(mongo.db.reviews.find(
-            {"tmdb_id": tmdb_id, "created_by": user}))
-    if details_exist:
-        if len(details_exist) > 1:
-            mongo.db.reviews.delete_one(
-                {"tmdb_id": tmdb_id, "created_by": user.lower()})
-    flash("Review Posted Successfully!")
-    return
 
 
 def get_choice_detail(tmdb_id, media_type):
@@ -620,7 +619,10 @@ def register():
         session["user"] = username.lower()
         flash("Registration Successful!")
         return redirect(url_for("index"))
-    return render_template("register.html")
+    if "user" not in session:
+        return render_template("register.html")
+    else:
+        return redirect(url_for("index"))
 
 
 @app.route("/change_password", methods=["GET", "POST"])
