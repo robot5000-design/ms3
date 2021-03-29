@@ -38,7 +38,7 @@
                                 href="{{ url_for('my_reviews', user=most_likes[index].created_by, my_reviews_sort='latest', page=0) }}">{{ most_likes[index].created_by }}</a>
                         </td>
                         <td><a
-                                href="{{ url_for('review_detail', tmdb_id=most_likes[index].tmdb_id, media_type=most_likes[index].media_type, review_detail_sort='latest') }}">{{ most_likes[index].original_title }}</a>
+                                href="{{ url_for('review_detail', tmdb_id=most_likes[index].tmdb_id, media_type=most_likes[index].media_type, review_detail_sort='latest', page=0) }}">{{ most_likes[index].original_title }}</a>
                         </td>
                         <td>{{ most_likes[index].sum_likes }}</td>
                     </tr>
