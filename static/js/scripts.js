@@ -30,27 +30,23 @@ function goBack() {
 
 $(".go-back").click(goBack)
 
-$(".call-delete").click(function() {
+$(".call-delete").click(function () {
     $(this).addClass("d-none");
     $(this).siblings(".confirm-delete").removeClass("d-none");
 });
 
-$(".delete-user").click(function() {
-    alert("Caution! This is Not Reversible!");
-});
-
-$(".review-form").on('submit', function() {
+$(".review-form").on('submit', function () {
     $(".submit").prop("disabled", true);
 });
 
-$('#search-api').on('submit','input', function(event) {    
+$('#search-api').on('submit', function () {
     $.ajax({
-    type:'POST',
-    url:'/search',
-    data:{
-        media_type: $(".form-check-input").val(),
-        query: $("#query").val()
-    }
+        type: 'POST',
+        url: '/search',
+        data: {
+            media_type: $(".form-check-input").val(),
+            query: $("#query").val()
+        }
     })
-    event.preventDefault();
+    //event.preventDefault();
 });

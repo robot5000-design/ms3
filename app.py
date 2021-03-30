@@ -2,6 +2,7 @@ import os
 import requests
 import datetime
 import math
+import json
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
@@ -12,8 +13,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
 
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 
@@ -21,12 +20,6 @@ app.secret_key = os.environ.get("SECRET_KEY")
 app.api_key = os.environ.get("API_KEY")
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
-'''
-limiter = Limiter(
-    app,
-    key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour"]
-)'''
 
 csp = {
     'default-src': [
@@ -64,8 +57,8 @@ mongo = PyMongo(app)
 @app.route('/')
 @app.route('/index')
 def index():
-    movie_details = mongo.db.movie_details.find().sort(
-        "last_review_date", -1).limit(10)
+    movie_details = list(mongo.db.movie_details.find().sort(
+        "last_review_date", -1).limit(12))
     if movie_details:
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         return render_template("index.html", movie_details=movie_details,
@@ -186,7 +179,7 @@ def delete_all(tmdb_id):
         mongo.db.movie_details.delete_one(
             {"tmdb_id": tmdb_id})
         flash("Movie & Reviews Successfully Deleted")
-    return redirect(url_for('browse_reviews'))
+    return redirect(url_for('browse_reviews', page=0))
 
 
 @app.route("/edit_review/<tmdb_id>/<my_reviews_sort>",
@@ -352,7 +345,6 @@ def api_request(page):
 
 @app.route("/new_review/<tmdb_id>/<media_type>",
            methods=["GET", "POST"])
-#@limiter.limit("1/second", override_defaults=False)
 def new_review(tmdb_id, media_type):
     if request.method == "POST":
         # check if movie details already exist in db and if not, add them
@@ -516,15 +508,25 @@ def admin_controls():
                     flash("This Entry Already Exists!")
             if not add_genre and not remove_genre:
                 flash("Nothing to Update")
-        if "submit-form-2" in request.form:
-            delete_list_users = request.form.getlist("select-user")
-            if len(delete_list_users) == 0:
-                for user in delete_list_users:
-                    mongo.db.users.delete_one(
+        if "submit-form-3" in request.form:
+            block_list_users = request.form.getlist("block-selected")
+            if len(block_list_users) != 0:
+                for user in block_list_users:
+                    already_blocked = mongo.db.blocked_users.find_one(
                         {"username": user})
-                flash("Users Deleted")
-            else:
-                flash("Nothing to Update")
+                    if already_blocked:
+                        flash("User(s) Already Blocked")
+                    else:
+                        mongo.db.blocked_users.insert_one(
+                            {"username": user})
+                flash("User(s) Blocked")
+        if "submit-form-4" in request.form:
+            unblock_list_users = request.form.getlist("unblock-selected")
+            if len(unblock_list_users) != 0:
+                for user in unblock_list_users:
+                    mongo.db.blocked_users.delete_one(
+                        {"username": user})
+                flash("User(s) Unblocked")
     if "user" in session:
         if session["user"] == "admin":
             number_users = mongo.db.users.count()
@@ -551,8 +553,12 @@ def admin_controls():
             genres = mongo.db.genres.find().sort("genre_name", 1)
             user_list = [user["username"] for user in mongo.db.users.find(
                 ).sort("username", 1)]
+            blocked_users = [user[
+                "username"] for user in mongo.db.blocked_users.find(
+                    ).sort("username", 1)]
             return render_template("admin_controls.html", genres=genres,
                                    user_list=user_list,
+                                   blocked_users=blocked_users,
                                    number_users=number_users,
                                    number_movies=number_movies,
                                    number_reviews=number_reviews,
@@ -566,8 +572,13 @@ def admin_controls():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # check if username exists in db
+        # check if username exists in db or is blocked
         username = request.form.get("username")
+        blocked_user = mongo.db.blocked_users.find_one(
+            {"username": username.lower()})
+        if blocked_user:
+            flash("User has been Blocked. Contact the Administrator")
+            return redirect(url_for("index"))
         existing_user = mongo.db.users.find_one(
             {"username": username.lower()})
         if existing_user:
