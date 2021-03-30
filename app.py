@@ -2,7 +2,6 @@ import os
 import requests
 import datetime
 import math
-import json
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
@@ -218,11 +217,13 @@ def edit_review(tmdb_id, my_reviews_sort):
                            my_reviews_sort=my_reviews_sort)
 
 
-@app.route('/review_detail/<tmdb_id>/<media_type>/<review_detail_sort>/<int:page>')
+@app.route(
+    '/review_detail/<tmdb_id>/<media_type>/<review_detail_sort>/<int:page>')
 def review_detail(tmdb_id, media_type, review_detail_sort, page):
     if review_detail_sort == "latest":
         reviews = list(mongo.db.reviews.find(
-            {"tmdb_id": tmdb_id}).sort("review_date", -1).skip(page * 6).limit(6))
+            {"tmdb_id": tmdb_id}).sort("review_date", -1).skip(
+                page * 6).limit(6))
     else:
         # Following aggregate based on information in this thread
         # https://stackoverflow.com/questions/9040161/mongo-order-by-length-of-array

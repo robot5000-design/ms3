@@ -72,16 +72,12 @@ body {
 
 .index-card {
     max-height: 450px;
-    width: 100%;
+    width: 20%;
     background-color: #191958;
 }
 
 .carousel {
     width: 100%;
-}
-
-.carousel-inner .carousel-item {
-    margin-right: inherit;
 }
 
 .get-reviews-btn {
