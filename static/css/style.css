@@ -71,9 +71,10 @@ body {
 }
 
 .index-card {
-    max-height: 450px;
-    width: 20%;
+    height: 100%;
+    width: 100%;
     background-color: #191958;
+    font-size: .8em;
 }
 
 #carousel-3X4 {
@@ -95,22 +96,16 @@ body {
 
 .carousel-review {
     display: inline-block;
-    margin-left:-4px;
+    margin-left: -4px;
 }
 .carousel-review img {
-    width:100%;
-    height:auto;
+    width: 100%;
+    height: auto;
 }
-body .carousel-indicators li{
-    background-color:red;
-}
+
 body .carousel-control-prev-icon,
-body .carousel-control-next-icon{
-    background-color:red;
-}
-body .no-padding{
-    padding-left: 0;
-    padding-right: 0;
+body .carousel-control-next-icon {
+    background-color: rgba(255, 0, 0, 0.699);
 }
 
 .get-reviews-btn {

@@ -30,7 +30,7 @@
             {% else %}
             <select class="select-genre" name="select-genre" aria-label="Select Genre" required>
                 <option disabled>Choose a Genre:</option>
-                <option selected disabled>{{ review_fields.genre }}</option>
+                <option value="{{ review_fields.genre }}" selected>{{ review_fields.genre }}</option>
                 {% for genre in genres %}
                 <option required>{{ genre.genre_name.title() }}</option>
                 {% endfor %}

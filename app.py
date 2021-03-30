@@ -54,8 +54,13 @@ mongo = PyMongo(app)
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index', methods=["GET", "POST"])
 def index():
+    if request.method == "POST":
+        session["search"] = True
+        session["search_query"] = request.form.get("query")
+        session["media_type"] = request.form.get("media_type")
+        return api_request(page=1)
     movie_details = list(mongo.db.movie_details.find().sort(
         "last_review_date", -1).limit(12))
     if movie_details:
@@ -118,20 +123,20 @@ def my_reviews(user, my_reviews_sort, page):
         query = ""
     if my_reviews_sort == "alphabetically":
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
-            "original_title", 1).skip(page * 6).limit(6))
+            "original_title", 1).skip(page * 12).limit(12))
     elif my_reviews_sort == "oldest":
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
-            "review_date", 1).skip(page * 6).limit(6))
+            "review_date", 1).skip(page * 12).limit(12))
     else:
         my_reviews_sort = "latest"
         my_reviews = list(mongo.db.reviews.find(search_term).sort(
-            "review_date", -1).skip(page * 6).limit(6))
+            "review_date", -1).skip(page * 12).limit(12))
     if my_reviews:
         movie_id_list = []
         for review in my_reviews:
             movie_id_list.append(review["tmdb_id"])
         review_count = mongo.db.reviews.find({"created_by": user}).count()
-        total_pages = math.ceil(review_count / 6)
+        total_pages = math.ceil(review_count / 12)
         # pick out the movies details that we need
         movie_details = []
         index = 0
@@ -185,18 +190,15 @@ def delete_all(tmdb_id):
            methods=["GET", "POST"])
 def edit_review(tmdb_id, my_reviews_sort):
     if request.method == "POST":
+        review_update = {
+            "genre": request.form.get("select-genre"),
+            "review": request.form.get("review-text"),
+            "rating": request.form.get("inlineRadioOptions"),
+            "review_date": datetime.datetime.now()
+        }
         mongo.db.reviews.update_one(
             {"tmdb_id": tmdb_id, "created_by": session["user"]},
-            {"$set": {"genre": request.form.get("select-genre")}})
-        mongo.db.reviews.update_one(
-            {"tmdb_id": tmdb_id, "created_by": session["user"]},
-            {"$set": {"review": request.form.get("review-text")}})
-        mongo.db.reviews.update_one(
-            {"tmdb_id": tmdb_id, "created_by": session["user"]},
-            {"$set": {"rating": request.form.get("inlineRadioOptions")}})
-        mongo.db.reviews.update_one(
-            {"tmdb_id": tmdb_id, "created_by": session["user"]},
-            {"$set": {"review_date": datetime.datetime.now()}})
+            {"$set": review_update})
         flash("Your review has been updated")
         return redirect(url_for('my_reviews', user=session['user'],
                                 my_reviews_sort=my_reviews_sort, page=0))
