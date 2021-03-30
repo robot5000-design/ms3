@@ -1,47 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <h1>Browse All Reviews:</h1>
+        </div>
+    </div>
     <div class="row search-box">
-        <form action="{{ url_for('browse_reviews', page=0) }}" method="post">
-            <div class="mb-3 row">
-                <label for="search-box" class="form-label">Search</label>
-                <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
-                    aria-describedby="search-query">
-                <div id="search-box-text" class="form-text">Search by Name, Type(movie or tv) or Year of Release(YYYY)
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col">
-                    <div class="dropdown">
-                        {% if browse_reviews_sort == "rating" %}
-                        <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
-                            <option value="rating" selected>Sort-by: Rating</option>
-                            <option value="latest">Sort-by: Latest</option>
-                            <option value="popularity">Sort-by: Popularity</option>
-                        </select>
-                        {% elif browse_reviews_sort == "popularity" %}
-                        <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
-                            <option value="popularity" selected>Sort-by: Popularity</option>
-                            <option value="latest">Sort-by: Latest</option>
-                            <option value="rating">Sort-by: Rating</option>
-                        </select>
-                        {% else %}
-                        <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
-                            <option value="latest" selected>Sort-by: Latest</option>
-                            <option value="popularity">Sort-by: Popularity</option>
-                            <option value="rating">Sort-by: Rating</option>
-                        </select>
-                        {% endif %}
+        <div class="col">
+            <form action="{{ url_for('browse_reviews', page=0) }}" method="post">
+                <div class="mb-3 row">
+                    <div class="col">
+                        <label for="search-box" class="form-label">Search</label>
+                        <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
+                            aria-describedby="search-query">
+                        <div id="search-box-text" class="form-text">Search by Name, Type(movie or tv) or Year of
+                            Release(YYYY)
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <button type="submit" class="btn btn-primary">Update Results</button>
-            </div>
-        </form>
+                <div class="row">
+                    <div class="col">
+                        <div class="dropdown">
+                            {% if browse_reviews_sort == "rating" %}
+                            <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
+                                <option value="rating" selected>Sort-by: Rating</option>
+                                <option value="latest">Sort-by: Latest</option>
+                                <option value="popularity">Sort-by: Popularity</option>
+                            </select>
+                            {% elif browse_reviews_sort == "popularity" %}
+                            <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
+                                <option value="popularity" selected>Sort-by: Popularity</option>
+                                <option value="latest">Sort-by: Latest</option>
+                                <option value="rating">Sort-by: Rating</option>
+                            </select>
+                            {% else %}
+                            <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
+                                <option value="latest" selected>Sort-by: Latest</option>
+                                <option value="popularity">Sort-by: Popularity</option>
+                                <option value="rating">Sort-by: Rating</option>
+                            </select>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary mx-auto">Update Results</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
     {% if movie_details | length() > 0 %}
-    <div class="row justify-content-center">
+    <div class="row">
         {% for movie in movie_details %}
         <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-0">
             <div class="card index-card">

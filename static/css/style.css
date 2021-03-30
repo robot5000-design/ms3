@@ -137,6 +137,11 @@ body .carousel-control-next-icon {
     margin-top: 50px;
 }
 
+.search-box {
+    width: fit-content;
+    margin: 0 auto;
+}
+
 /*--------------------------------------------------------Footer */
 
 .footer-container {
