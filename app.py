@@ -347,6 +347,7 @@ def api_request(page):
 @app.route("/new_review/<tmdb_id>/<media_type>",
            methods=["GET", "POST"])
 def new_review(tmdb_id, media_type):
+    ''' '''
     if request.method == "POST":
         # check if movie details already exist in db and if not, add them
         details_exist = mongo.db.movie_details.find_one(

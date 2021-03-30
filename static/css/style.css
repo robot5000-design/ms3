@@ -76,8 +76,41 @@ body {
     background-color: #191958;
 }
 
-.carousel {
+#carousel-3X4 {
+    display: none;
+}
+
+#carousel-4X3 {
+    display: none;
+}
+
+#carousel-6X2 {
+    display: none;
+}
+
+#carousel-12X1 {
     width: 100%;
+    display: block;
+}
+
+.carousel-review {
+    display: inline-block;
+    margin-left:-4px;
+}
+.carousel-review img {
+    width:100%;
+    height:auto;
+}
+body .carousel-indicators li{
+    background-color:red;
+}
+body .carousel-control-prev-icon,
+body .carousel-control-next-icon{
+    background-color:red;
+}
+body .no-padding{
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .get-reviews-btn {
@@ -100,7 +133,7 @@ body {
 }
 
 .review-image {
-    width: 100%;
+    width: 20%;
     margin: 0 auto;
 }
 
@@ -112,42 +145,42 @@ body {
 /*--------------------------------------------------------Footer */
 
 .footer-container {
-  background-color: #353535;
-  min-height: 140px;
-  text-align: center;
-  position: relative;
+    background-color: #353535;
+    min-height: 140px;
+    text-align: center;
+    position: relative;
 }
 
 .footer-container li a i {
-  color: #e4dfd5;
-  font-size: 28px;
+    color: #e4dfd5;
+    font-size: 28px;
 }
 
 .footer-terms a,
 .footer-terms {
-  font-family: "Roboto Mono", monospace;
-  font-weight: 500;
-  color: #e4dfd5;
-  margin: 0 auto;
-  text-decoration: none;
+    font-family: "Roboto Mono", monospace;
+    font-weight: 500;
+    color: #e4dfd5;
+    margin: 0 auto;
+    text-decoration: none;
 }
 
 /* Color change on hover */
 .footer-container li a i,
 .footer-terms a {
-  transition: all 0.15s ease-in-out;
-  -moz-transition: all 0.15s ease-in-out;
-  -webkit-transition: all 0.15s ease-in-out;
-  -o-transition: all 0.15s ease-in-out;
+    transition: all 0.15s ease-in-out;
+    -moz-transition: all 0.15s ease-in-out;
+    -webkit-transition: all 0.15s ease-in-out;
+    -o-transition: all 0.15s ease-in-out;
 }
 
 .footer-terms a:hover,
 .footer-container li a i:hover {
-  color: #d31363;
+    color: #d31363;
 }
 
 .footer-terms .footer-terms-item {
-  padding-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 
@@ -180,7 +213,17 @@ body {
         width: 60%;
     }
 
-    
+}
+
+@media screen and (min-width: 768px) {
+    #carousel-12X1 {
+        display: none;
+    }
+
+    #carousel-6X2 {
+        width: 100%;
+        display: block;
+    }    
 }
 
 @media screen and (min-width: 992px) {
@@ -199,5 +242,36 @@ body {
     .register-wrapper {
         width: 40%;
     }
+
+    #carousel-12X1 {
+        display: none;
+    }
+
+    #carousel-6X2 {
+        display: none;
+    }
+
+    #carousel-4X3 {
+        width: 100%;
+        display: block;
+    }    
 }
 
+@media screen and (min-width: 1200px) {
+    #carousel-12X1 {
+        display: none;
+    }
+
+    #carousel-6X2 {
+        display: none;
+    }
+    
+    #carousel-4X3 {
+        display: none;
+    }
+
+    #carousel-3X4 {
+        width: 100%;
+        display: block;
+    } 
+}
