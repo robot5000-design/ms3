@@ -28,7 +28,9 @@ form .form-control,
     background-color: #eee9e1;
 }
 
+.navbar .navbar-brand,
 .heading {
+    color: #eee9e1;
     font-family: "Alfa Slab One", cursive;
 }
 
@@ -50,6 +52,26 @@ h1 {
     font-size: 1.7em;
 }
 
+h2 {
+    font-size: 1.2em;
+}
+
+#navbarNavAltMarkup {
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+.navbar-brand {
+    color: #ffa30f;
+}
+
+.navbar-brand i {
+    font-size: 4.5em;
+    padding-right: 7px;
+    color: #ffa30f;
+}
+
 .api-search-form {
     color: #eee9e1;
     max-width: 80vw;
@@ -58,6 +80,10 @@ h1 {
 
 .form-check {
     display: inline-block;
+}
+
+.form-check-input:checked {
+    border: 10px solid red;
 }
 
 .form-check-tv {
@@ -126,6 +152,11 @@ h1 {
 .carousel-review {
     display: inline-block;
     margin-left: -4px;
+}
+
+.carousel {
+    padding-bottom: 50px;
+    margin-bottom: 70px;
 }
 
 .carousel-inner {

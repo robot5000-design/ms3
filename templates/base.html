@@ -20,14 +20,20 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Navbar</a>
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-film"></i>
+                <div class="d-inline-block">
+                    <h1>Rush Reviews</h1>
+                    <h2>TV & Movie Reviews</h2>
+                </div>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="collapse navbar-collapse text-end" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
+                    <a class="nav-link" aria-current="page" href="{{ url_for('index') }}">Home</a>
                     <a class="nav-link" href="{{ url_for('search_movies') }}">New Review</a>
                     <a class="nav-link" href="{{ url_for('browse_reviews', page=0) }}">Browse Reviews</a>
                     {% if "user" in session %}
@@ -36,9 +42,12 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                             {{ session.user.title() }}'s Account
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('my_reviews', user=session['user'], my_reviews_sort='latest', page=0) }}">My Reviews</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a></li>
+                        <ul class="dropdown-menu text-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item"
+                                    href="{{ url_for('my_reviews', user=session['user'], my_reviews_sort='latest', page=0) }}">My
+                                    Reviews</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a>
+                            </li>
                             {% if session.user == "admin" %}
                             <li><a class="dropdown-item" href="{{ url_for('admin_controls') }}">Admin Controls</a></li>
                             {% endif %}
