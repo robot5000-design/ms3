@@ -39,7 +39,7 @@ $(".review-form").on('submit', function () {
     $(".submit").prop("disabled", true);
 });
 
-$('#search-api').on('submit', function () {
+$("#search-api").on('submit', function(event) {
     $.ajax({
         type: 'POST',
         url: '/search',
@@ -48,5 +48,5 @@ $('#search-api').on('submit', function () {
             query: $("#query").val()
         }
     })
-    //event.preventDefault();
+    event.preventDefault();
 });

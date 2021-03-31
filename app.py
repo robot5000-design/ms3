@@ -282,19 +282,21 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
                                 media_type=media_type))
 
 
-@app.route("/add_like/<id>/<tmdb_id>")
-def add_like(id, tmdb_id):
+@app.route("/add_like/<id>/<tmdb_id>/<media_type>")
+def add_like(id, tmdb_id, media_type):
     mongo.db.reviews.update_one(
         {"_id": ObjectId(id)},
         {"$addToSet": {"likes": session["user"]}})
     return redirect(url_for('review_detail', tmdb_id=tmdb_id,
                             review_detail_sort="popular",
+                            media_type=media_type,
                             page=0))
 
 
 @app.route("/search", methods=["GET", "POST"])
 def search_movies():
     if request.method == "POST":
+        flash("post")
         session["search"] = True
         session["search_query"] = request.form.get("query")
         session["media_type"] = request.form.get("media_type")
@@ -311,7 +313,6 @@ def search_pagination(page):
         session["search_query"] = request.form.get("query")
         session["media_type"] = request.form.get("media_type")
         return api_request(page=1)
-    flash("Page " + str(page))
     if "search_query" in session:
         return api_request(page)
     else:

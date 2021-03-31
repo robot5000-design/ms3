@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container text-center">
-    <div class="row">
+    <div class="row py-4">
         <div class="col">
             <h1>Browse All Reviews:</h1>
         </div>
@@ -9,9 +9,9 @@
     <div class="row search-box">
         <div class="col">
             <form action="{{ url_for('browse_reviews', page=0) }}" method="post">
-                <div class="mb-3 row">
+                <div class="row pb-4">
                     <div class="col">
-                        <label for="search-box" class="form-label">Search</label>
+                        <label for="search-box" class="form-label pb-4">Search</label>
                         <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
                             aria-describedby="search-query">
                         <div id="search-box-text" class="form-text">Search by Name, Type(movie or tv) or Year of
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row py-5">
                     <div class="col">
                         <button type="submit" class="btn btn-primary mx-auto">Update Results</button>
                     </div>

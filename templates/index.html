@@ -6,38 +6,7 @@
         <div class="col">
             <form action="" method="post" class="" id="search-api">
                 <div class="row mb-3">
-                    <div class="">
-                        {% if session["media_type"] == "tv" %}
-                        <div class="form-check">
-                            <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv"
-                                checked>
-                            <label class="form-check-label" for="media-type-tv">
-                                TV
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                id="media-type-movie">
-                            <label class="form-check-label" for="media-type-movie">
-                                Movie
-                            </label>
-                        </div>
-                        {% elif session["media_type"] == "movie" %}
-                        <div class="form-check">
-                            <input name="media_type" value="tv" class="form-check-input" type="radio"
-                                id="media-type-tv">
-                            <label class="form-check-label" for="media-type-tv">
-                                TV
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                id="media-type-movie" checked>
-                            <label class="form-check-label" for="media-type-movie">
-                                Movie
-                            </label>
-                        </div>
-                        {% else %}
+                    <div class="col">
                         <div class="form-check">
                             <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv"
                                 required>
@@ -52,7 +21,6 @@
                                 Movie
                             </label>
                         </div>
-                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -63,7 +31,7 @@
                             </div>
                             <div class="col-12 col-sm-10 mx-auto">
                                 <input type="text" name="query" id="query" minlength="3" maxlength="30"
-                                    class="form-control" value="" required>
+                                    class="form-control" required>
                                 <label for="query" class="form-label">Search Movies or TV Series</label>
                             </div>
                         </div>

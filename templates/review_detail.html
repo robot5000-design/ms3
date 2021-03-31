@@ -99,7 +99,7 @@
         <div>Genre: {{ review.genre }}</div>
         <div>Rating: {{ review.rating }} / 5</div>
         {% if "user" in session and session["user"] != review.created_by and session["user"] not in review.likes %}
-        <a href="{{ url_for('add_like', id=review._id, tmdb_id=review.tmdb_id) }}"><i class="fas fa-thumbs-up"></i>
+        <a href="{{ url_for('add_like', id=review._id, tmdb_id=review.tmdb_id, media_type=movie_detail.media_type) }}"><i class="fas fa-thumbs-up"></i>
             {{ review.likes | length }}</a>
         {% else %}
         <div><i class="fas fa-thumbs-up"></i> {{ review.likes|length }}</div>
