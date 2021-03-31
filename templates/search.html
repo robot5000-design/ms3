@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <div class="row api-search-form align-items-center">
-        <div class="col">
-            <div class="row">
-                <h3 class="col">Search for a movie or tv series to review:</h3>
+    <div class="row">
+        <div class="col-12">
+            <div class="row text-center py-4">
+                <h3 class="col-12">Search for a movie or tv series to review:</h3>
             </div>
             <!-- Search within movie list -->
-            <div class="row">
-                <div class="col">
+            <div class="row pb-2">
+                <div class="col-12 col-sm-10 col-lg-8 mx-auto">
                     <form action="" method="post" class="" id="search-api">
                         <div class="row mb-3">
                             <div class="">
                                 {% if session["media_type"] == "tv" %}
-                                <div class="form-check">
+                                <div class="form-check form-check-tv">
                                     <input name="media_type" value="tv" class="form-check-input" type="radio"
                                         id="media-type-tv" checked>
                                     <label class="form-check-label" for="media-type-tv">
                                         TV
                                     </label>
                                 </div>
-                                <div class="form-check">
+                                <div class="form-check form-check-movie">
                                     <input name="media_type" value="movie" class="form-check-input" type="radio"
                                         id="media-type-movie">
                                     <label class="form-check-label" for="media-type-movie">
@@ -28,14 +28,14 @@
                                     </label>
                                 </div>
                                 {% elif session["media_type"] == "movie" %}
-                                <div class="form-check">
+                                <div class="form-check form-check-tv">
                                     <input name="media_type" value="tv" class="form-check-input" type="radio"
                                         id="media-type-tv">
                                     <label class="form-check-label" for="media-type-tv">
                                         TV
                                     </label>
                                 </div>
-                                <div class="form-check">
+                                <div class="form-check form-check-movie">
                                     <input name="media_type" value="movie" class="form-check-input" type="radio"
                                         id="media-type-movie" checked>
                                     <label class="form-check-label" for="media-type-movie">
@@ -43,14 +43,14 @@
                                     </label>
                                 </div>
                                 {% else %}
-                                <div class="form-check">
+                                <div class="form-check form-check-tv">
                                     <input name="media_type" value="tv" class="form-check-input" type="radio"
                                         id="media-type-tv" required>
                                     <label class="form-check-label" for="media-type-tv">
                                         TV
                                     </label>
                                 </div>
-                                <div class="form-check">
+                                <div class="form-check form-check-movie">
                                     <input name="media_type" value="movie" class="form-check-input" type="radio"
                                         id="media-type-movie" required>
                                     <label class="form-check-label" for="media-type-movie">
@@ -60,13 +60,13 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12 col-md-8 px-1">
+                        <div class="row pt-2">
+                            <div class="col-12 col-md-8">
                                 <div class="row">
                                     <div class="col-sm-1 d-none d-sm-block search-icon">
                                         <i class="fas fa-search"></i>
                                     </div>
-                                    <div class="col-12 col-sm-10 mx-auto">
+                                    <div class="col-12 col-sm-10 offset-sm-1 px-0">
                                         <input type="text" name="query" id="query" minlength="3" maxlength="30"
                                             class="form-control" value="{{ session['search_query'] }}" required>
                                         <label for="query" class="form-label">Search Movies or TV Series</label>
@@ -83,98 +83,110 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="card api-results-card mt-5">
-                    {% if request.method == "POST" or search_results %}
-                    {% if search_results %}
-                    {% if search_results.results %}
-                    <div class="page-number py-3">Page {{ search_results.page }} / {{ search_results.total_pages }}
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        {% for result in search_results.results %}
-                        <li class="list-group-item tmdb-result-list">
-                            {% if result.original_title and result.id %}
-                            <a href="{{ url_for('review_detail', tmdb_id=result.id, media_type=session.media_type, review_detail_sort='popular', page=0) }}"
-                                class="text-decoration-none">
-                                <div class="row">
-                                    <div class="col-12 col-sm-3">
-                                        {% if result.poster_path %}
-                                        {% if result.poster_path == "" or result.poster_path == None %}
-                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                            class="img-thumbnail" alt="">
-                                        {% else %}
-                                        <img src="https://image.tmdb.org/t/p/w500/{{ result.poster_path }}"
-                                            class="img-thumbnail" alt="">
-                                        {% endif %}
-                                        {% else %}
-                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                            class="img-thumbnail" alt="">
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-12 col-sm-9 thumbnail-title">
-                                        {{ result.original_title }}
-                                    </div>
-                                </div>
-                            </a>
-                            {% elif result.name and result.id %}
-                            <a href="{{ url_for('review_detail', tmdb_id=result.id, media_type=session.media_type, review_detail_sort='popular', page=0) }}"
-                                class="text-decoration-none">
-                                <div class="row">
-                                    <div class="col-12 col-sm-3">
-                                        {% if result.poster_path %}
-                                        {% if result.poster_path == "" or result.poster_path == None %}
-                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                            class="img-thumbnail" alt="">
-                                        {% else %}
-                                        <img src="https://image.tmdb.org/t/p/w500/{{ result.poster_path }}"
-                                            class="img-thumbnail" alt="">
-                                        {% endif %}
-                                        {% else %}
-                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                            class="img-thumbnail" alt="">
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-12 col-sm-9 thumbnail-title">
-                                        {{ result.name }}
-                                    </div>
-                                </div>
-                            </a>
-                            {% else %}
-                            <h3>This result could not be accessed</h3>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="row mx-auto pt-3">
-                        <div class="col">
-                            {% if search_results.total_pages > 1 %}
-                            <div class="page-number">Page {{ search_results.page }} / {{ search_results.total_pages }}
-                            </div>
-                            {% endif %}
+        <div class="row api-results-card mt-5">
+            <div class="col-12">
+                {% if request.method == "POST" or search_results %}
+                {% if search_results %}
+                {% if search_results.results %}
+                <div class="row">
+                    <div class="col">
+                        <div class="page-number pb-5">Page {{ search_results.page }} / {{ search_results.total_pages }}
                         </div>
                     </div>
-                    <div class="row mx-auto">
-                        <div class="col">
-                            {% if search_results.page > 1 %}
-                            <a href="{{ url_for('search_pagination', page=search_results.page-1) }}"
-                                class="btn btn-secondary previous-button">Previous</a>
-                            {% endif %}
-                            {% if search_results.total_pages > 1 and search_results.page < search_results.total_pages %}
-                            <a href="{{ url_for('search_pagination', page=search_results.page+1) }}"
-                                class="btn btn-secondary next-button">Next</a>
-                            {% endif %}
-                            {% else %}
-                            <h3>No Results!</h3>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
                 </div>
+                <div class="row pb-4">
+                    <div class="col">
+                        <div class="row">
+                            {% for result in search_results.results %}
+                            <div class="col-12 col-sm-6">
+                                {% if result.original_title and result.id %}
+                                <div class="row">
+                                    <div class="col-12 col-md-6 mx-auto pb-2">
+                                        <a href="{{ url_for('review_detail', tmdb_id=result.id, media_type=session.media_type, review_detail_sort='popular', page=0) }}"
+                                            class="text-decoration-none">
+                                            {% if result.poster_path %}
+                                            {% if result.poster_path == "" or result.poster_path == None %}
+                                            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                class="img-thumbnail" alt="">
+                                            {% else %}
+                                            <img src="https://image.tmdb.org/t/p/w500/{{ result.poster_path }}"
+                                                class="img-thumbnail" alt="">
+                                            {% endif %}
+                                            {% else %}
+                                            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                class="img-thumbnail" alt="">
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-6 thumbnail-title pb-5 mx-auto text-center">
+                                        <a href="{{ url_for('review_detail', tmdb_id=result.id, media_type=session.media_type, review_detail_sort='popular', page=0) }}"
+                                            class="text-decoration-none">
+                                            {{ result.original_title }}
+                                        </a>
+                                    </div>
+                                </div>
+                                {% elif result.name and result.id %}
+                                <div class="row">
+                                    <div class="col-12 col-md-6 mx-auto pb-2">
+                                        <a href="{{ url_for('review_detail', tmdb_id=result.id, media_type=session.media_type, review_detail_sort='popular', page=0) }}"
+                                            class="text-decoration-none">
+                                            {% if result.poster_path %}
+                                            {% if result.poster_path == "" or result.poster_path == None %}
+                                            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                class="img-thumbnail" alt="">
+                                            {% else %}
+                                            <img src="https://image.tmdb.org/t/p/w500/{{ result.poster_path }}"
+                                                class="img-thumbnail" alt="">
+                                            {% endif %}
+                                            {% else %}
+                                            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                class="img-thumbnail" alt="">
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="col-12 col-md-6 thumbnail-title pb-5 mx-auto text-center">
+                                        <a href="{{ url_for('review_detail', tmdb_id=result.id, media_type=session.media_type, review_detail_sort='popular', page=0) }}"
+                                            class="text-decoration-none">
+                                            {{ result.name }}
+                                        </a>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <h3>This result could not be accessed</h3>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mx-auto pb-4">
+                    <div class="col">
+                        {% if search_results.total_pages > 1 %}
+                        <div class="page-number">Page {{ search_results.page }} / {{ search_results.total_pages }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mx-auto pb-5">
+                    <div class="col">
+                        {% if search_results.page > 1 %}
+                        <a href="{{ url_for('search_pagination', page=search_results.page-1) }}"
+                            class="btn btn-secondary previous-button">Previous</a>
+                        {% endif %}
+                        {% if search_results.total_pages > 1 and search_results.page < search_results.total_pages %}
+                        <a href="{{ url_for('search_pagination', page=search_results.page+1) }}"
+                            class="btn btn-secondary next-button">Next</a>
+                        {% endif %}
+                        {% else %}
+                        <h3>No Results!</h3>
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>
-</div>
 
-{% endblock %}
+
+    {% endblock %}

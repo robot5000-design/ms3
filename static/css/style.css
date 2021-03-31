@@ -16,7 +16,16 @@ body {
     font-family: "Montserrat", sans-serif;
     font-size: 100%;
     background-color: #191958;
-    color: #e4dfd5;
+    color: #eee9e1;
+}
+
+.btn {
+    color: #eee9e1;
+}
+
+form .form-control,
+.form-select {
+    background-color: #eee9e1;
 }
 
 .heading {
@@ -37,10 +46,28 @@ body {
   right: 0;
 }
 
+h1 {
+    font-size: 1.7em;
+}
+
 .api-search-form {
-    color: #e4dfd5;
+    color: #eee9e1;
     max-width: 80vw;
     margin: 0 auto;
+}
+
+.form-check {
+    display: inline-block;
+}
+
+.form-check-tv {
+    padding-left: 17%;
+    font-size: 1.2em;
+}
+
+.form-check-movie {
+    padding-left: 60px;
+    font-size: 1.2em;
 }
 
 .search-api-button {
@@ -48,14 +75,12 @@ body {
 }
 
 .page-number {
-    color: #3f3f3f;
+    color: #8b8989;
     text-align: center;
 }
 
 .img-thumbnail {
-    width: 10%;
-    background-color: #e4dfd5;
-    min-width: 100px;
+    width: 100%;
     padding: 0;
 }
 
@@ -64,6 +89,10 @@ body {
     margin-top: 10px;
     width: 100px;
     font-size: .9em;
+}
+
+.btn-primary {
+    background-color: #316dc6;
 }
 
 .tmdb-result-list {
@@ -98,6 +127,11 @@ body {
     display: inline-block;
     margin-left: -4px;
 }
+
+.carousel-inner {
+    background-color: #000000;
+}
+
 .carousel-review img {
     width: 100%;
     height: auto;
@@ -108,19 +142,24 @@ body .carousel-control-next-icon {
     background-color: rgba(255, 0, 0, 0.699);
 }
 
-.get-reviews-btn {
-    font-size: 1em;
+.get-reviews-btn,
+.edit-review-btn {
+    font-size: .9em;
 }
 
-.thumbnail-title {
+.thumbnail-title a {
     font-family: "Alfa Slab One", cursive;
+    font-size: 1.2em;
+    color: #eee9e1;
     padding-top: 7px;
 }
 
 .api-results-card {
-    max-width: 70vw;
+    width: 70vw;
     margin: 0 auto;
     text-align: center;
+    border: 0;
+    background-color: #eee9e100;
 }
 
 .search-icon > i {
@@ -152,7 +191,7 @@ body .carousel-control-next-icon {
 }
 
 .footer-container li a i {
-    color: #e4dfd5;
+    color: #eee9e1;
     font-size: 28px;
 }
 
@@ -160,7 +199,7 @@ body .carousel-control-next-icon {
 .footer-terms {
     font-family: "Roboto Mono", monospace;
     font-weight: 500;
-    color: #e4dfd5;
+    color: #eee9e1;
     margin: 0 auto;
     text-decoration: none;
 }
@@ -193,9 +232,8 @@ body .carousel-control-next-icon {
 
 @media screen and (min-width: 576px) {
     .api-results-card {
-        max-width: 80vw;
-        text-align: start;
-        font-size: 1.2em;
+        font-size: 1em;
+        width: 100%;
     }
 
     .previous-button,
@@ -207,6 +245,7 @@ body .carousel-control-next-icon {
 
     .img-thumbnail {
         margin-right: 20px;
+        width: 100%;
     }
 
     .register-wrapper {
@@ -216,7 +255,6 @@ body .carousel-control-next-icon {
     .search-box {
         width: 80%;
     }
-
 }
 
 @media screen and (min-width: 768px) {
@@ -235,14 +273,6 @@ body .carousel-control-next-icon {
 }
 
 @media screen and (min-width: 992px) {
-    .api-results-card {
-        max-width: 50vw;
-    }
-
-    .api-search-form {
-    max-width: 60vw;
-    }
-
     .search-api-button {
         width: 85%;
     }

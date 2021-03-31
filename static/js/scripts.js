@@ -48,5 +48,5 @@ $("#search-api").on('submit', function(event) {
             query: $("#query").val()
         }
     })
-    event.preventDefault();
+    //event.preventDefault();
 });

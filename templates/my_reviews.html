@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container text-center my-reviews-container">
-    <div class="row">
+<div class="container-fluid text-center my-reviews-container">
+    <div class="row py-4">
         <div class="col">
             <h1>{{ user.title() }}'s Reviews</h1>
         </div>
@@ -10,9 +10,9 @@
         <div class="col">
             <form action="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=0) }}"
                 method="post">
-                <div class="mb-3 row">
+                <div class="pb-4 row">
                     <div class="col">
-                        <label for="search-box" class="form-label">Search</label>
+                        <label for="search-box" class="form-label pb-4">Search</label>
                         <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
                             aria-describedby="search-query">
                         <div id="search-box-text" class="form-text">Search by Name/Title</div>
@@ -52,7 +52,7 @@
         </div>
     </div>
     {% if movie_details | length() > 0 %}
-    <div class="row justify-content-center">
+    <div class="row">
         {% for movie in movie_details %}
         <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-0">
             <div class="card index-card">
@@ -84,14 +84,14 @@
         </div>
         {% endfor %}
     </div>
-    <div class="row mx-auto pt-3">
+    <div class="row mx-auto pt-5 pb-3">
         <div class="col">
             {% if review_count > 12 %}
             <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
             {% endif %}
         </div>
     </div>
-    <div class="row mx-auto">
+    <div class="row mx-auto pb-5">
         <div class="col">
             {% if page > 0 %}
             <a href="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=page-1) }}"
@@ -104,7 +104,7 @@
         </div>
     </div>
     {% else %}
-    <h3>No Results!</h3>
+    <h3 class="p-5">No Results!</h3>
     {% endif %}
 </div>
 

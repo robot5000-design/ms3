@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container text-center">
+<div class="container-fluid text-center">
     <div class="row py-4">
         <div class="col">
             <h1>Browse All Reviews:</h1>
         </div>
     </div>
     <div class="row search-box">
-        <div class="col">
+        <div class="col-12">
             <form action="{{ url_for('browse_reviews', page=0) }}" method="post">
                 <div class="row pb-4">
                     <div class="col">
@@ -77,14 +77,14 @@
         </div>
         {% endfor %}
     </div>
-    <div class="row mx-auto pt-3">
+    <div class="row mx-auto pt-5 pb-3">
         <div class="col">
             {% if review_count > 12 %}
             <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
             {% endif %}
         </div>
     </div>
-    <div class="row mx-auto">
+    <div class="row mx-auto pb-5">
         <div class="col">
             {% if page > 0 %}
             <a href="{{ url_for('browse_reviews', page=page-1) }}"
@@ -96,7 +96,7 @@
         </div>
     </div>
     {% else %}
-    <h3>No Results!</h3>
+    <h3 class="p-5">No Results!</h3>
     {% endif %}
 </div>
 
