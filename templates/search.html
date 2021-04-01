@@ -66,7 +66,7 @@
                                     <div class="col-sm-1 d-none d-sm-block search-icon">
                                         <i class="fas fa-search"></i>
                                     </div>
-                                    <div class="col-12 col-sm-10 offset-sm-1 px-0">
+                                    <div class="col-12 col-sm-10 offset-sm-1 px-0 pb-4">
                                         <input type="text" name="query" id="query" minlength="3" maxlength="30"
                                             class="form-control" value="{{ session['search_query'] }}" required>
                                         <label for="query" class="form-label">Search Movies or TV Series</label>
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class="row api-results-card mt-5">
+        <div class="row api-results-card mt-3">
             <div class="col-12">
                 {% if request.method == "POST" or search_results %}
                 {% if search_results %}
@@ -178,7 +178,11 @@
                             class="btn btn-secondary next-button">Next</a>
                         {% endif %}
                         {% else %}
-                        <h3>No Results!</h3>
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="p-5">No Results!</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {% endif %}
