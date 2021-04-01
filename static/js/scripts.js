@@ -36,7 +36,7 @@ $(".call-delete").click(function () {
 });
 
 $(".review-form").on('submit', function () {
-    $(".submit").prop("disabled", true);
+    $(".submit-edit").prop("disabled", true);
 });
 
 $("#search-api").on('submit', function(event) {
