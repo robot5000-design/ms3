@@ -159,20 +159,22 @@ def my_reviews(user, my_reviews_sort, page):
 
 @app.route("/delete_review/<tmdb_id>/<user>")
 def delete_review(tmdb_id, user):
-    if user == session["user"] or session["user"] == "admin":
-        mongo.db.reviews.delete_one(
-            {"tmdb_id": tmdb_id, "created_by": user.lower()})
-        flash("Review Successfully Deleted")
-        other_reviews = mongo.db.reviews.find_one(
-            {"tmdb_id": tmdb_id})
-        if not other_reviews:
-            mongo.db.movie_details.delete_one(
+    if "user" in session:
+        if user == session["user"] or session["user"] == "admin":
+            mongo.db.reviews.delete_one(
+                {"tmdb_id": tmdb_id, "created_by": user.lower()})
+            flash("Review Successfully Deleted")
+            # check if there are other reviews, otherwise delete movie details in the db
+            other_reviews = mongo.db.reviews.find_one(
                 {"tmdb_id": tmdb_id})
-        if session["user"] == "admin":
-            return redirect(url_for('browse_reviews', page=0))
-        else:
+            if not other_reviews:
+                mongo.db.movie_details.delete_one(
+                    {"tmdb_id": tmdb_id})
+            if session["user"] == "admin":
+                return redirect(url_for('browse_reviews', page=0))
             return redirect(url_for('my_reviews', user=user,
-                                    my_reviews_sort='latest', page=0))
+                                        my_reviews_sort='latest', page=0))
+    return check_user_permission()
 
 
 @app.route("/delete_review/<tmdb_id>")
@@ -183,7 +185,8 @@ def delete_all(tmdb_id):
         mongo.db.movie_details.delete_one(
             {"tmdb_id": tmdb_id})
         flash("Movie & Reviews Successfully Deleted")
-    return redirect(url_for('browse_reviews', page=0))
+        return redirect(url_for('browse_reviews', page=0))
+    return check_user_permission()
 
 
 @app.route("/edit_review/<tmdb_id>/<my_reviews_sort>",
@@ -202,21 +205,23 @@ def edit_review(tmdb_id, my_reviews_sort):
         flash("Your review has been updated")
         return redirect(url_for('my_reviews', user=session['user'],
                                 my_reviews_sort=my_reviews_sort, page=0))
-    try:
-        media_detail = list(mongo.db.movie_details.find(
-                            {"tmdb_id": tmdb_id}))[0]
-    except IndexError:
-        return redirect(url_for("index"))
-    review_fields = list(mongo.db.reviews.find(
-        {"tmdb_id": tmdb_id, "created_by": session[
-            "user"]}))[0]
-    tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
-    genres = mongo.db.genres.find().sort("genre_name", 1)
-    return render_template("edit_review.html", review_fields=review_fields,
-                           media_detail=media_detail,
-                           tmdb_poster_url=tmdb_poster_url,
-                           genres=genres,
-                           my_reviews_sort=my_reviews_sort)
+    if "user" in session:
+        try:
+            media_detail = list(mongo.db.movie_details.find(
+                                {"tmdb_id": tmdb_id}))[0]
+        except IndexError:
+            return redirect(url_for("index"))
+        review_fields = list(mongo.db.reviews.find(
+            {"tmdb_id": tmdb_id, "created_by": session[
+                "user"]}))[0]
+        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+        genres = mongo.db.genres.find().sort("genre_name", 1)
+        return render_template("edit_review.html", review_fields=review_fields,
+                            media_detail=media_detail,
+                            tmdb_poster_url=tmdb_poster_url,
+                            genres=genres,
+                            my_reviews_sort=my_reviews_sort)
+    return check_user_permission()
 
 
 @app.route(
@@ -277,8 +282,7 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
                                review_detail_sort=review_detail_sort,
                                page=page, review_count=review_count,
                                total_pages=total_pages)
-    else:
-        return redirect(url_for("new_review", tmdb_id=tmdb_id,
+    return redirect(url_for("new_review", tmdb_id=tmdb_id,
                                 media_type=media_type))
 
 
@@ -567,10 +571,19 @@ def admin_controls():
                                    number_movies=number_movies,
                                    number_reviews=number_reviews,
                                    most_likes=most_likes)
-        else:
-            return redirect(url_for("index"))
-    else:
         return redirect(url_for("index"))
+    return check_user_permission()
+
+
+def check_user_permission():
+    if "user" in session:
+        blocked_user = mongo.db.blocked_users.find_one(
+            {"username": session["user"].lower()})
+        if blocked_user:
+            flash("User has been Blocked. Contact the Administrator")
+            return redirect(url_for("index"))
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -594,16 +607,14 @@ def login():
                 if username.lower() != "admin":
                     return redirect(url_for("my_reviews", user=session[
                         'user'], my_reviews_sort='latest', page=0))
-                else:
-                    return redirect(url_for("admin_controls"))
-            else:
-                # invalid password match
-                flash("Incorrect Username and/or Password")
-                return redirect(url_for("index"))
-        else:
-            # username doesn't exist
+                return redirect(url_for("admin_controls"))
+            # invalid password match
             flash("Incorrect Username and/or Password")
             return redirect(url_for("index"))
+        # username doesn't exist
+        flash("Incorrect Username and/or Password")
+        return redirect(url_for("index"))
+    return check_user_permission()
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -624,20 +635,19 @@ def register():
             flash("Passwords do not match!")
             return redirect(url_for("index"))
 
-        register = {
+        new_user = {
             "username": username.lower(),
             "password": generate_password_hash(request.form.get("password2"))
         }
-        mongo.db.users.insert_one(register)
+        mongo.db.users.insert_one(new_user)
 
         # put the new user into 'session' cookie
         session["user"] = username.lower()
         flash("Registration Successful!")
         return redirect(url_for("index"))
-    if "user" not in session:
-        return render_template("register.html")
-    else:
+    if "user" in session:
         return redirect(url_for("index"))
+    return check_user_permission()
 
 
 @app.route("/change_password", methods=["GET", "POST"])
@@ -659,21 +669,21 @@ def change_password():
                 {"$set": {"password": password}})
             flash("Password Updated!")
             return redirect(url_for("logout"))
-        else:
-            flash("Passwords do not match!")
-            return redirect(url_for("change_password"))
+        flash("Passwords do not match!")
+        return redirect(url_for("change_password"))
     if "user" in session:
         return render_template("change_password.html")
-    else:
-        return redirect(url_for("index"))
+    return check_user_permission()
 
 
 @app.route("/logout")
 def logout():
-    # remove user from session cookie
-    flash("You have been logged out")
-    session.pop("user")
-    return redirect(url_for("index"))
+    if "user" in session:
+        # remove user from session cookie
+        flash("You have been logged out")
+        session.pop("user")
+        return redirect(url_for("index"))
+    return check_user_permission()
 
 
 if __name__ == "__main__":
