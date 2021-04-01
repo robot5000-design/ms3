@@ -31,8 +31,8 @@ function goBack() {
 $(".go-back").click(goBack)
 
 $(".call-delete").click(function () {
-    $(this).addClass("d-none");
-    $(this).siblings(".confirm-delete").removeClass("d-none");
+    $(this).addClass("invisible");
+    $(this).siblings(".confirm-delete").removeClass("invisible");
 });
 
 $(".review-form").on('submit', function () {

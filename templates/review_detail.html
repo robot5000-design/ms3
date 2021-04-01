@@ -11,11 +11,11 @@
     </div>
     {% if "user" in session %}
     {% if session["user"].lower() == "admin" %}
-    <div class="row">
-        <div class="btn btn-primary col-4 call-delete">Delete Entry
+    <div class="pt-3 text-center">
+        <div class="btn btn-primary call-delete">Delete Movie
         </div>
         <a href="{{ url_for('delete_all', tmdb_id=movie_detail.tmdb_id) }}"
-            class="btn btn-danger confirm-delete col-4 offset-4 d-none">Confirm Delete
+            class="btn btn-danger confirm-delete invisible">Confirm Delete
         </a>
     </div>
     {% endif %}
@@ -44,7 +44,7 @@
 
             <!-- reviews section -->
             <div class="reviews">
-                <div class="pb-4">
+                <div class="pb-4 pt-2">
                     {% if not session.user %}
                     <a class="login-modal" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to
                         submit
@@ -54,7 +54,7 @@
                     <div>You've already reviewed this.</div>
                     {% else %}
                     <a href="{{ url_for('new_review', tmdb_id=movie_detail.tmdb_id, media_type=movie_detail.media_type) }}"
-                        class="btn btn-primary">Review This</a>
+                        class="btn btn-primary review-this">Review This</a>
                     {% endif %}
                 </div>
                 {% if reviews %}
@@ -93,18 +93,18 @@
                 {% for review in reviews %}
                 {% if "user" in session %}
                 {% if session["user"].lower() == "admin" %}
-                <div class="row">
-                    <a class="btn btn-primary call-delete col-3">
-                        Delete This Review
+                <div class="pb-3">
+                    <a class="btn btn-primary call-delete">
+                        Delete Review
                     </a>
                     <a href="{{ url_for('delete_review', tmdb_id=movie_detail.tmdb_id, user=review.created_by) }}"
-                        class="btn btn-danger confirm-delete d-none offset-3 col-3">Confirm Delete
+                        class="btn btn-danger confirm-delete invisible">Confirm Delete
                     </a>
                 </div>
                 {% endif %}
                 {% endif %}
                 <div class="pb-2">
-                    Reviewed by: <a
+                    Reviewed by: <a class="text-decoration-none"
                         href="{{ url_for('my_reviews', user=review.created_by, my_reviews_sort='latest', page=0) }}">{{ review.created_by }}</a>
                     {{ review.review_date }}
                 </div>

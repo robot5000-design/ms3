@@ -24,7 +24,8 @@ body {
 }
 
 form .form-control,
-.form-select {
+.form-select,
+.review-form select {
     background-color: #eee9e1;
 }
 
@@ -37,6 +38,7 @@ form .form-control,
     font-size: 1.5em;
     color: #ffa30f;
     font-family: "Alfa Slab One", cursive;
+    line-height: 1.6em;
 }
 
 .reviews {
@@ -125,6 +127,18 @@ h2 {
 
 .search-api-button {
     width: 100%;
+}
+
+.btn {
+    font-size: 1em;
+}
+
+.call-delete,
+.confirm-delete,
+.submit-edit {
+    font-size: .8em;
+    width: 45%;
+    max-width: 150px;
 }
 
 .page-number {
@@ -343,6 +357,9 @@ body .carousel-control-next-icon {
     }
     .review-image {
         width: 100%;
+    }
+    .review-wrapper {
+        padding-top: 30px;
     }
 }
 
