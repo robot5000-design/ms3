@@ -1,6 +1,6 @@
 // Scrolls window to top on page load
 $(document).ready(function () {
-    window.scroll(0, 0);
+    //window.scroll(0, 0);
 });
 
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -50,3 +50,5 @@ $("#search-api").on('submit', function(event) {
     })
     //event.preventDefault();
 });
+
+

@@ -28,10 +28,36 @@ form .form-control,
     background-color: #eee9e1;
 }
 
-.navbar .navbar-brand,
-.heading {
+.navbar .navbar-brand {
     color: #eee9e1;
     font-family: "Alfa Slab One", cursive;
+}
+
+.heading {
+    font-size: 1.5em;
+    color: #ffa30f;
+    font-family: "Alfa Slab One", cursive;
+}
+
+.reviews {
+    font-size: .85em;
+}
+
+.reviews-heading {
+    font-size: 1.5em;
+}
+
+.review-text {
+    color: #ffa30f;
+}
+
+i {
+    color: #ffa30f;
+}
+
+.reviews .dropdown .btn,
+.dropdown-item {
+    font-size: .85em;
 }
 
 .backing-image {
@@ -64,10 +90,11 @@ h2 {
 
 .navbar-brand {
     color: #ffa30f;
+    font-size: 3vw;
 }
 
 .navbar-brand i {
-    font-size: 4.5em;
+    font-size: 15vw;
     padding-right: 7px;
     color: #ffa30f;
 }
@@ -198,7 +225,7 @@ body .carousel-control-next-icon {
 }
 
 .review-image {
-    width: 20%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -255,36 +282,49 @@ body .carousel-control-next-icon {
 
 
 @media screen and (min-width: 400px) {
+    .navbar-brand {
+        font-size: 2.7vw;
+    }
+    .navbar-brand i {
+        font-size: 13vw;
+    }
     .review-image {
-        height: 70vh;
-        width: auto;
+        width: 80%;
+    }
+    .review-wrapper {
+        padding-left: 40px;
     }
 }
 
 @media screen and (min-width: 576px) {
+    .navbar-brand {
+        font-size: 1.2em;
+    }
+    .navbar-brand i {
+        font-size: 4.5em;
+    }
     .api-results-card {
         font-size: 1em;
         width: 100%;
     }
-
     .previous-button,
     .next-button {
         margin-top: 10px;
         width: 120px;
         font-size: 1em;
     }
-
     .img-thumbnail {
         margin-right: 20px;
         width: 100%;
     }
-
     .register-wrapper {
         width: 60%;
     }
-
     .search-box {
         width: 80%;
+    }
+    .heading {
+        font-size: 1.8em;
     }
 }
 
@@ -300,6 +340,9 @@ body .carousel-control-next-icon {
 
     .search-box {
         width: 65%;
+    }
+    .review-image {
+        width: 100%;
     }
 }
 

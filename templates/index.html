@@ -72,7 +72,7 @@
                             {% endfor %}
                         </div>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
+                            <div class="carousel-item active" data-bs-interval="3000">
                                 {% for index in range(4) %}
                                 <a class="carousel-review col-3"
                                     href="{{ url_for('review_detail', tmdb_id=movie_details[index].tmdb_id, media_type=movie_details[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -87,7 +87,7 @@
                                 {% endfor %}
                             </div>
                             {% for outer_index in range(2) %}
-                            <div class="carousel-item">
+                            <div class="carousel-item" data-bs-interval="3000">
                                 {% for index in range(4 + (outer_index * 4), 8 + (outer_index * 4)) %}
                                 <a class="carousel-review col-3"
                                     href="{{ url_for('review_detail', tmdb_id=movie_details[index].tmdb_id, media_type=movie_details[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -116,7 +116,7 @@
                     </div>
 
                     <!-- 4 X 3 Carousel -->
-                    <div id="carousel-4X3" class="carousel slide" data-bs-ride="carousel2">
+                    <div id="carousel-4X3" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#carousel-4X3" data-bs-slide-to="0" class="active"
                                 aria-current="true" aria-label="Slide 0">
@@ -128,7 +128,7 @@
                             {% endfor %}
                         </div>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
+                            <div class="carousel-item active" data-bs-interval="3000">
                                 {% for index in range(3) %}
                                 <a class="carousel-review col-4"
                                     href="{{ url_for('review_detail', tmdb_id=movie_details[index].tmdb_id, media_type=movie_details[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -143,7 +143,7 @@
                                 {% endfor %}
                             </div>
                             {% for outer_index in range(3) %}
-                            <div class="carousel-item">
+                            <div class="carousel-item" data-bs-interval="3000">
                                 {% for index in range(3 + (outer_index * 3), 6 + (outer_index * 3)) %}
                                 <a class="carousel-review col-4"
                                     href="{{ url_for('review_detail', tmdb_id=movie_details[index].tmdb_id, media_type=movie_details[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -172,7 +172,7 @@
                     </div>
 
                     <!-- 6 X 2 Carousel -->
-                    <div id="carousel-6X2" class="carousel slide" data-bs-ride="carousel3">
+                    <div id="carousel-6X2" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#carousel-6X2" data-bs-slide-to="0" class="active"
                                 aria-current="true" aria-label="Slide 0">
@@ -184,7 +184,7 @@
                             {% endfor %}
                         </div>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
+                            <div class="carousel-item active" data-bs-interval="3000">
                                 {% for index in range(2) %}
                                 <a class="carousel-review col-6"
                                     href="{{ url_for('review_detail', tmdb_id=movie_details[index].tmdb_id, media_type=movie_details[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -199,7 +199,7 @@
                                 {% endfor %}
                             </div>
                             {% for outer_index in range(4) %}
-                            <div class="carousel-item">
+                            <div class="carousel-item" data-bs-interval="3000">
                                 {% for index in range(2 + (outer_index * 2), 4 + (outer_index * 2)) %}
                                 <a class="carousel-review col-6"
                                     href="{{ url_for('review_detail', tmdb_id=movie_details[index].tmdb_id, media_type=movie_details[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -228,7 +228,7 @@
                     </div>
 
                     <!-- 12 X 1 Carousel -->
-                    <div id="carousel-12X1" class="carousel slide" data-bs-ride="carousel4">
+                    <div id="carousel-12X1" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#carousel-12X1" data-bs-slide-to="0" class="active"
                                 aria-current="true" aria-label="Slide 0">
@@ -240,7 +240,7 @@
                             {% endfor %}
                         </div>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
+                            <div class="carousel-item active" data-bs-interval="3000">
                                 <a class="carousel-review col-12"
                                     href="{{ url_for('review_detail', tmdb_id=movie_details[0].tmdb_id, media_type=movie_details[0].media_type, review_detail_sort='popular', page=0) }}">
                                     {% if movie_details[0].poster_path == None %}
@@ -253,7 +253,7 @@
                                 </a>
                             </div>
                             {% for index in range(1, 12) %}
-                            <div class="carousel-item">
+                            <div class="carousel-item" data-bs-interval="3000">
                                 <a class="carousel-review col-12"
                                     href="{{ url_for('review_detail', tmdb_id=movie_details[index].tmdb_id, media_type=movie_details[index].media_type, review_detail_sort='popular', page=0) }}">
                                     {% if movie_details[index].poster_path == None %}

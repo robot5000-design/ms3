@@ -296,7 +296,6 @@ def add_like(id, tmdb_id, media_type):
 @app.route("/search", methods=["GET", "POST"])
 def search_movies():
     if request.method == "POST":
-        flash("post")
         session["search"] = True
         session["search_query"] = request.form.get("query")
         session["media_type"] = request.form.get("media_type")
