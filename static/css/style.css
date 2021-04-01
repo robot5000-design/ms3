@@ -25,7 +25,8 @@ body {
 
 form .form-control,
 .form-select,
-.review-form select {
+.review-form select,
+.list-group li {
     background-color: #eee9e1;
 }
 
@@ -47,6 +48,15 @@ form .form-control,
 
 .reviews-heading {
     font-size: 1.5em;
+}
+
+.stats-group {
+    color: #000;
+    font-size: .9em;
+}
+
+.table {
+    font-size: 4.1vw;
 }
 
 .review-text {
@@ -135,8 +145,17 @@ h2 {
 
 .call-delete,
 .confirm-delete,
+.submit-edit,
+.delete-genre,
+.confirm-genre,
+.confirm-block,
+.confirm-unblock {
+    font-size: .8em;    
+}
+
+.call-delete,
+.confirm-delete,
 .submit-edit {
-    font-size: .8em;
     width: 45%;
     max-width: 150px;
 }
@@ -294,6 +313,11 @@ body .carousel-control-next-icon {
     padding-bottom: 20px;
 }
 
+@media screen and (min-width: 350px) {
+    .table {
+        font-size: .9em;
+    }
+}
 
 @media screen and (min-width: 400px) {
     .navbar-brand {

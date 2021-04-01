@@ -30,9 +30,9 @@ function goBack() {
 
 $(".go-back").click(goBack)
 
-$(".call-delete").click(function () {
+$(".call-delete, .delete-genre").click(function () {
     $(this).addClass("invisible");
-    $(this).siblings(".confirm-delete").removeClass("invisible");
+    $(this).siblings(".confirm-delete, .confirm-genre").removeClass("invisible");
 });
 
 $(".review-form").on('submit', function () {
