@@ -260,6 +260,8 @@ body .carousel-control-next-icon {
 .review-image {
     width: 100%;
     margin: 0 auto;
+    border: 3px solid #000;
+    border-radius: 5%;
 }
 
 .register-wrapper {

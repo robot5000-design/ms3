@@ -159,12 +159,13 @@ def my_reviews(user, my_reviews_sort, page):
 
 @app.route("/delete_review/<tmdb_id>/<user>")
 def delete_review(tmdb_id, user):
-    if "user" in session:
+    if check_user_permission() == "valid-user":
         if user == session["user"] or session["user"] == "admin":
             mongo.db.reviews.delete_one(
                 {"tmdb_id": tmdb_id, "created_by": user.lower()})
             flash("Review Successfully Deleted")
-            # check if there are other reviews, otherwise delete movie details in the db
+            # check if there are other reviews, otherwise delete movie
+            # details in the db
             other_reviews = mongo.db.reviews.find_one(
                 {"tmdb_id": tmdb_id})
             if not other_reviews:
@@ -174,38 +175,41 @@ def delete_review(tmdb_id, user):
                 return redirect(url_for('browse_reviews', page=0))
             return redirect(url_for('my_reviews', user=user,
                                         my_reviews_sort='latest', page=0))
-    return check_user_permission()
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 @app.route("/delete_review/<tmdb_id>")
 def delete_all(tmdb_id):
-    if session["user"] == "admin":
-        mongo.db.reviews.delete_many(
-            {"tmdb_id": tmdb_id})
-        mongo.db.movie_details.delete_one(
-            {"tmdb_id": tmdb_id})
-        flash("Movie & Reviews Successfully Deleted")
-        return redirect(url_for('browse_reviews', page=0))
-    return check_user_permission()
+    if check_user_permission() == "valid-user":
+        if session["user"] == "admin":
+            mongo.db.reviews.delete_many(
+                {"tmdb_id": tmdb_id})
+            mongo.db.movie_details.delete_one(
+                {"tmdb_id": tmdb_id})
+            flash("Movie & Reviews Successfully Deleted")
+            return redirect(url_for('browse_reviews', page=0))
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 @app.route("/edit_review/<tmdb_id>/<my_reviews_sort>",
            methods=["GET", "POST"])
 def edit_review(tmdb_id, my_reviews_sort):
-    if request.method == "POST":
-        review_update = {
-            "genre": request.form.get("select-genre"),
-            "review": request.form.get("review-text"),
-            "rating": request.form.get("inlineRadioOptions"),
-            "review_date": datetime.datetime.now()
-        }
-        mongo.db.reviews.update_one(
-            {"tmdb_id": tmdb_id, "created_by": session["user"]},
-            {"$set": review_update})
-        flash("Your review has been updated")
-        return redirect(url_for('my_reviews', user=session['user'],
-                                my_reviews_sort=my_reviews_sort, page=0))
-    if "user" in session:
+    if check_user_permission() == "valid-user":
+        if request.method == "POST":
+            review_update = {
+                "genre": request.form.get("select-genre"),
+                "review": request.form.get("review-text"),
+                "rating": request.form.get("inlineRadioOptions"),
+                "review_date": datetime.datetime.now()
+            }
+            mongo.db.reviews.update_one(
+                {"tmdb_id": tmdb_id, "created_by": session["user"]},
+                {"$set": review_update})
+            flash("Your review has been updated")
+            return redirect(url_for('my_reviews', user=session['user'],
+                                    my_reviews_sort=my_reviews_sort, page=0))
         try:
             media_detail = list(mongo.db.movie_details.find(
                                 {"tmdb_id": tmdb_id}))[0]
@@ -217,11 +221,12 @@ def edit_review(tmdb_id, my_reviews_sort):
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         genres = mongo.db.genres.find().sort("genre_name", 1)
         return render_template("edit_review.html", review_fields=review_fields,
-                            media_detail=media_detail,
-                            tmdb_poster_url=tmdb_poster_url,
-                            genres=genres,
-                            my_reviews_sort=my_reviews_sort)
-    return check_user_permission()
+                                media_detail=media_detail,
+                                tmdb_poster_url=tmdb_poster_url,
+                                genres=genres,
+                                my_reviews_sort=my_reviews_sort)
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 @app.route(
@@ -288,13 +293,16 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
 
 @app.route("/add_like/<id>/<tmdb_id>/<media_type>")
 def add_like(id, tmdb_id, media_type):
-    mongo.db.reviews.update_one(
-        {"_id": ObjectId(id)},
-        {"$addToSet": {"likes": session["user"]}})
-    return redirect(url_for('review_detail', tmdb_id=tmdb_id,
-                            review_detail_sort="popular",
-                            media_type=media_type,
-                            page=0))
+    if check_user_permission() == "valid-user":
+        mongo.db.reviews.update_one(
+            {"_id": ObjectId(id)},
+            {"$addToSet": {"likes": session["user"]}})
+        return redirect(url_for('review_detail', tmdb_id=tmdb_id,
+                                review_detail_sort="popular",
+                                media_type=media_type,
+                                page=0))
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -354,52 +362,53 @@ def api_request(page):
            methods=["GET", "POST"])
 def new_review(tmdb_id, media_type):
     ''' '''
-    if request.method == "POST":
-        # check if movie details already exist in db and if not, add them
-        details_exist = mongo.db.movie_details.find_one(
-            {"tmdb_id": tmdb_id})
-        if not details_exist:
-            # insert new movie details into the db
-            session["selected_media"]["overall_rating"] = int(request.form.get(
-                "inlineRadioOptions"))
-            session["selected_media"]["number_reviews"] = 1
-            mongo.db.movie_details.insert_one(dict(session["selected_media"]))
-            original_title = session["selected_media"]["original_title"]
-        else:
-            # update overall rating and number of reviews for sorting purposes
-            total_rating = details_exist["overall_rating"] + int(
-                request.form.get("inlineRadioOptions"))
-            number_reviews = details_exist["number_reviews"] + 1
-            update_rating = total_rating / number_reviews
-            mongo.db.movie_details.update_one(
-                {"tmdb_id": tmdb_id},
-                {"$set": {"overall_rating": round(float(update_rating), 2)}})
-            mongo.db.movie_details.update_one(
-                {"tmdb_id": tmdb_id},
-                {"$set": {"number_reviews": int(
-                    details_exist["number_reviews"] + 1)}})
-            mongo.db.movie_details.update_one(
-                {"tmdb_id": tmdb_id},
-                {"$set": {"last_review_date": datetime.datetime.now()}})
-            original_title = details_exist["original_title"]
-        # Add new review to db
-        new_review = {
-            "tmdb_id": str(tmdb_id),
-            "original_title": original_title,
-            "genre": request.form.get("select-genre").title(),
-            "review": request.form.get("review-text"),
-            "rating": request.form.get("inlineRadioOptions"),
-            "review_date": datetime.datetime.now(),
-            "created_by": session["user"],
-            "likes": []
-        }
-        mongo.db.reviews.insert_one(new_review)
-        session.pop("selected_media", None)
-        session.pop("search_query", None)
-        session.pop("media_type", None)
-        session.pop("overall_rating", None)
-        flash("Review Posted Successfully!")
-        return redirect(url_for("browse_reviews", page=0))
+    if check_user_permission() == "valid-user":
+        if request.method == "POST":
+            # check if movie details already exist in db and if not, add them
+            details_exist = mongo.db.movie_details.find_one(
+                {"tmdb_id": tmdb_id})
+            if not details_exist:
+                # insert new movie details into the db
+                session["selected_media"]["overall_rating"] = int(request.form.get(
+                    "inlineRadioOptions"))
+                session["selected_media"]["number_reviews"] = 1
+                mongo.db.movie_details.insert_one(dict(session["selected_media"]))
+                original_title = session["selected_media"]["original_title"]
+            else:
+                # update overall rating and number of reviews for sorting purposes
+                total_rating = details_exist["overall_rating"] + int(
+                    request.form.get("inlineRadioOptions"))
+                number_reviews = details_exist["number_reviews"] + 1
+                update_rating = total_rating / number_reviews
+                mongo.db.movie_details.update_one(
+                    {"tmdb_id": tmdb_id},
+                    {"$set": {"overall_rating": round(float(update_rating), 2)}})
+                mongo.db.movie_details.update_one(
+                    {"tmdb_id": tmdb_id},
+                    {"$set": {"number_reviews": int(
+                        details_exist["number_reviews"] + 1)}})
+                mongo.db.movie_details.update_one(
+                    {"tmdb_id": tmdb_id},
+                    {"$set": {"last_review_date": datetime.datetime.now()}})
+                original_title = details_exist["original_title"]
+            # Add new review to db
+            new_review = {
+                "tmdb_id": str(tmdb_id),
+                "original_title": original_title,
+                "genre": request.form.get("select-genre").title(),
+                "review": request.form.get("review-text"),
+                "rating": request.form.get("inlineRadioOptions"),
+                "review_date": datetime.datetime.now(),
+                "created_by": session["user"],
+                "likes": []
+            }
+            mongo.db.reviews.insert_one(new_review)
+            session.pop("selected_media", None)
+            session.pop("search_query", None)
+            session.pop("media_type", None)
+            session.pop("overall_rating", None)
+            flash("Review Posted Successfully!")
+            return redirect(url_for("browse_reviews", page=0))
     # check if media details are already in db
     if "user" in session:
         already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
@@ -497,45 +506,45 @@ def validate_choice(media_detail):
 
 @app.route("/admin_controls", methods=["GET", "POST"])
 def admin_controls():
-    if request.method == "POST":
-        if "submit-form-1" in request.form:
-            remove_genre = request.form.get("select-genre")
-            add_genre = request.form.get("new-genre")
-            if remove_genre:
-                mongo.db.genres.delete_one(
-                    {"genre_name": remove_genre})
-                flash(f"{remove_genre.title()} Deleted & List Updated")
-            if add_genre:
-                already_exist = mongo.db.genres.find_one(
-                    {"genre_name": add_genre.title()})
-                if not already_exist:
-                    mongo.db.genres.insert_one(
-                        {"genre_name": add_genre.title()})
-                    flash(f"{add_genre.title()} Added & List Updated")
-                else:
-                    flash("This Entry Already Exists!")
-            if not add_genre and not remove_genre:
-                flash("Nothing to Update")
-        if "submit-form-3" in request.form:
-            block_list_users = request.form.getlist("block-selected")
-            if len(block_list_users) != 0:
-                for user in block_list_users:
-                    already_blocked = mongo.db.blocked_users.find_one(
-                        {"username": user})
-                    if already_blocked:
-                        flash("User(s) Already Blocked")
-                    else:
-                        mongo.db.blocked_users.insert_one(
-                            {"username": user})
-                flash("User(s) Blocked")
-        if "submit-form-4" in request.form:
-            unblock_list_users = request.form.getlist("unblock-selected")
-            if len(unblock_list_users) != 0:
-                for user in unblock_list_users:
-                    mongo.db.blocked_users.delete_one(
-                        {"username": user})
-                flash("User(s) Unblocked")
     if "user" in session:
+        if request.method == "POST":
+            if "submit-form-1" in request.form:
+                remove_genre = request.form.get("select-genre")
+                add_genre = request.form.get("new-genre")
+                if remove_genre:
+                    mongo.db.genres.delete_one(
+                        {"genre_name": remove_genre})
+                    flash(f"{remove_genre.title()} Deleted & List Updated")
+                if add_genre:
+                    already_exist = mongo.db.genres.find_one(
+                        {"genre_name": add_genre.title()})
+                    if not already_exist:
+                        mongo.db.genres.insert_one(
+                            {"genre_name": add_genre.title()})
+                        flash(f"{add_genre.title()} Added & List Updated")
+                    else:
+                        flash("This Entry Already Exists!")
+                if not add_genre and not remove_genre:
+                    flash("Nothing to Update")
+            if "submit-form-3" in request.form:
+                block_list_users = request.form.getlist("block-selected")
+                if len(block_list_users) != 0:
+                    for user in block_list_users:
+                        already_blocked = mongo.db.blocked_users.find_one(
+                            {"username": user})
+                        if already_blocked:
+                            flash("User(s) Already Blocked")
+                        else:
+                            mongo.db.blocked_users.insert_one(
+                                {"username": user})
+                    flash("User(s) Blocked")
+            if "submit-form-4" in request.form:
+                unblock_list_users = request.form.getlist("unblock-selected")
+                if len(unblock_list_users) != 0:
+                    for user in unblock_list_users:
+                        mongo.db.blocked_users.delete_one(
+                            {"username": user})
+                    flash("User(s) Unblocked")
         if session["user"] == "admin":
             number_users = mongo.db.users.count()
             number_movies = mongo.db.movie_details.count()
@@ -565,14 +574,15 @@ def admin_controls():
                 "username"] for user in mongo.db.blocked_users.find(
                     ).sort("username", 1)]
             return render_template("admin_controls.html", genres=genres,
-                                   user_list=user_list,
-                                   blocked_users=blocked_users,
-                                   number_users=number_users,
-                                   number_movies=number_movies,
-                                   number_reviews=number_reviews,
-                                   most_likes=most_likes)
-        return redirect(url_for("index"))
-    return check_user_permission()
+                                user_list=user_list,
+                                blocked_users=blocked_users,
+                                number_users=number_users,
+                                number_movies=number_movies,
+                                number_reviews=number_reviews,
+                                most_likes=most_likes)
+    check_user_permission()
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 def check_user_permission():
@@ -581,9 +591,10 @@ def check_user_permission():
             {"username": session["user"].lower()})
         if blocked_user:
             flash("User has been Blocked. Contact the Administrator")
-            return redirect(url_for("logout"))
-    flash("You do not have permission to access the requested resource")
-    return redirect(url_for("index"))
+            logout()
+            return "user-blocked"
+        return "valid-user"
+    return False
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -614,7 +625,9 @@ def login():
         # username doesn't exist
         flash("Incorrect Username and/or Password")
         return redirect(url_for("index"))
-    return check_user_permission()
+    check_user_permission()
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -645,35 +658,37 @@ def register():
         session["user"] = username.lower()
         flash("Registration Successful!")
         return redirect(url_for("index"))
-    if "user" in session:
-        return redirect(url_for("index"))
-    return check_user_permission()
+    if not check_user_permission():
+        return render_template("register.html")
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 @app.route("/change_password", methods=["GET", "POST"])
 def change_password():
-    if request.method == "POST":
-        password2 = request.form.get("password2")
-        confirm_password2 = request.form.get("confirm-password2")
-        if password2 != confirm_password2:
+    if check_user_permission() == "valid-user":
+        if request.method == "POST":
+            password2 = request.form.get("password2")
+            confirm_password2 = request.form.get("confirm-password2")
+            if password2 != confirm_password2:
+                flash("Passwords do not match!")
+                return redirect(url_for("change_password"))
+
+            existing_user = mongo.db.users.find_one(
+                {"username": session["user"]})
+            if check_password_hash(
+                    existing_user["password"], request.form.get("password1")):
+                password = generate_password_hash(confirm_password2)
+                mongo.db.users.update_one(
+                    {"username": session["user"]},
+                    {"$set": {"password": password}})
+                flash("Password Updated!")
+                return redirect(url_for("logout"))
             flash("Passwords do not match!")
             return redirect(url_for("change_password"))
-
-        existing_user = mongo.db.users.find_one(
-            {"username": session["user"]})
-        if check_password_hash(
-                existing_user["password"], request.form.get("password1")):
-            password = generate_password_hash(confirm_password2)
-            mongo.db.users.update_one(
-                {"username": session["user"]},
-                {"$set": {"password": password}})
-            flash("Password Updated!")
-            return redirect(url_for("logout"))
-        flash("Passwords do not match!")
-        return redirect(url_for("change_password"))
-    if "user" in session:
         return render_template("change_password.html")
-    return check_user_permission()
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 @app.route("/logout")
@@ -683,7 +698,8 @@ def logout():
         flash("You have been logged out")
         session.pop("user")
         return redirect(url_for("index"))
-    return check_user_permission()
+    flash("You do not have permission to access the requested resource")
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
