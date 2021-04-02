@@ -272,6 +272,10 @@ body .carousel-control-next-icon {
     margin: 0 auto;
 }
 
+.input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+    border-radius: .25rem;
+}
+
 /*--------------------------------------------------------Footer */
 
 .footer-container {

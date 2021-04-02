@@ -50,8 +50,8 @@
     <div class="row">
         <div class="col-12 col-lg-6 mb-5">
             <h3>Add/Remove Genres:</h3>
-            <p>Pick from the list below to remove a genre and/or add one in the input box below that</p>
-            <form class="needs-validation" action="{{ url_for('admin_controls') }}" method="POST" novalidate>
+            <p>Pick from the list below to remove a genre and/or add a new one in the input box</p>
+            <form class="needs-validation adjust-genres" action="{{ url_for('admin_controls') }}" method="POST" novalidate>
                 <select class="form-select select-genre" name="select-genre" size="10"
                     aria-label="Size 10 Select Genre">
                     <option value="" disabled>Genre List:</option>

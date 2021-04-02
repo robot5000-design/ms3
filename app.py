@@ -581,7 +581,7 @@ def check_user_permission():
             {"username": session["user"].lower()})
         if blocked_user:
             flash("User has been Blocked. Contact the Administrator")
-            return redirect(url_for("index"))
+            return redirect(url_for("logout"))
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
