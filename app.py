@@ -25,7 +25,8 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 csp = {
     'default-src': [
         '\'self\'',
-        'https:'
+        'https:',
+        'none'
     ],
     'script-src': [
         '\'self\'',
@@ -54,8 +55,14 @@ csp = {
     ]
 }
 
-talisman = Talisman(app, content_security_policy=csp,
-                    session_cookie_secure=True)
+talisman = Talisman(app, content_security_policy=csp)
+
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+)
+
 mongo = PyMongo(app)
 csrf = CSRFProtect(app)
 
