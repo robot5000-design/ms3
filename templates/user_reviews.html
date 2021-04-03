@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<!--  
 <div class="container-fluid my-reviews-container">
     <div class="row">
         <div class="col">
@@ -8,6 +9,7 @@
     </div>
     <div class="row search-box">
         <form action="{{ url_for('my_reviews', user=session['user'], sort_by='latest', page=0) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <div class="mb-3 row">
                 <label for="search-box" class="form-label">Search</label>
                 <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
@@ -87,5 +89,6 @@
     <h3>No Results!</h3>
     {% endif %}
 </div>
+-->
 
 {% endblock %}

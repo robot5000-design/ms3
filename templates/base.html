@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init("user_oV8YdlKemUPQdjcjpZQbo");
+        })();
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
         integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
         crossorigin="anonymous" type="text/css" />
@@ -110,7 +116,7 @@
                     <p>Powered by TMDB</p>
                 </div>
                 <div class="col-sm-4 order-sm-3 footer-terms-item">
-                    <a href="#">Privacy Policy</a>
+                    <a href="{{ url_for('contact') }}">Contact</a>
                 </div>
                 <div class="col-sm-4 order-sm-2 footer-terms-item">
                     <p>For Educational Purposes Only</p>
@@ -129,6 +135,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="needs-validation" action="{{ url_for('login') }}" method="POST" novalidate>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                         <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
                             <input id="username" name="username" type="text" class="form-control" minlength="5"

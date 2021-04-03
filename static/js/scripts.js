@@ -39,7 +39,15 @@ $(".review-form").on('submit', function () {
     $(".submit-edit").prop("disabled", true);
 });
 
-$("#search-api").on('submit', function(event) {
+$("#search-api").on('submit', function (event) {
+    var csrf_token = "{{ csrf_token() }}";
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
     $.ajax({
         type: 'POST',
         url: '/search',
@@ -50,5 +58,47 @@ $("#search-api").on('submit', function(event) {
     })
     //event.preventDefault();
 });
+
+
+// Regular Functions  ######################################################################
+/**
+ * Sends the feedback form values to the emailjs service template
+ * @param { object } contactForm - feedback form values
+ */
+function sendMail(contactForm) {
+    emailjs.send("service_ceipqpk", "template_7pribcf", {
+        "from_name": contactForm.name.value,
+        "from_email": contactForm.emailaddress.value,
+        "feed_back": contactForm.feedback.value
+    })
+        .then(
+            function (response) {
+                handleMailResponse(response, `Your message has been successfully delivered.`);
+            },
+            function (error) {
+                handleMailResponse(error, `Sorry. There's been a problem and your mail has not been sent. Please try again later.`);
+            }
+        );
+    return false; // To block from loading a new page
+}
+
+/**
+ * Sends the feedback form values to the emailjs service template
+ * @param { object } responseObject - emailjs.send response object
+ * @param { string } message - message to display to user on success or failure
+ * 
+ */
+function handleMailResponse(responseObject, message) {
+    //alert(`Status: ${responseObject.status} ${message}`)
+
+    $(".contact-error").html(
+        `<div>
+            Status: ${responseObject.status}
+        </div>
+        <div>
+            ${message}
+        </div>`
+    );
+}
 
 

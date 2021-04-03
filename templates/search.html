@@ -4,12 +4,13 @@
     <div class="row">
         <div class="col-12">
             <div class="row text-center py-4">
-                <h3 class="col-12">Search for a movie or tv series to review:</h3>
+                <h1 class="heading col-12">Search for a movie or tv series to review:</h1>
             </div>
             <!-- Search within movie list -->
             <div class="row pb-2">
                 <div class="col-12 col-sm-10 col-lg-8 mx-auto">
                     <form action="" method="post" class="" id="search-api">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                         <div class="row mb-3">
                             <div class="">
                                 {% if session["media_type"] == "tv" %}

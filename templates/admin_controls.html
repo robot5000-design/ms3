@@ -52,6 +52,7 @@
             <h3>Add/Remove Genres:</h3>
             <p>Pick from the list below to remove a genre and/or add a new one in the input box</p>
             <form class="needs-validation adjust-genres" action="{{ url_for('admin_controls') }}" method="POST" novalidate>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <select class="form-select select-genre" name="select-genre" size="10"
                     aria-label="Size 10 Select Genre">
                     <option value="" disabled>Genre List:</option>
@@ -75,6 +76,7 @@
         <div class="col-12 col-lg-6 mb-5">
             <h3>Block User(s):</h3>
             <form class="" action="{{ url_for('admin_controls') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <select class="form-select select-user mb-2" name="block-selected" size="10" aria-label="Size 10 Select User"
                     multiple required>
                     <option value="" disabled>User List:</option>
@@ -92,6 +94,7 @@
         <div class="col-12 col-lg-6">
             <h3>Unblock User(s):</h3>
             <form class="" action="{{ url_for('admin_controls') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <select class="form-select select-user mb-2" name="unblock-selected" size="10" aria-label="Size 10 Select User"
                     multiple required>
                     <option value="" disabled>User List:</option>

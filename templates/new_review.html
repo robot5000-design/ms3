@@ -46,6 +46,7 @@
                 {% else %}
                 <form class="review-form" method="POST"
                     action="{{ url_for('new_review', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <select class="select-genre mb-3 py-1" name="select-genre" aria-label="Select Genre" required>
                         <option value="" selected disabled>Choose a Genre:</option>
                         {% for genre in genres %}

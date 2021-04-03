@@ -37,6 +37,7 @@
 
             <form class="review-form" method="POST"
                 action="{{ url_for('edit_review', tmdb_id=media_detail.tmdb_id, my_reviews_sort=my_reviews_sort) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 {% if not session.user %}
                 <a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
                 {% elif already_reviewed %}

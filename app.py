@@ -1,12 +1,13 @@
 import os
-import requests
 import datetime
 import math
+import requests
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
 from flask_pymongo import PyMongo
-from flask_talisman import Talisman
+from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFError
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
@@ -20,37 +21,8 @@ app.api_key = os.environ.get("API_KEY")
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 
-csp = {
-    'default-src': [
-        '\'self\''
-    ],
-    'script-src': [
-        '\'self\'',
-        'code.jquery.com',
-        'cdn.jsdelivr.net',
-        'cdnjs.cloudflare.com'
-    ],
-    'font-src': [
-        '\'self\'',
-        'themes.googleusercontent.com *.gstatic.com',
-        'fonts.googleapis.com',
-        'cdnjs.cloudflare.com'
-    ],
-    'style-src': [
-        '\'self\'',
-        'code.jquery.com',
-        'cdn.jsdelivr.net',
-        'cdnjs.cloudflare.com',
-        'fonts.googleapis.com'
-    ],
-    'img-src': [
-        '\'self\'',
-        'image.tmdb.org'
-    ]
-}
-#talisman = Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'])
-
 mongo = PyMongo(app)
+csrf = CSRFProtect(app)
 
 
 @app.route('/')
@@ -122,29 +94,29 @@ def my_reviews(user, my_reviews_sort, page):
         search_term = {"created_by": user}
         query = ""
     if my_reviews_sort == "alphabetically":
-        my_reviews = list(mongo.db.reviews.find(search_term).sort(
+        my_reviews_search = list(mongo.db.reviews.find(search_term).sort(
             "original_title", 1).skip(page * 12).limit(12))
     elif my_reviews_sort == "oldest":
-        my_reviews = list(mongo.db.reviews.find(search_term).sort(
+        my_reviews_search = list(mongo.db.reviews.find(search_term).sort(
             "review_date", 1).skip(page * 12).limit(12))
     else:
         my_reviews_sort = "latest"
-        my_reviews = list(mongo.db.reviews.find(search_term).sort(
+        my_reviews_search = list(mongo.db.reviews.find(search_term).sort(
             "review_date", -1).skip(page * 12).limit(12))
-    if my_reviews:
+    if my_reviews_search:
         movie_id_list = []
-        for review in my_reviews:
+        for review in my_reviews_search:
             movie_id_list.append(review["tmdb_id"])
         review_count = mongo.db.reviews.find({"created_by": user}).count()
         total_pages = math.ceil(review_count / 12)
         # pick out the movies details that we need
         movie_details = []
-        index = 0
-        while index < len(movie_id_list):
+        iteration = 0
+        while iteration < len(movie_id_list):
             movie_detail = list(mongo.db.movie_details.find(
-                {"tmdb_id": movie_id_list[index]}))
+                {"tmdb_id": movie_id_list[iteration]}))
             movie_details.extend(movie_detail)
-            index += 1
+            iteration += 1
         if movie_details:
             tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         return render_template("my_reviews.html", movie_details=movie_details,
@@ -288,14 +260,14 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
                                page=page, review_count=review_count,
                                total_pages=total_pages)
     return redirect(url_for("new_review", tmdb_id=tmdb_id,
-                                media_type=media_type))
+                            media_type=media_type))
 
 
-@app.route("/add_like/<id>/<tmdb_id>/<media_type>")
-def add_like(id, tmdb_id, media_type):
+@app.route("/add_like/<object_id>/<tmdb_id>/<media_type>")
+def add_like(object_id, tmdb_id, media_type):
     if check_user_permission() == "valid-user":
         mongo.db.reviews.update_one(
-            {"_id": ObjectId(id)},
+            {"_id": ObjectId(object_id)},
             {"$addToSet": {"likes": session["user"]}})
         return redirect(url_for('review_detail', tmdb_id=tmdb_id,
                                 review_detail_sort="popular",
@@ -326,9 +298,8 @@ def search_pagination(page):
         return api_request(page=1)
     if "search_query" in session:
         return api_request(page)
-    else:
-        flash("Something went wrong!")
-        return redirect(url_for("search_movies"))
+    flash("Something went wrong!")
+    return redirect(url_for("search_movies"))
 
 
 def api_request(page):
@@ -341,21 +312,21 @@ def api_request(page):
     else:
         search_url = search_url_movie
     try:
-        api_request = requests.get(search_url)
+        api_search = requests.get(search_url)
     except requests.exceptions.ConnectionError:
         flash("Cannot get results from the database\
                 at this time. Please try again later.")
     else:
-        if api_request.status_code == 200:
-            search_results = api_request.json()
+        if api_search.status_code == 200:
+            search_results = api_search.json()
             if "results" in search_results:
                 return render_template(
                     "search.html", search_results=search_results)
-            else:
-                flash("There's been a problem. Please try again later.")
-        else:
-            flash("Status " + str(api_request.status_code) + " " + api_request.reason + ". Cannot get results \
-                from the database at this time. Please try again later.")
+            flash("There's been a problem. Please try again later.")
+            return None
+        flash("Status " + str(api_search.status_code) + " " + api_search.reason + ". Cannot get results \
+            from the database at this time. Please try again later.")
+        return None
 
 
 @app.route("/new_review/<tmdb_id>/<media_type>",
@@ -369,20 +340,23 @@ def new_review(tmdb_id, media_type):
                 {"tmdb_id": tmdb_id})
             if not details_exist:
                 # insert new movie details into the db
-                session["selected_media"]["overall_rating"] = int(request.form.get(
-                    "inlineRadioOptions"))
+                session["selected_media"]["overall_rating"] = int(
+                    request.form.get("inlineRadioOptions"))
                 session["selected_media"]["number_reviews"] = 1
-                mongo.db.movie_details.insert_one(dict(session["selected_media"]))
+                mongo.db.movie_details.insert_one(dict(
+                    session["selected_media"]))
                 original_title = session["selected_media"]["original_title"]
             else:
-                # update overall rating and number of reviews for sorting purposes
+                # update overall rating and number of reviews for sorting
+                # purposes
                 total_rating = details_exist["overall_rating"] + int(
                     request.form.get("inlineRadioOptions"))
                 number_reviews = details_exist["number_reviews"] + 1
                 update_rating = total_rating / number_reviews
                 mongo.db.movie_details.update_one(
                     {"tmdb_id": tmdb_id},
-                    {"$set": {"overall_rating": round(float(update_rating), 2)}})
+                    {"$set": {"overall_rating": round(float(
+                        update_rating), 2)}})
                 mongo.db.movie_details.update_one(
                     {"tmdb_id": tmdb_id},
                     {"$set": {"number_reviews": int(
@@ -392,7 +366,7 @@ def new_review(tmdb_id, media_type):
                     {"$set": {"last_review_date": datetime.datetime.now()}})
                 original_title = details_exist["original_title"]
             # Add new review to db
-            new_review = {
+            new_review_object = {
                 "tmdb_id": str(tmdb_id),
                 "original_title": original_title,
                 "genre": request.form.get("select-genre").title(),
@@ -402,7 +376,7 @@ def new_review(tmdb_id, media_type):
                 "created_by": session["user"],
                 "likes": []
             }
-            mongo.db.reviews.insert_one(new_review)
+            mongo.db.reviews.insert_one(new_review_object)
             session.pop("selected_media", None)
             session.pop("search_query", None)
             session.pop("media_type", None)
@@ -453,27 +427,16 @@ def get_choice_detail(tmdb_id, media_type):
                 at this time. Please try again later.")
     else:
         if detail_request.status_code == 200:
-            media_detail = detail_request.json()
-            if "id" in media_detail:
-                return media_detail
-            else:
-                flash("There's been a problem. Please try again later.")
-        else:
-            flash("Status " + str(detail_request.status_code) + " " + detail_request.reason + ". Cannot get results \
-                from the database at this time. Please try again later.")
+            if "id" in detail_request.json():
+                return detail_request.json()
+            flash("There's been a problem. Please try again later.")
+            return None
+        flash("Status " + str(detail_request.status_code) + " " + detail_request.reason + ". Cannot get results \
+            from the database at this time. Please try again later.")
+        return None
 
 
-def validate_choice(media_detail):
-    session["selected_media"] = {}
-    if "id" in media_detail:
-        session["selected_media"]["tmdb_id"] = str(media_detail["id"])
-    if "original_title" in media_detail:
-        session["selected_media"][
-            "original_title"] = media_detail["original_title"]
-    elif "original_name" in media_detail:
-        session["selected_media"][
-            "original_title"] = media_detail["original_name"]
-    session["selected_media"]["media_type"] = session["media_type"]
+def validate_api_date_name(media_detail):
     if "first_air_date" in media_detail:
         if media_detail["first_air_date"] is None or media_detail[
                 "first_air_date"] == "":
@@ -490,6 +453,20 @@ def validate_choice(media_detail):
                 "release_date"] = media_detail["release_date"][0:4]
     else:
         session["selected_media"]["release_date"] = ""
+
+
+def validate_choice(media_detail):
+    session["selected_media"] = {}
+    if "id" in media_detail:
+        session["selected_media"]["tmdb_id"] = str(media_detail["id"])
+    if "original_title" in media_detail:
+        session["selected_media"][
+            "original_title"] = media_detail["original_title"]
+    elif "original_name" in media_detail:
+        session["selected_media"][
+            "original_title"] = media_detail["original_name"]
+    session["selected_media"]["media_type"] = session["media_type"]
+    validate_api_date_name(media_detail)
     if "poster_path" in media_detail:
         if media_detail["poster_path"] == "" or media_detail[
                 "poster_path"] is None:
@@ -504,85 +481,100 @@ def validate_choice(media_detail):
     session["selected_media"]["last_review_date"] = datetime.datetime.now()
 
 
+def add_remove_genre():
+    remove_genre = request.form.get("select-genre")
+    add_genre = request.form.get("new-genre")
+    if remove_genre:
+        mongo.db.genres.delete_one(
+            {"genre_name": remove_genre})
+        flash(f"{remove_genre.title()} Deleted & List Updated")
+    if add_genre:
+        already_exist = mongo.db.genres.find_one(
+            {"genre_name": add_genre.title()})
+        if not already_exist:
+            mongo.db.genres.insert_one(
+                {"genre_name": add_genre.title()})
+            flash(f"{add_genre.title()} Added & List Updated")
+        else:
+            flash("This Entry Already Exists!")
+    if not add_genre and not remove_genre:
+        flash("Nothing to Update")
+
+
+def block_users():
+    block_list_users = request.form.getlist("block-selected")
+    if len(block_list_users) != 0:
+        for user in block_list_users:
+            already_blocked = mongo.db.blocked_users.find_one(
+                {"username": user})
+            if already_blocked:
+                flash("User(s) Already Blocked")
+            else:
+                mongo.db.blocked_users.insert_one(
+                    {"username": user})
+        flash("User(s) Blocked")
+
+
+def unblock_users():
+    unblock_list_users = request.form.getlist("unblock-selected")
+    if len(unblock_list_users) != 0:
+        for user in unblock_list_users:
+            mongo.db.blocked_users.delete_one(
+                {"username": user})
+        flash("User(s) Unblocked")
+
+
 @app.route("/admin_controls", methods=["GET", "POST"])
 def admin_controls():
-    if "user" in session:
-        if request.method == "POST":
-            if "submit-form-1" in request.form:
-                remove_genre = request.form.get("select-genre")
-                add_genre = request.form.get("new-genre")
-                if remove_genre:
-                    mongo.db.genres.delete_one(
-                        {"genre_name": remove_genre})
-                    flash(f"{remove_genre.title()} Deleted & List Updated")
-                if add_genre:
-                    already_exist = mongo.db.genres.find_one(
-                        {"genre_name": add_genre.title()})
-                    if not already_exist:
-                        mongo.db.genres.insert_one(
-                            {"genre_name": add_genre.title()})
-                        flash(f"{add_genre.title()} Added & List Updated")
-                    else:
-                        flash("This Entry Already Exists!")
-                if not add_genre and not remove_genre:
-                    flash("Nothing to Update")
-            if "submit-form-3" in request.form:
-                block_list_users = request.form.getlist("block-selected")
-                if len(block_list_users) != 0:
-                    for user in block_list_users:
-                        already_blocked = mongo.db.blocked_users.find_one(
-                            {"username": user})
-                        if already_blocked:
-                            flash("User(s) Already Blocked")
-                        else:
-                            mongo.db.blocked_users.insert_one(
-                                {"username": user})
-                    flash("User(s) Blocked")
-            if "submit-form-4" in request.form:
-                unblock_list_users = request.form.getlist("unblock-selected")
-                if len(unblock_list_users) != 0:
-                    for user in unblock_list_users:
-                        mongo.db.blocked_users.delete_one(
-                            {"username": user})
-                    flash("User(s) Unblocked")
-        if session["user"] == "admin":
-            number_users = mongo.db.users.count()
-            number_movies = mongo.db.movie_details.count()
-            number_reviews = mongo.db.reviews.count()
-            most_likes = list(mongo.db.reviews.aggregate([
-                {
-                    "$addFields": {
-                        "sum_likes": {"$size": {"$ifNull": ["$likes", []]}}}
-                },
-                {
-                    "$sort": {"sum_likes": -1}
-                },
-                {
-                    "$limit": 5
-                }
-            ]))
-            # find media_type for the top 5 most liked reviews
-            for review in most_likes:
-                tmdb_id = review["tmdb_id"]
-                movie_detail = mongo.db.movie_details.find_one(
-                                {"tmdb_id": tmdb_id})
-                review["media_type"] = movie_detail["media_type"]
-            genres = mongo.db.genres.find().sort("genre_name", 1)
-            user_list = [user["username"] for user in mongo.db.users.find(
+    if request.method == "POST":
+        if "submit-form-1" in request.form:
+            add_remove_genre()
+        if "submit-form-3" in request.form:
+            block_users()
+        if "submit-form-4" in request.form:
+            unblock_users()
+    if session["user"] == "admin":
+        number_users = mongo.db.users.count()
+        number_movies = mongo.db.movie_details.count()
+        number_reviews = mongo.db.reviews.count()
+        most_likes = list(mongo.db.reviews.aggregate([
+            {
+                "$addFields": {
+                    "sum_likes": {"$size": {"$ifNull": ["$likes", []]}}}
+            },
+            {
+                "$sort": {"sum_likes": -1}
+            },
+            {
+                "$limit": 5
+            }
+        ]))
+        # find media_type for the top 5 most liked reviews
+        for review in most_likes:
+            tmdb_id = review["tmdb_id"]
+            movie_detail = mongo.db.movie_details.find_one(
+                            {"tmdb_id": tmdb_id})
+            review["media_type"] = movie_detail["media_type"]
+        genres = mongo.db.genres.find().sort("genre_name", 1)
+        user_list = [user["username"] for user in mongo.db.users.find(
+            ).sort("username", 1)]
+        blocked_users = [user[
+            "username"] for user in mongo.db.blocked_users.find(
                 ).sort("username", 1)]
-            blocked_users = [user[
-                "username"] for user in mongo.db.blocked_users.find(
-                    ).sort("username", 1)]
-            return render_template("admin_controls.html", genres=genres,
-                                user_list=user_list,
-                                blocked_users=blocked_users,
-                                number_users=number_users,
-                                number_movies=number_movies,
-                                number_reviews=number_reviews,
-                                most_likes=most_likes)
-    check_user_permission()
+        return render_template("admin_controls.html", genres=genres,
+                               user_list=user_list,
+                               blocked_users=blocked_users,
+                               number_users=number_users,
+                               number_movies=number_movies,
+                               number_reviews=number_reviews,
+                               most_likes=most_likes)
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
+
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
 
 
 def check_user_permission():
@@ -640,13 +632,13 @@ def register():
 
         if existing_user:
             flash("Username already exists")
-            return redirect(url_for("index"))
+            return redirect(url_for("register"))
 
         password1 = request.form.get("password2")
         password2 = request.form.get("confirm-password2")
         if password1 != password2:
             flash("Passwords do not match!")
-            return redirect(url_for("index"))
+            return redirect(url_for("register"))
 
         new_user = {
             "username": username.lower(),
@@ -658,10 +650,10 @@ def register():
         session["user"] = username.lower()
         flash("Registration Successful!")
         return redirect(url_for("index"))
-    if not check_user_permission():
-        return render_template("register.html")
-    flash("You do not have permission to access the requested resource")
-    return redirect(url_for("index"))
+    if check_user_permission():
+        flash("You do not have permission to access the requested resource")
+        return redirect(url_for("index"))
+    return render_template("register.html")
 
 
 @app.route("/change_password", methods=["GET", "POST"])
@@ -700,6 +692,21 @@ def logout():
         return redirect(url_for("index"))
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("error.html", error=error)
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template("error.html", error=error)
+
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(error):
+    return render_template('error.html', error=error.description), 400
 
 
 if __name__ == "__main__":

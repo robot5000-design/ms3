@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container register-wrapper">
+    <h1 class="heading mb-3">Register New User:</h1>
     <form class="needs-validation" action="{{ url_for('register') }}" method="POST" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <div class="mb-3">
             <label for="username2" class="form-label">Username</label>
             <input id="username2" name="username2" type="text" class="form-control" minlength="5"

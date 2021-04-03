@@ -3,13 +3,14 @@
 <div class="container-fluid text-center my-reviews-container">
     <div class="row py-4">
         <div class="col">
-            <h1>{{ user.title() }}'s Reviews</h1>
+            <h1 class="heading">{{ user.title() }}'s Reviews</h1>
         </div>
     </div>
     <div class="row search-box">
         <div class="col">
             <form action="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=0) }}"
                 method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="pb-4 row">
                     <div class="col">
                         <label for="search-box" class="form-label pb-4">Search</label>
@@ -59,7 +60,7 @@
                 <div class="row">
                     {% if user == session['user'] %}
                     <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}"
-                        class="btn btn-primary edit-review-btn">
+                        class="card-img-top">
                         <img src="{{ tmdb_poster_url }}{{ movie['poster_path'] }}" class="card-img-top" alt="...">
                     </a>
                     {% else %}

@@ -241,7 +241,7 @@ body .carousel-control-next-icon {
 .thumbnail-title a {
     font-family: "Alfa Slab One", cursive;
     font-size: 1.2em;
-    color: #eee9e1;
+    color: #ffa30f;
     padding-top: 7px;
 }
 
@@ -264,7 +264,8 @@ body .carousel-control-next-icon {
     border-radius: 5%;
 }
 
-.register-wrapper {
+.register-wrapper,
+.contact-wrapper {
     width: 100%;
     margin-top: 50px;
 }
@@ -281,7 +282,7 @@ body .carousel-control-next-icon {
 /*--------------------------------------------------------Footer */
 
 .footer-container {
-    background-color: #353535;
+    background-color: #000;
     min-height: 140px;
     text-align: center;
     position: relative;
@@ -312,7 +313,7 @@ body .carousel-control-next-icon {
 
 .footer-terms a:hover,
 .footer-container li a i:hover {
-    color: #d31363;
+    color: #316dc6;
 }
 
 .footer-terms .footer-terms-item {
@@ -361,7 +362,8 @@ body .carousel-control-next-icon {
         margin-right: 20px;
         width: 100%;
     }
-    .register-wrapper {
+    .register-wrapper,
+    .contact-wrapper {
         width: 60%;
     }
     .search-box {
@@ -398,7 +400,8 @@ body .carousel-control-next-icon {
         width: 85%;
     }
 
-    .register-wrapper {
+    .register-wrapper,
+    .contact-wrapper {
         width: 40%;
     }
 

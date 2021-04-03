@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main class="container p-5">
+    <div class="row m-0">
+        <div class="col">
+            <p>{{ error }}</p>
+            <p>Please click below to return to safety.</p>
+            <a href="{{ url_for('index') }}"
+                class="btn btn-success">Back
+            </a>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

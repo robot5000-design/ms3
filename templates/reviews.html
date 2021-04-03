@@ -3,12 +3,13 @@
 <div class="container-fluid text-center">
     <div class="row py-4">
         <div class="col">
-            <h1>Browse All Reviews:</h1>
+            <h1 class="heading">Browse All Reviews:</h1>
         </div>
     </div>
     <div class="row search-box">
         <div class="col-12">
             <form action="{{ url_for('browse_reviews', page=0) }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="row pb-4">
                     <div class="col">
                         <label for="search-box" class="form-label pb-4">Search</label>

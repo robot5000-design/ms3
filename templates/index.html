@@ -3,13 +3,14 @@
 <div class="container-fluid">
     <div class="row text-center py-4">
         <div class="col">
-            <h1>Search for something to review...</h1>
+            <h1 class="heading">Search for something to review...</h1>
         </div>
     </div>
     <!-- Search within movie list -->
     <div class="row pb-5">
         <div class="col-12 col-sm-10 col-lg-8 mx-auto">
             <form action="" method="post" class="" id="search-api">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="row mb-3">
                     <div class="col">
                         <div class="form-check form-check-tv">
@@ -52,7 +53,7 @@
     </div>
     <div class="row text-center py-5">
         <div class="col">
-            <h1>...or Check the Latest Reviews:</h1>
+            <h1 class="heading">...or Check the Latest Reviews:</h1>
         </div>
     </div>
     <div class="row">
