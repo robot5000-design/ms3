@@ -52,6 +52,9 @@ csp = {
         '\'self\'',
         'image.tmdb.org',
         'data:'
+    ],
+    'base-uri': [
+        'none'
     ]
 }
 
