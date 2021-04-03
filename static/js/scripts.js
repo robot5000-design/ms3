@@ -9,7 +9,7 @@ $(document).ready(function () {
  * @param { object } contactForm - feedback form values
  */
 function sendMail(contactForm) {
-    emailjs.send("service_ceipqpk", "template_7pribcf", {
+    emailjs.send("service_ceip qpk", "template_7pribcf", {
         "from_name": contactForm.name.value,
         "from_email": contactForm.emailaddress.value,
         "feed_back": contactForm.feedback.value
@@ -41,6 +41,7 @@ function handleMailResponse(responseObject, message) {
         </div>`
     );
     $(".contact-form")[0].reset();
+    $(".submit-contact").prop("disabled", false);
 }
 
 /**
@@ -71,6 +72,12 @@ $(".call-delete, .delete-genre").click(function () {
 
 $(".review-form").on('submit', function () {
     $(".submit-edit").prop("disabled", true);
+});
+
+$(".contact-form").on('submit', function(event) {
+    $(".submit-contact").prop("disabled", true);
+    sendMail(this);
+    event.preventDefault();
 });
 
 /**

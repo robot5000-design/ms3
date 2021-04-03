@@ -25,7 +25,7 @@ mongo = PyMongo(app)
 csrf = CSRFProtect(app)
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -146,7 +146,7 @@ def delete_review(tmdb_id, user):
             if session["user"] == "admin":
                 return redirect(url_for('browse_reviews', page=0))
             return redirect(url_for('my_reviews', user=user,
-                                        my_reviews_sort='latest', page=0))
+                                    my_reviews_sort='latest', page=0))
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
@@ -713,4 +713,4 @@ def handle_csrf_error(error):
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=os.environ.get("DEBUG"))
+            debug=True)
