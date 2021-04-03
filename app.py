@@ -25,6 +25,7 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 csp = {
     'default-src': [
         '\'self\'',
+        'https:',
         'api.emailjs.com'
     ],
     'script-src': [
@@ -53,7 +54,8 @@ csp = {
     ]
 }
 
-talisman = Talisman(app, content_security_policy=csp)
+talisman = Talisman(app, content_security_policy=csp,
+                    session_cookie_secure=True)
 mongo = PyMongo(app)
 csrf = CSRFProtect(app)
 
