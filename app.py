@@ -316,17 +316,17 @@ def api_request(page):
     except requests.exceptions.ConnectionError:
         flash("Cannot get results from the database\
                 at this time. Please try again later.")
-    else:
-        if api_search.status_code == 200:
-            search_results = api_search.json()
-            if "results" in search_results:
-                return render_template(
-                    "search.html", search_results=search_results)
-            flash("There's been a problem. Please try again later.")
-            return None
-        flash("Status " + str(api_search.status_code) + " " + api_search.reason + ". Cannot get results \
-            from the database at this time. Please try again later.")
+    if api_search.status_code == 200:
+        search_results = api_search.json()
+        if "results" in search_results:
+            return render_template(
+                "search.html", search_results=search_results)
+        flash("There's been a problem. Please try again later.")
         return None
+    flash("Status " + str(api_search.status_code) + " " + api_search.reason + ". \
+        Cannot get results from the database at this time. \
+            Please try again later.")
+    return None
 
 
 @app.route("/new_review/<tmdb_id>/<media_type>",
@@ -425,15 +425,16 @@ def get_choice_detail(tmdb_id, media_type):
     except requests.exceptions.ConnectionError:
         flash("Cannot get results from the database\
                 at this time. Please try again later.")
-    else:
-        if detail_request.status_code == 200:
-            if "id" in detail_request.json():
-                return detail_request.json()
-            flash("There's been a problem. Please try again later.")
-            return None
-        flash("Status " + str(detail_request.status_code) + " " + detail_request.reason + ". Cannot get results \
-            from the database at this time. Please try again later.")
+    if detail_request.status_code == 200:
+        if "id" in detail_request.json():
+            return detail_request.json()
+        flash("There's been a problem. Please try again later.")
         return None
+
+    flash("Status " + str(detail_request.status_code) + " " + detail_request.reason + ". \
+        Cannot get results from the database at this time. \
+            Please try again later.")
+    return None
 
 
 def validate_api_date_name(media_detail):

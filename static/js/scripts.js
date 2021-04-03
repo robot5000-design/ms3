@@ -1,65 +1,7 @@
 // Scrolls window to top on page load
 $(document).ready(function () {
-    //window.scroll(0, 0);
+    window.scroll(0, 0);
 });
-
-/**
- * Form validation taken directly from bootstrap documentation
- * Disables form submissions if there are invalid fields
- * @param { object } contactForm - feedback form values
- */
-(function () {
-    'use strict'
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.querySelectorAll('.needs-validation')
-    // Loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                form.classList.add('was-validated')
-            }, false)
-        })
-})()
-
-function goBack() {
-    window.history.back();
-}
-
-$(".go-back").click(goBack)
-
-$(".call-delete, .delete-genre").click(function () {
-    $(this).addClass("invisible");
-    $(this).siblings(".confirm-delete, .confirm-genre").removeClass("invisible");
-});
-
-$(".review-form").on('submit', function () {
-    $(".submit-edit").prop("disabled", true);
-});
-
-$("#search-api").on('submit', function (event) {
-    var csrf_token = "{{ csrf_token() }}";
-    $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrf_token);
-            }
-        }
-    });
-    $.ajax({
-        type: 'POST',
-        url: '/search',
-        data: {
-            media_type: $(".form-check-input").val(),
-            query: $("#query").val()
-        }
-    })
-    //event.preventDefault();
-});
-
 
 // Regular Functions  ######################################################################
 /**
@@ -101,4 +43,67 @@ function handleMailResponse(responseObject, message) {
     $(".contact-form")[0].reset();
 }
 
+/**
+ * Form validation taken directly from bootstrap documentation
+ * Disables form submissions if there are invalid fields
+ */
+(function () {
+    'use strict'
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
 
+$(".call-delete, .delete-genre").click(function () {
+    $(this).addClass("invisible");
+    $(this).siblings(".confirm-delete, .confirm-genre").removeClass("invisible");
+});
+
+$(".review-form").on('submit', function () {
+    $(".submit-edit").prop("disabled", true);
+});
+
+/**
+ * Sends the feedback form values to the emailjs service template
+ */
+$("#search-api").on('submit', function (event) {
+    var csrf_token = "{{ csrf_token() }}";
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        url: '/search',
+        data: {
+            media_type: $(".form-check-input").val(),
+            query: $("#query").val()
+        }
+    })
+    //event.preventDefault();
+});
+
+/**
+ * When the go-back button is clicked the browser returns to the
+ * previous page in history
+ */
+function goBack() {
+    window.history.back();
+}
+
+// Click Events ###################################################################################
+
+$(".go-back").click(goBack)
