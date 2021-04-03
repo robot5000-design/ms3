@@ -26,6 +26,14 @@ function sendMail(contactForm) {
 }
 
 /**
+ * emailjs initialisation
+ * 
+ */
+(function () {
+    emailjs.init("user_oV8YdlKemUPQdjcjpZQbo");
+})();
+
+/**
  * Sends the feedback form values to the emailjs service template
  * @param { object } responseObject - emailjs.send response object
  * @param { string } message - message to display to user on success or failure
@@ -74,7 +82,7 @@ $(".review-form").on('submit', function () {
     $(".submit-edit").prop("disabled", true);
 });
 
-$(".contact-form").on('submit', function(event) {
+$(".contact-form").on('submit', function (event) {
     $(".submit-contact").prop("disabled", true);
     sendMail(this);
     event.preventDefault();
