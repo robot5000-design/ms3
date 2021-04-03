@@ -3,13 +3,15 @@ $(document).ready(function () {
     //window.scroll(0, 0);
 });
 
-// Example starter JavaScript for disabling form submissions if there are invalid fields
+/**
+ * Form validation taken directly from bootstrap documentation
+ * Disables form submissions if there are invalid fields
+ * @param { object } contactForm - feedback form values
+ */
 (function () {
     'use strict'
-
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     var forms = document.querySelectorAll('.needs-validation')
-
     // Loop over them and prevent submission
     Array.prototype.slice.call(forms)
         .forEach(function (form) {
@@ -18,7 +20,6 @@ $(document).ready(function () {
                     event.preventDefault()
                     event.stopPropagation()
                 }
-
                 form.classList.add('was-validated')
             }, false)
         })

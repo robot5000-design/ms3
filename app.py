@@ -193,10 +193,10 @@ def edit_review(tmdb_id, my_reviews_sort):
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         genres = mongo.db.genres.find().sort("genre_name", 1)
         return render_template("edit_review.html", review_fields=review_fields,
-                                media_detail=media_detail,
-                                tmdb_poster_url=tmdb_poster_url,
-                                genres=genres,
-                                my_reviews_sort=my_reviews_sort)
+                               media_detail=media_detail,
+                               tmdb_poster_url=tmdb_poster_url,
+                               genres=genres,
+                               my_reviews_sort=my_reviews_sort)
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
