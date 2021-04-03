@@ -25,14 +25,14 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 csp = {
     'default-src': [
         '\'self\'',
-        'https:',
-        'api.emailjs.com'
+        'https:'
     ],
     'script-src': [
         '\'self\'',
         'code.jquery.com',
         'cdn.jsdelivr.net',
-        'cdnjs.cloudflare.com'
+        'cdnjs.cloudflare.com',
+        'api.emailjs.com'
     ],
     'font-src': [
         '\'self\'',
