@@ -53,7 +53,7 @@ csp = {
     ]
 }
 
-talisman = Talisman(app, content_security_policy=csp)
+#talisman = Talisman(app, content_security_policy=csp)
 mongo = PyMongo(app)
 csrf = CSRFProtect(app)
 
