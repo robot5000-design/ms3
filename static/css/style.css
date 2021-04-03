@@ -279,6 +279,10 @@ body .carousel-control-next-icon {
     border-radius: .25rem;
 }
 
+.modal {
+    color: #8b8989;
+}
+
 /*--------------------------------------------------------Footer */
 
 .footer-container {

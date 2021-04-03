@@ -89,8 +89,6 @@ function sendMail(contactForm) {
  * 
  */
 function handleMailResponse(responseObject, message) {
-    //alert(`Status: ${responseObject.status} ${message}`)
-
     $(".contact-error").html(
         `<div>
             Status: ${responseObject.status}
@@ -99,6 +97,7 @@ function handleMailResponse(responseObject, message) {
             ${message}
         </div>`
     );
+    $(".contact-form")[0].reset();
 }
 
 
