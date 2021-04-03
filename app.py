@@ -6,6 +6,7 @@ from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for)
 from flask_pymongo import PyMongo
+from flask_talisman import Talisman
 from flask_wtf.csrf import CSRFProtect
 from flask_wtf.csrf import CSRFError
 from bson.objectid import ObjectId
@@ -21,6 +22,38 @@ app.api_key = os.environ.get("API_KEY")
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 
+csp = {
+    'default-src': [
+        '\'self\'',
+        'api.emailjs.com'
+    ],
+    'script-src': [
+        '\'self\'',
+        'code.jquery.com',
+        'cdn.jsdelivr.net',
+        'cdnjs.cloudflare.com'
+    ],
+    'font-src': [
+        '\'self\'',
+        'themes.googleusercontent.com *.gstatic.com',
+        'fonts.googleapis.com',
+        'cdnjs.cloudflare.com'
+    ],
+    'style-src': [
+        '\'self\'',
+        'code.jquery.com',
+        'cdn.jsdelivr.net',
+        'cdnjs.cloudflare.com',
+        'fonts.googleapis.com'
+    ],
+    'img-src': [
+        '\'self\'',
+        'image.tmdb.org',
+        'data:'
+    ]
+}
+
+talisman = Talisman(app, content_security_policy=csp)
 mongo = PyMongo(app)
 csrf = CSRFProtect(app)
 
