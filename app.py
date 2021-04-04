@@ -52,7 +52,7 @@ csp = {
         'data:'
     ],
     'connect-src': [
-        #'\'self\'',
+        '\'self\'',
         'api.emailjs.com'
     ],
     'object-src': [

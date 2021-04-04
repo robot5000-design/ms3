@@ -1,6 +1,7 @@
 // Scrolls window to top on page load
 $(document).ready(function () {
     window.scroll(0, 0);
+    //$('#csrf_token').val('ABC');
 });
 
 // Regular Functions  ######################################################################
@@ -90,26 +91,23 @@ $(".contact-form").on('submit', function (event) {
 
 /**
  * Sends the feedback form values to the emailjs service template
- */ /*
-$("#search-api").on('submit', function () {
-    var csrf_token = "{{ csrf_token() }}";
-    /*$.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrf_token);
-            }
-        }
-    });
+ */
+$("#search-api").on('submit', function (event) {
     $.ajax({
         type: 'POST',
         url: '/search',
-        data: {
-            media_type: $(".form-check-input").val(),
-            query: $("#query").val()
+        data: $("#search-api").serialize(),
+        success: function () {
+            alert("success")
+            event.preventDefault();
+        },
+        error: function() {
+            alert("error")
+            console.log("error");
         }
     })
-    //event.preventDefault();
-});*/
+
+});
 
 /**
  * When the go-back button is clicked the browser returns to the
