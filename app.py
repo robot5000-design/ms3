@@ -25,8 +25,7 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 csp = {
     'default-src': [
         '\'self\'',
-        'https:',
-        'none'
+        '\'none\''
     ],
     'script-src': [
         '\'self\'',
@@ -53,8 +52,11 @@ csp = {
         'image.tmdb.org',
         'data:'
     ],
+    'object-src': [
+        '\'none\''
+    ],
     'base-uri': [
-        'none'
+        '\'none\''
     ]
 }
 
