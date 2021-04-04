@@ -195,15 +195,22 @@ def delete_review(tmdb_id, user):
                 mongo.db.movie_details.delete_one(
                     {"tmdb_id": tmdb_id})
             else:
+                # adjust the overall rating to take account of deleted review
                 details_exist = mongo.db.movie_details.find_one(
                     {"tmdb_id": tmdb_id})
                 current_rating = details_exist["overall_rating"]
                 current_number_reviews = details_exist["number_reviews"]
                 deleted_rating = float(review_to_delete["rating"])
                 updated_number_reviews = current_number_reviews - 1
-                updated_rating = (
-                    (current_rating * current_number_reviews) -
-                    deleted_rating) / updated_number_reviews
+                try:
+                    updated_overall_rating = (
+                        (current_rating * current_number_reviews) -
+                        deleted_rating) / updated_number_reviews
+                except ZeroDivisionError:
+                    flash("Oops, division by zero error")
+                    updated_rating = current_rating
+                if updated_overall_rating > 5:
+                    updated_overall_rating = 5
                 update_items = {
                     "overall_rating": updated_rating,
                     "number_reviews": updated_number_reviews
@@ -244,6 +251,29 @@ def edit_review(tmdb_id, my_reviews_sort):
                 "rating": request.form.get("inlineRadioOptions"),
                 "review_date": datetime.datetime.now()
             }
+            # adjust the overall rating to take account of edited review
+            media_details = mongo.db.movie_details.find_one(
+                {"tmdb_id": tmdb_id})
+            existing_review = mongo.db.reviews.find_one(
+                {"tmdb_id": tmdb_id, "created_by": session["user"]})
+            current_overall_rating = media_details["overall_rating"]
+            current_number_reviews = media_details["number_reviews"]
+            existing_review_rating = float(existing_review["rating"])
+            adjusted_review_rating = float(request.form.get(
+                "inlineRadioOptions"))
+            try:
+                updated_overall_rating = round(float(((
+                    current_overall_rating * current_number_reviews
+                    ) - existing_review_rating + adjusted_review_rating
+                    ) / current_number_reviews), 2)
+            except ZeroDivisionError:
+                flash("Oops, division by zero error")
+                updated_overall_rating = current_overall_rating
+            if updated_overall_rating > 5:
+                updated_overall_rating = 5
+            mongo.db.movie_details.update_one(
+                {"tmdb_id": tmdb_id},
+                {"$set": {"overall_rating": updated_overall_rating}})
             mongo.db.reviews.update_one(
                 {"tmdb_id": tmdb_id, "created_by": session["user"]},
                 {"$set": review_update})
@@ -303,23 +333,22 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
     if reviews:
         review_count = mongo.db.reviews.find({"tmdb_id": tmdb_id}).count()
         total_pages = math.ceil(review_count / 6)
-        movie_detail = list(mongo.db.movie_details.find(
-            {"tmdb_id": tmdb_id}))[0]
+        try:
+            movie_detail = list(mongo.db.movie_details.find(
+                {"tmdb_id": tmdb_id}))[0]
+        except IndexError:
+            flash("That resource does not exist")
+            return redirect(url_for("index"))
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         if "user" in session:
             already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
-                                                           "created_by": session["user"]}))
+                                    "created_by": session["user"]}))
         else:
             already_reviewed = False
-        overall_rating = 0
-        for review in reviews:
-            overall_rating += int(review["rating"])
-            review["review_date"] = review["review_date"].strftime("%d-%m-%Y")
+        overall_rating = movie_detail["overall_rating"]
         session["overall_rating"] = overall_rating
-        try:
-            overall_rating = round((overall_rating / len(reviews)), 2)
-        except ZeroDivisionError:
-            flash("Oops we have a zero division error")
+        for review in reviews:
+            review["review_date"] = review["review_date"].strftime("%d-%m-%Y")
         return render_template("review_detail.html", reviews=reviews,
                                movie_detail=movie_detail,
                                tmdb_poster_url=tmdb_poster_url,
@@ -418,12 +447,18 @@ def new_review(tmdb_id, media_type):
             else:
                 # update overall rating and number of reviews for sorting
                 # purposes
-                total_rating = details_exist["overall_rating"] + int(
+                total_rating = details_exist["overall_rating"] + float(
                     request.form.get("inlineRadioOptions"))
                 number_reviews = details_exist["number_reviews"] + 1
-                update_rating = total_rating / number_reviews
+                try:
+                    updated_overall_rating = total_rating / number_reviews
+                except ZeroDivisionError:
+                    flash("Oops we have a zero division error")
+                    updated_overall_rating = total_rating
+                if updated_overall_rating > 5:
+                    updated_overall_rating = 5
                 update_items = {
-                    "overall_rating": round(float(update_rating), 2),
+                    "overall_rating": round(float(updated_overall_rating), 2),
                     "number_reviews": int(details_exist["number_reviews"] + 1),
                     "last_review_date": datetime.datetime.now()
                 }
@@ -452,7 +487,7 @@ def new_review(tmdb_id, media_type):
     # check if media details are already in db
     if "user" in session:
         already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
-                                                       "created_by": session["user"]}))
+                                "created_by": session["user"]}))
     else:
         already_reviewed = None
     details_exist = list(mongo.db.movie_details.find(

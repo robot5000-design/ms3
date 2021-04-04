@@ -5,6 +5,7 @@ $(document).ready(function () {
 });
 
 // Regular Functions  ######################################################################
+
 /**
  * Sends the feedback form values to the emailjs service template
  * @param { object } contactForm - feedback form values
@@ -38,7 +39,6 @@ function sendMail(contactForm) {
  * Sends the feedback form values to the emailjs service template
  * @param { object } responseObject - emailjs.send response object
  * @param { string } message - message to display to user on success or failure
- * 
  */
 function handleMailResponse(responseObject, message) {
     $(".contact-error").html(
@@ -74,21 +74,6 @@ function handleMailResponse(responseObject, message) {
         })
 })()
 
-$(".call-delete, .delete-genre").click(function () {
-    $(this).addClass("invisible");
-    $(this).siblings(".confirm-delete, .confirm-genre").removeClass("invisible");
-});
-
-$(".review-form").on('submit', function () {
-    $(".submit-edit").prop("disabled", true);
-});
-
-$(".contact-form").on('submit', function (event) {
-    $(".submit-contact").prop("disabled", true);
-    sendMail(this);
-    event.preventDefault();
-});
-
 /**
  * When the go-back button is clicked the browser returns to the
  * previous page in history
@@ -99,4 +84,26 @@ function goBack() {
 
 // Click Events ###################################################################################
 
+// makes the delete process a two step process. Press the call-delete
+// button  and the confirm-delete goes from invisible to visible
+$(".call-delete, .delete-genre").click(function () {
+    $(this).addClass("invisible");
+    $(this).siblings(".confirm-delete, .confirm-genre").removeClass("invisible");
+});
+
+// On submitting a new review form, submit button is disabled 
+// to prevent double database submits
+$(".review-form").on('submit', function () {
+    $(".submit-edit").prop("disabled", true);
+});
+
+// Calls the sendmail function for the contact form and prevents the page
+// reloading so that a success or failure message can be displayed
+$(".contact-form").on('submit', function (event) {
+    $(".submit-contact").prop("disabled", true);
+    sendMail(this);
+    event.preventDefault();
+});
+
+// Call the goBack function which goes back to the previous page in history
 $(".go-back").click(goBack)
