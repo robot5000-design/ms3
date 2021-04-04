@@ -33,7 +33,7 @@ csp = {
         'code.jquery.com',
         'cdn.jsdelivr.net',
         'cdnjs.cloudflare.com',
-        'api.emailjs.com'
+        'https://api.emailjs.com'
     ],
     'font-src': [
         '\'self\'',
