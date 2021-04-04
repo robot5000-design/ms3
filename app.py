@@ -41,7 +41,7 @@ csp = {
     ],
     'style-src': [
         '\'self\'',
-        #'code.jquery.com',
+        # 'code.jquery.com',
         'cdn.jsdelivr.net',
         'cdnjs.cloudflare.com',
         'fonts.googleapis.com'
@@ -183,8 +183,9 @@ def my_reviews(user, my_reviews_sort, page):
 def delete_review(tmdb_id, user):
     if check_user_permission() == "valid-user":
         if user == session["user"] or session["user"] == "admin":
-            mongo.db.reviews.delete_one(
+            review_to_delete = mongo.db.reviews.find_one(
                 {"tmdb_id": tmdb_id, "created_by": user.lower()})
+            mongo.db.reviews.delete_one(review_to_delete)
             flash("Review Successfully Deleted")
             # check if there are other reviews, otherwise delete movie
             # details in the db
@@ -193,6 +194,23 @@ def delete_review(tmdb_id, user):
             if not other_reviews:
                 mongo.db.movie_details.delete_one(
                     {"tmdb_id": tmdb_id})
+            else:
+                details_exist = mongo.db.movie_details.find_one(
+                    {"tmdb_id": tmdb_id})
+                current_rating = details_exist["overall_rating"]
+                current_number_reviews = details_exist["number_reviews"]
+                deleted_rating = float(review_to_delete["rating"])
+                updated_number_reviews = current_number_reviews - 1
+                updated_rating = (
+                    (current_rating * current_number_reviews) -
+                    deleted_rating) / updated_number_reviews
+                update_items = {
+                    "overall_rating": updated_rating,
+                    "number_reviews": updated_number_reviews
+                }
+                mongo.db.movie_details.update_one(
+                    {"tmdb_id": tmdb_id},
+                    {"$set": update_items})
             if session["user"] == "admin":
                 return redirect(url_for('browse_reviews', page=0))
             return redirect(url_for('my_reviews', user=user,
@@ -235,11 +253,12 @@ def edit_review(tmdb_id, my_reviews_sort):
         try:
             media_detail = list(mongo.db.movie_details.find(
                                 {"tmdb_id": tmdb_id}))[0]
+            review_fields = list(mongo.db.reviews.find(
+                {"tmdb_id": tmdb_id, "created_by": session[
+                    "user"]}))[0]
         except IndexError:
+            flash("That resource does not exist")
             return redirect(url_for("index"))
-        review_fields = list(mongo.db.reviews.find(
-            {"tmdb_id": tmdb_id, "created_by": session[
-                "user"]}))[0]
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         genres = mongo.db.genres.find().sort("genre_name", 1)
         return render_template("edit_review.html", review_fields=review_fields,
@@ -289,7 +308,7 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
         tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
         if "user" in session:
             already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
-                                    "created_by": session["user"]}))
+                                                           "created_by": session["user"]}))
         else:
             already_reviewed = False
         overall_rating = 0
@@ -403,17 +422,14 @@ def new_review(tmdb_id, media_type):
                     request.form.get("inlineRadioOptions"))
                 number_reviews = details_exist["number_reviews"] + 1
                 update_rating = total_rating / number_reviews
+                update_items = {
+                    "overall_rating": round(float(update_rating), 2),
+                    "number_reviews": int(details_exist["number_reviews"] + 1),
+                    "last_review_date": datetime.datetime.now()
+                }
                 mongo.db.movie_details.update_one(
                     {"tmdb_id": tmdb_id},
-                    {"$set": {"overall_rating": round(float(
-                        update_rating), 2)}})
-                mongo.db.movie_details.update_one(
-                    {"tmdb_id": tmdb_id},
-                    {"$set": {"number_reviews": int(
-                        details_exist["number_reviews"] + 1)}})
-                mongo.db.movie_details.update_one(
-                    {"tmdb_id": tmdb_id},
-                    {"$set": {"last_review_date": datetime.datetime.now()}})
+                    {"$set": update_items})
                 original_title = details_exist["original_title"]
             # Add new review to db
             new_review_object = {
@@ -436,7 +452,7 @@ def new_review(tmdb_id, media_type):
     # check if media details are already in db
     if "user" in session:
         already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
-                                "created_by": session["user"]}))
+                                                       "created_by": session["user"]}))
     else:
         already_reviewed = None
     details_exist = list(mongo.db.movie_details.find(
@@ -604,14 +620,14 @@ def admin_controls():
         for review in most_likes:
             tmdb_id = review["tmdb_id"]
             movie_detail = mongo.db.movie_details.find_one(
-                            {"tmdb_id": tmdb_id})
+                {"tmdb_id": tmdb_id})
             review["media_type"] = movie_detail["media_type"]
         genres = mongo.db.genres.find().sort("genre_name", 1)
         user_list = [user["username"] for user in mongo.db.users.find(
-            ).sort("username", 1)]
+        ).sort("username", 1)]
         blocked_users = [user[
             "username"] for user in mongo.db.blocked_users.find(
-                ).sort("username", 1)]
+        ).sort("username", 1)]
         return render_template("admin_controls.html", genres=genres,
                                user_list=user_list,
                                blocked_users=blocked_users,
