@@ -90,32 +90,6 @@ $(".contact-form").on('submit', function (event) {
 });
 
 /**
- * Sends the feedback form values to the emailjs service template
- */ /*
-$("#search-api").submit(function (event) {
-    var csrf_token = "{{ csrf_token() }}";
-    event.preventDefault();
-    $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrf_token);
-            }
-        }
-    });
-    $.ajax({
-        type: 'POST',
-        url: '/search',
-        data: $("#search-api").serialize(),
-        success: function () {
-            alert("success")
-        },
-        error: function () {
-            alert("error")
-        }
-    })
-}); */
-
-/**
  * When the go-back button is clicked the browser returns to the
  * previous page in history
  */
