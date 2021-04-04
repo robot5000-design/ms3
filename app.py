@@ -333,7 +333,7 @@ def search_movies():
         session["search"] = True
         session["search_query"] = request.form.get("query")
         session["media_type"] = request.form.get("media_type")
-        return api_request(page=1)
+        return redirect(url_for("search_pagination", page=1))
     session.pop("search_query", None)
     session.pop("media_type", None)
     return render_template("search.html")

@@ -9,7 +9,7 @@
             <!-- Search within movie list -->
             <div class="row pb-2">
                 <div class="col-12 col-sm-10 col-lg-8 mx-auto">
-                    <form action="" method="post" class="" id="search-api">
+                    <form action="{{ url_for('search_movies') }}" method="post" class="" id="search-api">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" id="csrf_token" />
                         <div class="row mb-3">
                             <div class="">
@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                             <div class="col-6 col-md-4 mx-auto px-1">
-                                <button type="submit" class="btn btn-primary search-api-button">
+                                <button type="submit" class="btn btn-primary search-api-button" id="search-api-button">
                                     <i class="fas fa-search"></i> Search
                                 </button>
                             </div>

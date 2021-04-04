@@ -91,31 +91,36 @@ $(".contact-form").on('submit', function (event) {
 
 /**
  * Sends the feedback form values to the emailjs service template
- */
-$("#search-api").on('submit', function (event) {
+ */ /*
+$("#search-api").submit(function (event) {
+    var csrf_token = "{{ csrf_token() }}";
+    event.preventDefault();
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
     $.ajax({
         type: 'POST',
         url: '/search',
         data: $("#search-api").serialize(),
         success: function () {
             alert("success")
-            event.preventDefault();
         },
-        error: function() {
+        error: function () {
             alert("error")
-            console.log("error");
         }
     })
-
-});
+}); */
 
 /**
  * When the go-back button is clicked the browser returns to the
  * previous page in history
  */
-function goBack(event) {
+function goBack() {
     window.history.back();
-    event.preventDefault();
 }
 
 // Click Events ###################################################################################
