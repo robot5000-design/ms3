@@ -41,7 +41,7 @@ csp = {
     ],
     'style-src': [
         '\'self\'',
-        'code.jquery.com',
+        #'code.jquery.com',
         'cdn.jsdelivr.net',
         'cdnjs.cloudflare.com',
         'fonts.googleapis.com'
@@ -52,6 +52,7 @@ csp = {
         'data:'
     ],
     'connect-src': [
+        #'\'self\'',
         'api.emailjs.com'
     ],
     'object-src': [
@@ -583,7 +584,7 @@ def admin_controls():
             block_users()
         if "submit-form-4" in request.form:
             unblock_users()
-    if session["user"] == "admin":
+    if check_user_permission() and session["user"] == "admin":
         number_users = mongo.db.users.count()
         number_movies = mongo.db.movie_details.count()
         number_reviews = mongo.db.reviews.count()

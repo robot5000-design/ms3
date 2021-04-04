@@ -90,10 +90,10 @@ $(".contact-form").on('submit', function (event) {
 
 /**
  * Sends the feedback form values to the emailjs service template
- */
-$("#search-api").on('submit', function (event) {
+ */ /*
+$("#search-api").on('submit', function () {
     var csrf_token = "{{ csrf_token() }}";
-    $.ajaxSetup({
+    /*$.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrf_token);
@@ -109,14 +109,15 @@ $("#search-api").on('submit', function (event) {
         }
     })
     //event.preventDefault();
-});
+});*/
 
 /**
  * When the go-back button is clicked the browser returns to the
  * previous page in history
  */
-function goBack() {
+function goBack(event) {
     window.history.back();
+    event.preventDefault();
 }
 
 // Click Events ###################################################################################
