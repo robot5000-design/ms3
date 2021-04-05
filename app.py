@@ -98,14 +98,35 @@ def browse_reviews(page):
     if request.method == "POST":
         query = request.form.get("search-box")
         browse_reviews_sort = request.form.get("browse_reviews_sort")
+        if not query:
+            query = "all"
+        return redirect(url_for("search_reviews", query=query,
+                                browse_reviews_sort=browse_reviews_sort,
+                                page=page))
+    query = "all"
+    browse_reviews_sort = "latest"
+    return redirect(url_for("search_reviews", query=query,
+                            browse_reviews_sort="browse_reviews_sort",
+                            page=page))
+
+
+@app.route("/search_reviews/<query>/<browse_reviews_sort>/<int:page>",
+           methods=["GET", "POST"])
+def search_reviews(query, browse_reviews_sort, page):
+    if request.method == "POST":
+        query = request.form.get("search-box")
+        browse_reviews_sort = request.form.get("browse_reviews_sort")
         if query:
             search_term = {"$text": {"$search": query}}
         else:
             search_term = None
+            query = ""
     else:
-        search_term = None
-        query = ""
-        browse_reviews_sort = "latest"
+        if query == "all":
+            search_term = None
+            query = ""
+        else:
+            search_term = {"$text": {"$search": query}}
     review_count = mongo.db.movie_details.find(search_term).count()
     total_pages = math.ceil(review_count / 12)
     if browse_reviews_sort == "rating":
@@ -437,31 +458,12 @@ def new_review(tmdb_id, media_type):
             details_exist = mongo.db.movie_details.find_one(
                 {"tmdb_id": tmdb_id})
             if not details_exist:
-                # insert new movie details into the db
-                session["selected_media"]["overall_rating"] = int(
-                    request.form.get("inlineRadioOptions"))
-                session["selected_media"]["number_reviews"] = 1
-                mongo.db.movie_details.insert_one(dict(
-                    session["selected_media"]))
+                insert_new_movie()
                 original_title = session["selected_media"]["original_title"]
             else:
                 # update overall rating and number of reviews for sorting
                 # purposes
-                total_rating = details_exist["overall_rating"] + float(
-                    request.form.get("inlineRadioOptions"))
-                number_reviews = details_exist["number_reviews"] + 1
-                try:
-                    updated_overall_rating = total_rating / number_reviews
-                except ZeroDivisionError:
-                    flash("Oops we have a zero division error")
-                    updated_overall_rating = total_rating
-                if updated_overall_rating > 5:
-                    updated_overall_rating = 5
-                update_items = {
-                    "overall_rating": round(float(updated_overall_rating), 2),
-                    "number_reviews": int(details_exist["number_reviews"] + 1),
-                    "last_review_date": datetime.datetime.now()
-                }
+                update_items = update_overall_rating(details_exist)
                 mongo.db.movie_details.update_one(
                     {"tmdb_id": tmdb_id},
                     {"$set": update_items})
@@ -509,6 +511,37 @@ def new_review(tmdb_id, media_type):
                            genres=genres,
                            tmdb_poster_url=tmdb_poster_url,
                            already_reviewed=already_reviewed)
+
+
+def insert_new_movie():
+    # add and initialise rating and number of reviews
+    # and insert new movie details into the db
+    session["selected_media"]["overall_rating"] = int(
+        request.form.get("inlineRadioOptions"))
+    session["selected_media"]["number_reviews"] = 1
+    mongo.db.movie_details.insert_one(dict(
+        session["selected_media"]))
+
+
+def update_overall_rating(details_exist):
+    # update overall rating and number of reviews for sorting
+    # purposes
+    total_rating = details_exist["overall_rating"] + float(
+                    request.form.get("inlineRadioOptions"))
+    number_reviews = details_exist["number_reviews"] + 1
+    try:
+        updated_overall_rating = total_rating / number_reviews
+    except ZeroDivisionError:
+        flash("Oops we have a zero division error")
+        updated_overall_rating = total_rating
+    if updated_overall_rating > 5:
+        updated_overall_rating = 5
+    update_items = {
+        "overall_rating": round(float(updated_overall_rating), 2),
+        "number_reviews": int(details_exist["number_reviews"] + 1),
+        "last_review_date": datetime.datetime.now()
+    }
+    return update_items
 
 
 def get_choice_detail(tmdb_id, media_type):
@@ -795,7 +828,7 @@ def logout():
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
-
+'''
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("error.html", error=error)
@@ -809,12 +842,13 @@ def internal_server_error(error):
 @app.errorhandler(Exception)
 def all_other_errors(error):
     error = f"System Error: {error}"
-    return render_template("error.html", error=error)
+    return render_template("error.html", error=error)'''
 
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(error):
-    return render_template('error.html', error=error.description), 400
+    error = f"Form Token Expired: {error.description}"
+    return render_template('error.html', error=error), 400
 
 
 if __name__ == "__main__":
