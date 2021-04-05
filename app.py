@@ -422,6 +422,24 @@ def search_pagination(page):
 
 
 def api_request(page):
+    """ Gets data from the TMDB API based on a search term and whether it is
+    a tv series or a movie.
+
+    Gets the TMDB API urls from the tmdb_urls database collection. Different
+    TMDB API urls are used depending on whether tv series or a movie.
+
+    Args:
+        page (int): The API returns 20 results at a time. Page number is used
+        to select results page required.
+
+    Returns:
+        If there are results it returns render of template for search.html.
+        None is returned if there is a problem with the results or the API
+        returns anything but a status 200.
+
+    Raises:
+        ConnectionError: If there is a problem connecting the the TMDB API.
+    """
     search_url_movie = mongo.db.tmdb_urls.find()[0]['search_url_movie'].format(
         app.api_key, page, session['search_query'])
     search_url_tv = mongo.db.tmdb_urls.find()[0]['search_url_tv'].format(
@@ -545,6 +563,25 @@ def update_overall_rating(details_exist):
 
 
 def get_choice_detail(tmdb_id, media_type):
+    """ Gets detail of a certain selected movie or tv series from the TMDB
+    API using the tmdb_id and media_type.
+
+    Gets the TMDB API urls from the tmdb_urls database collection. Media type
+    is saved to the session cookie. Different TMDB API urls are used depending
+    on whether tv series or a movie.
+
+    Args:
+        tmdb_id (str): This is the id that TMDB API use to identify a certain
+        movie or tv series.
+        media_type (str): Used to identify whether the search is for a movie
+        or tv series and to use the approriate API url.
+
+    Returns:
+        None
+
+    Raises:
+        ConnectionError: If there is a problem connecting the the TMDB API.
+    """
     tv_detail_url = mongo.db.tmdb_urls.find()[0]['tv_detail_url'].format(
         tmdb_id, app.api_key)
     movie_detail_url = mongo.db.tmdb_urls.find()[0]['movie_detail_url'].format(
@@ -572,6 +609,12 @@ def get_choice_detail(tmdb_id, media_type):
 
 
 def validate_api_date_name(media_detail):
+    """ Validates and extracts movie release date data returned from the
+    TMDB API and saves it to the session cookie as a dictionary.
+
+    Args:
+        media_detail: json object returned from TMDB API request.
+    """
     if "first_air_date" in media_detail:
         if media_detail["first_air_date"] is None or media_detail[
                 "first_air_date"] == "":
@@ -591,6 +634,12 @@ def validate_api_date_name(media_detail):
 
 
 def validate_choice(media_detail):
+    """ Validates and extracts data returned from the TMDB API and saves
+    it to the session cookie as a dictionary.
+
+    Args:
+        media_detail: json object returned from TMDB API request.
+    """
     session["selected_media"] = {}
     if "id" in media_detail:
         session["selected_media"]["tmdb_id"] = str(media_detail["id"])
@@ -617,6 +666,12 @@ def validate_choice(media_detail):
 
 
 def add_remove_genre():
+    """ Both adds and removes genres from the genres collection.
+
+    Gets values from the select-genre and new-genre inputs which are used
+    to add a genre if it doesn't exist or remove genres from the genres
+    database collection.
+    """
     remove_genre = request.form.get("select-genre")
     add_genre = request.form.get("new-genre")
     if remove_genre:
@@ -637,6 +692,12 @@ def add_remove_genre():
 
 
 def block_users():
+    """ Blocks users from using the site.
+
+    Gets values from the block_selected form. Validates that the
+    list returned has entries and that the user is not already blocked
+    and inserts them in the blocked_users collection in the database.
+    """
     block_list_users = request.form.getlist("block-selected")
     if len(block_list_users) != 0:
         for user in block_list_users:
@@ -651,6 +712,12 @@ def block_users():
 
 
 def unblock_users():
+    """ Unblocks users from using the site.
+
+    Requests values from the unblock_selected form. Validates that the
+    list returned has entries and removes them from the blocked_users
+    collection in the database.
+    """
     unblock_list_users = request.form.getlist("unblock-selected")
     if len(unblock_list_users) != 0:
         for user in unblock_list_users:
@@ -661,6 +728,21 @@ def unblock_users():
 
 @app.route("/admin_controls", methods=["GET", "POST"])
 def admin_controls():
+    """ Exclusive controls for the admin user account.
+
+    Checks user permission and that user is admin and then renders the
+    admin_controls template. Extracts stats from various collections in 
+    the database.
+    Genre list, user list and blocked user list from their corresponding
+    collections, for the forms on admin_controls template. most_likes is
+    a list of 5 most popular reviews.
+    Otherwise flashes an appropriate message and redirects the
+    user to index route.
+
+    Returns:
+        If user is in session and is admin, returns render of admin_controls.
+        If user is not admin returns redirect to index route.
+    """
     if request.method == "POST":
         if "submit-form-1" in request.form:
             add_remove_genre()
@@ -709,10 +791,19 @@ def admin_controls():
 
 @app.route("/contact")
 def contact():
+    """ Returns render of contact template
+    """
     return render_template("contact.html")
 
 
 def check_user_permission():
+    """ Checks if a user is in the session cookie and if they are blocked.
+
+    Returns:
+        If user not in session returns False.
+        If user in session and blocked returns 'user-blocked'.
+        if user in session and not blocked returns 'valid-user'.
+    """
     if "user" in session:
         blocked_user = mongo.db.blocked_users.find_one(
             {"username": session["user"].lower()})
@@ -726,6 +817,25 @@ def check_user_permission():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """ Facilitates a user to login to the site.
+
+    Checks user permission. If user already in session it redirects to index.
+    Otherwise the POST request through the login modal is validated and
+    handled. The username is checked to see if it is on the blocked users list.
+    If blocked the user is not logged in. Otherwise the username and passord
+    are checked against those saved in the database and if matching the
+    username is saved in the session cookie.
+
+    Returns:
+        If blocked user, or user already in session returns a redirect to index
+        route.
+        If valid user and POST request and username and password match,
+        returns redirect to my_reviews route.
+        If valid user and POST request and username and password match, if
+        username is admin returns redirect to admin_controls route.
+        If valid user and POST request and username or password do not match,
+        returns redirect to index route.
+    """
     if request.method == "POST":
         # check if username exists in db or is blocked
         username = request.form.get("username")
@@ -759,6 +869,22 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """ Facilitates a user to register on the site.
+
+    Checks user permission. If user not in session it renders the register
+    template. Otherwise the user is redirected to index route. A user can
+    choose a username and password. Username is checked if it already exists
+    in the database. The password is input twice and checked for matching.
+    When valid inputs are submitted the username and hashed password are
+    inserted to the database.
+
+    Returns:
+        If invalid user, returns a redirect to index route.
+        If valid user, returns render of register template.
+        If valid user and POST request and username already exists or
+        passwords do not match, returns redirect to register route, otherwise
+        returns redirect to index route.
+    """
     if request.method == "POST":
         username = request.form.get("username2")
         # check if username already exists in db
@@ -793,6 +919,19 @@ def register():
 
 @app.route("/change_password", methods=["GET", "POST"])
 def change_password():
+    """ Facilitates a user to change their password.
+
+    Checks user permission. If valid it renders the change_password template.
+    Otherwise the user is redirected to index route. If a valid user requests
+    to change password, it checks if new passwords match, generates a new hash
+    based on the new password and updates it to the database.
+
+    Returns:
+        If invalid user, returns a redirect to index route.
+        If valid user, returns render of change_password template.
+        If valid user and POST request and passwords do not match, redirects
+        to change_password route, otherwise redirects to logout.
+    """
     if check_user_permission() == "valid-user":
         if request.method == "POST":
             password2 = request.form.get("password2")
@@ -820,6 +959,14 @@ def change_password():
 
 @app.route("/logout")
 def logout():
+    """ Logs out a user by removing them from the session, flashes an
+    appropriate message, then redirects to index route.
+    If no user in session, flashes an appropriate message and redirects
+    to index route.
+
+    Returns:
+        In any case returns a redirect to index route.
+    """
     if "user" in session:
         # remove user from session cookie
         flash("You have been logged out")
@@ -831,23 +978,32 @@ def logout():
 '''
 @app.errorhandler(404)
 def page_not_found(error):
+    """ Handles a 404 page not found error
+    """
     return render_template("error.html", error=error)
 
 
 @app.errorhandler(500)
 def internal_server_error(error):
+    """ Handles a 500 internal server error
+    """
     return render_template("error.html", error=error)
 
 
 @app.errorhandler(Exception)
 def all_other_errors(error):
+    """ Catch all. Handles all other errors.
+    """
     error = f"System Error: {error}"
     return render_template("error.html", error=error)'''
 
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(error):
-    error = f"Form Token Expired: {error.description}"
+    """ Handles a CSRF token expired error
+    """
+    error = f"For security the form Token has Expired: \
+        {error.description} Go back and Refresh the page and try again."
     return render_template('error.html', error=error), 400
 
 

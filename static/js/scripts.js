@@ -28,8 +28,7 @@ function sendMail(contactForm) {
 }
 
 /**
- * emailjs initialisation
- * 
+ * emailjs initialisation 
  */
 (function () {
     emailjs.init("user_oV8YdlKemUPQdjcjpZQbo");
@@ -75,6 +74,26 @@ function handleMailResponse(responseObject, message) {
 })()
 
 /**
+ * Adds a loading spinner and disables the button referenced as the argument
+ * @param { string } toThisButton - button to which function is applied
+ */
+function addLoadingSpinner(toThisButton) {
+    $(toThisButton).html("<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Loading...");
+    $(toThisButton).prop("disabled", true);
+}
+
+/**
+ * Replaces a loading spinner and enables the button referenced as the toThisButton argument
+ * and replaces the html text of the button with the buttonText argument
+ * @param { string } toThisButton - button to which function is applied
+ * @param { string } buttonText - button html text to apply
+ */
+function removeLoadingSpinner(toThisButton, buttonText) {
+    $(toThisButton).html(buttonText);
+    $(toThisButton).prop("disabled", false);
+}
+
+/**
  * When the go-back button is clicked the browser returns to the
  * previous page in history
  */
@@ -82,7 +101,7 @@ function goBack() {
     window.history.back();
 }
 
-// Click Events ###################################################################################
+// Click and Submit Events ###################################################################################
 
 // makes the delete process a two step process. Press the call-delete
 // button  and the confirm-delete goes from invisible to visible
@@ -97,21 +116,6 @@ $(".review-form").on('submit', function () {
     $(".submit-edit").prop("disabled", true);
 });
 
-function addLoadingSpinner(toThisButton) {
-    $(toThisButton).html("<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Loading...");
-    $(toThisButton).prop("disabled", true);
-}
-
-function removeLoadingSpinner(toThisButton, buttonText) {
-    $(toThisButton).html(buttonText);
-    $(toThisButton).prop("disabled", false);
-}
-
-$("#search-api").on('submit', function () {
-    addLoadingSpinner(".search-api-button");
-});
-
-
 // Calls the sendmail function for the contact form and prevents the page
 // reloading so that a success or failure message can be displayed
 $(".contact-form").on('submit', function (event) {
@@ -121,8 +125,14 @@ $(".contact-form").on('submit', function (event) {
     event.preventDefault();
 });
 
+// Calls the addLoadingSpinner function when a review form is submitted
 $(".review-form").on('submit', function () {
     addLoadingSpinner(".submit-edit");
+});
+
+// Calls the addLoadingSpinner function when a search is submitted
+$("#search-api").on('submit', function () {
+    addLoadingSpinner(".search-api-button");
 });
 
 // Call the goBack function which goes back to the previous page in history
