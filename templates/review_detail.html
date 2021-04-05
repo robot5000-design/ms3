@@ -45,7 +45,7 @@
             <!-- reviews section -->
             <div class="reviews">
                 <div class="pb-4 pt-2">
-                    {% if not session.user %}
+                    {% if not session["user"] %}
                     <a class="login-modal" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to
                         submit
                         a
@@ -146,4 +146,5 @@
             </div>
         </div>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}

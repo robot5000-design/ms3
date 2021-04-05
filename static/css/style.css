@@ -56,7 +56,7 @@ form .form-control,
 }
 
 .table {
-    font-size: 4.1vw;
+    font-size: 3.5vw;
 }
 
 .review-text {
@@ -150,7 +150,7 @@ h2 {
 .confirm-genre,
 .confirm-block,
 .confirm-unblock {
-    font-size: .8em;    
+    font-size: .9em;    
 }
 
 .call-delete,

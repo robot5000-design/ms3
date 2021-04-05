@@ -567,8 +567,6 @@ def validate_choice(media_detail):
     elif "original_name" in media_detail:
         session["selected_media"][
             "original_title"] = media_detail["original_name"]
-    session["selected_media"]["media_type"] = session["media_type"]
-    validate_api_date_name(media_detail)
     if "poster_path" in media_detail:
         if media_detail["poster_path"] == "" or media_detail[
                 "poster_path"] is None:
@@ -581,6 +579,8 @@ def validate_choice(media_detail):
     else:
         session["selected_media"]["overview"] = None
     session["selected_media"]["last_review_date"] = datetime.datetime.now()
+    session["selected_media"]["media_type"] = session["media_type"]
+    validate_api_date_name(media_detail)
 
 
 def add_remove_genre():
@@ -659,10 +659,10 @@ def admin_controls():
             review["media_type"] = movie_detail["media_type"]
         genres = mongo.db.genres.find().sort("genre_name", 1)
         user_list = [user["username"] for user in mongo.db.users.find(
-        ).sort("username", 1)]
+            ).sort("username", 1)]
         blocked_users = [user[
             "username"] for user in mongo.db.blocked_users.find(
-        ).sort("username", 1)]
+            ).sort("username", 1)]
         return render_template("admin_controls.html", genres=genres,
                                user_list=user_list,
                                blocked_users=blocked_users,
@@ -803,6 +803,12 @@ def page_not_found(error):
 
 @app.errorhandler(500)
 def internal_server_error(error):
+    return render_template("error.html", error=error)
+
+
+@app.errorhandler(Exception)
+def all_other_errors(error):
+    error = f"System Error: {error}"
     return render_template("error.html", error=error)
 
 

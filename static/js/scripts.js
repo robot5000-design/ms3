@@ -50,7 +50,7 @@ function handleMailResponse(responseObject, message) {
         </div>`
     );
     $(".contact-form")[0].reset();
-    $(".submit-contact").prop("disabled", false);
+    removeLoadingSpinner(".submit-contact", "Contact Admin");
 }
 
 /**
@@ -97,12 +97,32 @@ $(".review-form").on('submit', function () {
     $(".submit-edit").prop("disabled", true);
 });
 
+function addLoadingSpinner(toThisButton) {
+    $(toThisButton).html("<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Loading...");
+    $(toThisButton).prop("disabled", true);
+}
+
+function removeLoadingSpinner(toThisButton, buttonText) {
+    $(toThisButton).html(buttonText);
+    $(toThisButton).prop("disabled", false);
+}
+
+$("#search-api").on('submit', function () {
+    addLoadingSpinner(".search-api-button");
+});
+
+
 // Calls the sendmail function for the contact form and prevents the page
 // reloading so that a success or failure message can be displayed
 $(".contact-form").on('submit', function (event) {
-    $(".submit-contact").prop("disabled", true);
+    addLoadingSpinner(".submit-contact");
+    $(".contact-error").html("")
     sendMail(this);
     event.preventDefault();
+});
+
+$(".review-form").on('submit', function () {
+    addLoadingSpinner(".submit-edit");
 });
 
 // Call the goBack function which goes back to the previous page in history
