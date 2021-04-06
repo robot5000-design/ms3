@@ -371,6 +371,31 @@ def delete_all(tmdb_id):
 @app.route("/edit_review/<tmdb_id>/<my_reviews_sort>",
            methods=["GET", "POST"])
 def edit_review(tmdb_id, my_reviews_sort):
+    """ Handles editing of user reviews.
+
+    First, checks if a valid user is in session cookie with
+    check_user_permission. If not it redirects to index. Otherwise it obtains
+    movie and review details from mongodb and renders the edit_review template.
+    If POST request, it prepares a review update object populated with the form
+    inputs. It updates the overall rating and then inserts the review and
+    updates the movie_details. It then redirects the user to my_reviews.
+
+    Args:
+        tmdb_id (str): This is the id that TMDB API use to identify a certain
+        movie or tv series.
+        my_reviews_sort (str): Describes sort order.
+
+    Returns:
+        If there are valid results from mongodb it returns render of template
+        for edit_reviews.html.
+        Upon successful completion of a review edit, it returns a redirect to
+        my_reviews.
+        If IndexError or invalid user, it returns a redirect to index.
+
+    Raises:
+        ZeroDivisionError: If current_number_reviews = 0
+        IndexError: If the movie or tv series cannot be found in mongodb.
+    """
     if check_user_permission() == "valid-user":
         if request.method == "POST":
             review_update = {
@@ -431,6 +456,36 @@ def edit_review(tmdb_id, my_reviews_sort):
 @app.route(
     '/review_detail/<tmdb_id>/<media_type>/<review_detail_sort>/<int:page>')
 def review_detail(tmdb_id, media_type, review_detail_sort, page):
+    """ Handles getting detailed information about a movie or tv series and
+    pagination of reviews.
+
+    First, it finds reviews for the selected movie or series if they exist,
+    sorted either by latest or by most likes, 6 at a time for pagination.
+    If there are reviews, it then counts how many for pagination. It then
+    finds the movie details and checks if the user in session has already
+    reviewed the movie. It puts the overall_rating in the session and formats
+    the review date for each review. It then renders the review_detail
+    template.
+
+    Args:
+        tmdb_id (str): This is the id that TMDB API use to identify a certain
+        movie or tv series.
+        media_type (str): Used to identify whether the search is for a movie
+        or tv series and to use the approriate API url.
+        review_detail_sort (str): Describes sort order.
+        page (int): A page number to facilate pagination of the my_reviews
+        template.
+
+    Returns:
+        If there are no valid results from mongodb it returns a redirect to
+        new_review.
+        if there are reviews but no movie details in mongodb, this results in
+        an index error and returns a redirect to index.
+        Otherwise it returns a render of the review_details template.
+
+    Raises:
+        IndexError: If the movie or tv series cannot be found in mongodb.
+    """
     if review_detail_sort == "latest":
         reviews = list(mongo.db.reviews.find(
             {"tmdb_id": tmdb_id}).sort("review_date", -1).skip(
@@ -505,6 +560,19 @@ def add_like(object_id, tmdb_id, media_type):
 
 @app.route("/search", methods=["GET", "POST"])
 def search_movies():
+    """ Handles search of TMDB API for new reviews.
+
+    This function serves as a redirect to the search_pagination
+    function, to avoid form resubmission on page back in the browser.
+    On page load, it deletes relevant session entries. It handles
+    the search form entries and redirects to search_pagination for page 1
+    of results.
+
+    Returns:
+        A render of the search.html template.
+        If POST request returns a redirect to search_pagination for page 1
+        of results.
+    """
     if request.method == "POST":
         session["search"] = True
         session["search_query"] = request.form.get("query")
@@ -517,6 +585,8 @@ def search_movies():
 
 @app.route("/search_pagination/<int:page>", methods=["GET", "POST"])
 def search_pagination(page):
+    """ 
+    """
     if request.method == "POST":
         session["search"] = True
         session["search_query"] = request.form.get("query")
