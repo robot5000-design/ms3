@@ -1,6 +1,8 @@
 import os
 import datetime
+import json
 import math
+import pymongo
 import requests
 from flask import (
     Flask, flash, render_template,
@@ -21,6 +23,11 @@ app.secret_key = os.environ.get("SECRET_KEY")
 app.api_key = os.environ.get("API_KEY")
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+)
 
 csp = {
     'default-src': [
@@ -64,13 +71,6 @@ csp = {
 }
 
 talisman = Talisman(app, content_security_policy=csp)
-
-app.config.update(
-    SESSION_COOKIE_SECURE=True,
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE='Lax',
-)
-
 mongo = PyMongo(app)
 csrf = CSRFProtect(app)
 
@@ -78,6 +78,16 @@ csrf = CSRFProtect(app)
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
+    """ Retrieves the last 12 movies or tv series reviewed and renders
+    the index template.
+
+    Also facilitates the TMDB API search input.
+
+    Returns:
+        The index template with last 12 reviewed movies if they exist or
+        not.
+        If POST request returns the results of the TMDB API request.
+    """
     if request.method == "POST":
         session["search"] = True
         session["search_query"] = request.form.get("query")
@@ -95,6 +105,18 @@ def index():
 @app.route("/browse_reviews/<int:page>", methods=[
            "GET", "POST"])
 def browse_reviews(page):
+    """ Used to facilitate a redirect to the search_reviews function
+    to prevent form resubmission requests in browser on page back.
+
+    Args:
+        page (int): A page number to facilate pagination of the reviews
+        template.
+
+    Returns:
+        A redirect to the search_reviews function and if a POST request,
+        returns a redirect to the search_reviews function using the search
+        form inputs.
+    """
     if request.method == "POST":
         query = request.form.get("search-box")
         browse_reviews_sort = request.form.get("browse_reviews_sort")
@@ -113,6 +135,27 @@ def browse_reviews(page):
 @app.route("/search_reviews/<query>/<browse_reviews_sort>/<int:page>",
            methods=["GET", "POST"])
 def search_reviews(query, browse_reviews_sort, page):
+    """ Handles paginated display of all reviews.
+
+    Displays 12 reviews at a time sorted from the database by latest,
+    most popular or rating. A POST request with a search query can filter
+    the results further.
+
+    Args:
+        query (str): Search input if POST request.
+        browse_reviews_sort (str): Describes sort order.
+        page (int): A page number to facilate pagination of the reviews
+        template.
+
+    Returns:
+        A render template of all reviews, 12 at a time paginated, or if POST
+        request reults can be filtered or reordered.
+        If KeyError is raised return render template of error.html.
+
+    Raises:
+        KeyError: If the tmdb_poster_url is modified incorrectly in database
+        tmdb_urls collection.
+    """
     if request.method == "POST":
         query = request.form.get("search-box")
         browse_reviews_sort = request.form.get("browse_reviews_sort")
@@ -139,7 +182,11 @@ def search_reviews(query, browse_reviews_sort, page):
         movie_details = list(mongo.db.movie_details.find(search_term).sort(
             "last_review_date", -1).skip(page * 12).limit(12))
     if movie_details:
-        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+        try:
+            tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+        except KeyError as error:
+            error = f"Key Error: {error}"
+            return render_template("error.html", error=error)
         return render_template("reviews.html", movie_details=movie_details,
                                tmdb_poster_url=tmdb_poster_url,
                                browse_reviews_sort=browse_reviews_sort,
@@ -154,6 +201,27 @@ def search_reviews(query, browse_reviews_sort, page):
 @app.route("/my_reviews/<user>/<my_reviews_sort>/<int:page>", methods=[
            "GET", "POST"])
 def my_reviews(user, my_reviews_sort, page):
+    """ Handles paginated display of a users reviews.
+
+    Displays 12 reviews at a time sorted from the database by latest,
+    alphabetically or oldest. A POST request with a search query can filter
+    the results further.
+
+    Args:
+        user (str): Username of results to be displayed.
+        my_reviews_sort (str): Describes sort order.
+        page (int): A page number to facilate pagination of the my_reviews
+        template.
+
+    Returns:
+        A render template of a users reviews, 12 at a time paginated, or if
+        POST request reults can be filtered or reordered.
+        If KeyError is raised return render template of error.html.
+
+    Raises:
+        KeyError: If the tmdb_poster_url is modified incorrectly in database
+        tmdb_urls collection.
+    """
     if request.method == "POST":
         query = request.form.get("search-box")
         my_reviews_sort = request.form.get("my_reviews_sort")
@@ -189,7 +257,12 @@ def my_reviews(user, my_reviews_sort, page):
             movie_details.extend(movie_detail)
             iteration += 1
         if movie_details:
-            tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+            try:
+                tmdb_poster_url = mongo.db.tmdb_urls.find_one()[
+                    "tmdb_poster_url"]
+            except KeyError as error:
+                error = f"Key Error: {error}"
+                return render_template("error.html", error=error)
         return render_template("my_reviews.html", movie_details=movie_details,
                                tmdb_poster_url=tmdb_poster_url,
                                page=page, my_reviews_sort=my_reviews_sort,
@@ -202,6 +275,27 @@ def my_reviews(user, my_reviews_sort, page):
 
 @app.route("/delete_review/<tmdb_id>/<user>")
 def delete_review(tmdb_id, user):
+    """ Handles deleting a review from the database reviews collection.
+
+    Checks if a valid user. A valid user must be logged in. Looks up
+    the review and deletes it. Also deletes the movie details if there
+    are no other reviews. Otherwise adjusts the overall rating and number
+    of reviews. If due to a miscalculation in the database over time, the
+    rating goes above 5, it is set equal to 5.
+
+    Args:
+        tmdb_id (str): This is the id that TMDB API use to identify a certain
+        movie or tv series.
+        user (str): Username of user logged into session cookie.
+
+    Returns:
+        If user is admin a redirect to browse_reviews.
+        Otherwise any other user, a redirect to my_reviews.
+        If invalid user a redirect to index.
+
+    Raises:
+        ZeroDivisionError: if updated_number_reviews = 0
+    """
     if check_user_permission() == "valid-user":
         if user == session["user"] or session["user"] == "admin":
             review_to_delete = mongo.db.reviews.find_one(
@@ -229,11 +323,11 @@ def delete_review(tmdb_id, user):
                         deleted_rating) / updated_number_reviews
                 except ZeroDivisionError:
                     flash("Oops, division by zero error")
-                    updated_rating = current_rating
+                    updated_overall_rating = current_rating
                 if updated_overall_rating > 5:
                     updated_overall_rating = 5
                 update_items = {
-                    "overall_rating": updated_rating,
+                    "overall_rating": round(updated_overall_rating, 2),
                     "number_reviews": updated_number_reviews
                 }
                 mongo.db.movie_details.update_one(
@@ -249,6 +343,19 @@ def delete_review(tmdb_id, user):
 
 @app.route("/delete_review/<tmdb_id>")
 def delete_all(tmdb_id):
+    """ Allows admin user to delete all entries in mongodb for a certain
+    movie or tv series.
+
+    Args:
+        tmdb_id (str): This is the id that TMDB API use to identify a certain
+        movie or tv series.
+
+    Returns:
+        If user is admin, it returns a redirect to browse_reviews after
+        deletion.
+        If no user in session or user is not admin, returns a redirect to
+        index.
+    """
     if check_user_permission() == "valid-user":
         if session["user"] == "admin":
             mongo.db.reviews.delete_many(
@@ -417,7 +524,6 @@ def search_pagination(page):
         return api_request(page=1)
     if "search_query" in session:
         return api_request(page)
-    flash("Something went wrong!")
     return redirect(url_for("search_movies"))
 
 
@@ -433,12 +539,16 @@ def api_request(page):
         to select results page required.
 
     Returns:
-        If there are results it returns render of template for search.html.
-        None is returned if there is a problem with the results or the API
-        returns anything but a status 200.
+        If there are valid results it returns render of template for
+        search.html.
+        If there is a request connection error, incomplate data returned, a
+        json conversion error, or anything but a request status 200, it returns
+        a redirect to search_movies.
 
     Raises:
         ConnectionError: If there is a problem connecting the the TMDB API.
+        JSONDecodeError: If the return from the request cannot be converted
+        to json.
     """
     search_url_movie = mongo.db.tmdb_urls.find()[0]['search_url_movie'].format(
         app.api_key, page, session['search_query'])
@@ -451,25 +561,57 @@ def api_request(page):
     try:
         api_search = requests.get(search_url)
     except requests.exceptions.ConnectionError:
-        flash("Cannot get results from the database\
-                at this time. Please try again later.")
+        flash("Cannot connect to the TMDB database\
+            at this time. Please try again later.")
+        return redirect(url_for("search_movies"))
     if api_search.status_code == 200:
-        search_results = api_search.json()
+        try:
+            search_results = api_search.json()
+        except json.decoder.JSONDecodeError:
+            flash("There's been a problem with the results. Please try again \
+            later.")
+            return redirect(url_for("search_movies"))
         if "results" in search_results:
             return render_template(
                 "search.html", search_results=search_results)
-        flash("There's been a problem. Please try again later.")
-        return None
+        flash("There's been a problem with the results. Please try again \
+            later.")
+        return redirect(url_for("search_movies"))
     flash("Status " + str(api_search.status_code) + " " + api_search.reason + ". \
         Cannot get results from the database at this time. \
             Please try again later.")
-    return None
+    return redirect(url_for("search_movies"))
 
 
 @app.route("/new_review/<tmdb_id>/<media_type>",
            methods=["GET", "POST"])
 def new_review(tmdb_id, media_type):
-    ''' '''
+    """ Handles inputting a new review into the database.
+
+    First, checks if a valid user is in session cookie with
+    check_user_permission. Then checks if the user has already reviewed the
+    movie. Then checks if the movie details already exist in the database
+    movie_details collection. If they do not, get_choice_details is called.
+    This invokes a request to the TMDB API for the details. Then confirms the
+    results are valid, before rendering the new_review template.
+    If POST request for a new review, it checks if the movie details exist. If
+    not, it inserts the details in the database movie_details collection. It
+    then updates the movie overall rating and prepares and inserts the
+    new_review object. Relevant items are then removed from the session cookie.
+
+    Args:
+        tmdb_id (str): This is the id that TMDB API use to identify a certain
+        movie or tv series.
+        media_type (str): Used to identify whether the search is for a movie
+        or tv series and to use the approriate API url.
+
+    Returns:
+        Upon selecting a movie or tv series to review it returns a render
+        of the new_review template.
+        If a succesful POST request, returns a redirect to browse_reviews.
+        If incomplete data is returned from the API request, it returns
+        a redirect to search_movies.
+    """
     if check_user_permission() == "valid-user":
         if request.method == "POST":
             # check if movie details already exist in db and if not, add them
@@ -506,8 +648,8 @@ def new_review(tmdb_id, media_type):
             return redirect(url_for("browse_reviews", page=0))
     # check if media details are already in db
     if "user" in session:
-        already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
-                                "created_by": session["user"]}))
+        already_reviewed = list(mongo.db.reviews.find(
+            {"tmdb_id": tmdb_id, "created_by": session["user"]}))
     else:
         already_reviewed = None
     details_exist = list(mongo.db.movie_details.find(
@@ -516,13 +658,16 @@ def new_review(tmdb_id, media_type):
         media_detail = details_exist[0]
     else:
         media_detail = get_choice_detail(tmdb_id, media_type)
-        if "status_code" in media_detail:
+
+        if isinstance(media_detail, dict) and "status_code" in media_detail:
             if media_detail["status_code"] == 34:
                 flash("Sorry. This resource cannot be found.")
                 return redirect(url_for("search_movies"))
-        else:
+        if isinstance(media_detail, dict) and "id" in media_detail:
             validate_choice(media_detail)
             media_detail = session["selected_media"]
+        else:
+            return redirect(url_for("search_movies"))
     genres = mongo.db.genres.find().sort("genre_name", 1)
     tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
     return render_template("new_review.html", media_detail=media_detail,
@@ -532,8 +677,10 @@ def new_review(tmdb_id, media_type):
 
 
 def insert_new_movie():
-    # add and initialise rating and number of reviews
-    # and insert new movie details into the db
+    """ Add and initialise rating and number of reviews to the selected_media
+    session object and insert object of new movie details into the database
+    movie_details collection.
+    """
     session["selected_media"]["overall_rating"] = int(
         request.form.get("inlineRadioOptions"))
     session["selected_media"]["number_reviews"] = 1
@@ -542,8 +689,21 @@ def insert_new_movie():
 
 
 def update_overall_rating(details_exist):
-    # update overall rating and number of reviews for sorting
-    # purposes
+    """ Update overall rating, number of reviews and date of review. If
+    due to a miscalculation in the database over time, the rating goes
+    above 5, it is set equal to 5.
+
+    Returns:
+        update_items (dict): Contains updated values for overall rating,
+        number of reviews and date of last review.
+
+    Args:
+        details_exist (obj): Cursor object returned from mongodb of details
+        of a specific movie or tv series.
+
+    Raises:
+        ZeroDivisionError: if number_reviews = 0
+    """
     total_rating = details_exist["overall_rating"] + float(
                     request.form.get("inlineRadioOptions"))
     number_reviews = details_exist["number_reviews"] + 1
@@ -577,10 +737,19 @@ def get_choice_detail(tmdb_id, media_type):
         or tv series and to use the approriate API url.
 
     Returns:
-        None
+        If there are no errors returns media_detail, valid detailed results of
+        the movie or tv series chosen for the request.
+        An error flash message if there's a problem with the request, e.g. a
+        connection problem.
+        Redirects to search_movies route with a flash error message, if the
+        request data cannot be converted to json.
+        Returns "request-error" if can connect to the TMDB database but does
+        not return a status 200.
 
     Raises:
         ConnectionError: If there is a problem connecting the the TMDB API.
+        JSONDecodeError: If the return from the request cannot be converted
+        to json.
     """
     tv_detail_url = mongo.db.tmdb_urls.find()[0]['tv_detail_url'].format(
         tmdb_id, app.api_key)
@@ -594,18 +763,23 @@ def get_choice_detail(tmdb_id, media_type):
     try:
         detail_request = requests.get(detail_url)
     except requests.exceptions.ConnectionError:
-        flash("Cannot get results from the database\
-                at this time. Please try again later.")
+        return flash("Cannot connect to the TMDB database\
+                     at this time. Please try again later.")
     if detail_request.status_code == 200:
-        if "id" in detail_request.json():
-            return detail_request.json()
-        flash("There's been a problem. Please try again later.")
-        return None
+        if isinstance(detail_request, requests.models.Response):
+            try:
+                media_detail = detail_request.json()
+            except json.decoder.JSONDecodeError:
+                flash("There's been a problem with the results. Please try again \
+                    later.")
+                return redirect(url_for("search_movies"))
+            else:
+                return media_detail
 
     flash("Status " + str(detail_request.status_code) + " " + detail_request.reason + ". \
-        Cannot get results from the database at this time. \
-            Please try again later.")
-    return None
+        Cannot get results from the TMDB database at this time. \
+        Please try again later.")
+    return "request-error"
 
 
 def validate_api_date_name(media_detail):
@@ -731,7 +905,7 @@ def admin_controls():
     """ Exclusive controls for the admin user account.
 
     Checks user permission and that user is admin and then renders the
-    admin_controls template. Extracts stats from various collections in 
+    admin_controls template. Extracts stats from various collections in
     the database.
     Genre list, user list and blocked user list from their corresponding
     collections, for the forms on admin_controls template. most_likes is
@@ -975,7 +1149,7 @@ def logout():
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
-'''
+
 @app.errorhandler(404)
 def page_not_found(error):
     """ Handles a 404 page not found error
@@ -994,8 +1168,13 @@ def internal_server_error(error):
 def all_other_errors(error):
     """ Catch all. Handles all other errors.
     """
-    error = f"System Error: {error}"
-    return render_template("error.html", error=error)'''
+    if isinstance(error, pymongo.errors.PyMongoError):
+        error = "System Error: Internal Database Error."
+    elif isinstance(error, requests.exceptions.RequestException):
+        error = "System Error: Problem connecting with TMDB API."
+    else:
+        error = f"System Error: {error}"
+    return render_template("error.html", error=error)
 
 
 @app.errorhandler(CSRFError)

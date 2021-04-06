@@ -1,6 +1,6 @@
 // Scrolls window to top on page load
 $(document).ready(function () {
-    window.scroll(0, 0);
+    //window.scroll(0, 0);
     //$('#csrf_token').val('ABC');
 });
 
@@ -133,6 +133,18 @@ $(".review-form").on('submit', function () {
 // Calls the addLoadingSpinner function when a search is submitted
 $("#search-api").on('submit', function () {
     addLoadingSpinner(".search-api-button");
+});
+
+// Calls the addLoadingSpinner function when a fliter search is submitted
+// on the reviews page
+$("#browse-reviews-form").on('submit', function () {
+    addLoadingSpinner(".filter-reviews");
+});
+
+// Calls the addLoadingSpinner function when a fliter search is submitted
+// on the my_reviews page
+$("#user-reviews-form").on('submit', function () {
+    addLoadingSpinner(".filter-reviews");
 });
 
 // Call the goBack function which goes back to the previous page in history

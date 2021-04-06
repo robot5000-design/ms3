@@ -9,7 +9,7 @@
     <div class="row search-box">
         <div class="col">
             <form action="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=0) }}"
-                method="post">
+                method="post" id="user-reviews-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="pb-4 row">
                     <div class="col">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="row py-5">
                     <div class="col">
-                        <button type="submit" class="btn btn-primary">Update Results</button>
+                        <button type="submit" class="btn btn-primary filter-reviews">Update Results</button>
                     </div>
                 </div>
             </form>
