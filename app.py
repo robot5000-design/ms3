@@ -620,10 +620,10 @@ def api_request(page):
         JSONDecodeError: If the return from the request cannot be converted
         to json.
     """
-    search_url_movie = mongo.db.tmdb_urls.find()[0]['search_url_movie'].format(
-        app.api_key, page, session['search_query'])
-    search_url_tv = mongo.db.tmdb_urls.find()[0]['search_url_tv'].format(
-        app.api_key, page, session['search_query'])
+    search_url_movie = mongo.db.tmdb_urls.find()[0]['search_url'].format(
+        "movie", app.api_key, page, session['search_query'])
+    search_url_tv = mongo.db.tmdb_urls.find()[0]['search_url'].format(
+        "tv", app.api_key, page, session['search_query'])
     if session["media_type"] == "tv":
         search_url = search_url_tv
     else:
@@ -821,10 +821,10 @@ def get_choice_detail(tmdb_id, media_type):
         JSONDecodeError: If the return from the request cannot be converted
         to json.
     """
-    tv_detail_url = mongo.db.tmdb_urls.find()[0]['tv_detail_url'].format(
-        tmdb_id, app.api_key)
-    movie_detail_url = mongo.db.tmdb_urls.find()[0]['movie_detail_url'].format(
-        tmdb_id, app.api_key)
+    tv_detail_url = mongo.db.tmdb_urls.find()[0]['detail_url'].format(
+        "tv", tmdb_id, app.api_key)
+    movie_detail_url = mongo.db.tmdb_urls.find()[0]['detail_url'].format(
+        "movie", tmdb_id, app.api_key)
     session["media_type"] = media_type
     if media_type == "tv":
         detail_url = tv_detail_url
@@ -1219,7 +1219,7 @@ def logout():
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
-
+'''
 @app.errorhandler(404)
 def page_not_found(error):
     """ Handles a 404 page not found error
@@ -1244,7 +1244,7 @@ def all_other_errors(error):
         error = "System Error: Problem connecting with TMDB API."
     else:
         error = f"System Error: {error}"
-    return render_template("error.html", error=error)
+    return render_template("error.html", error=error)'''
 
 
 @app.errorhandler(CSRFError)
