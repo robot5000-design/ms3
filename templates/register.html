@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="container register-wrapper">
     <h1 class="heading mb-3">Register New User:</h1>
     <form class="needs-validation" action="{{ url_for('register') }}" method="POST" novalidate>
@@ -27,8 +28,11 @@
         </div>
     </form>
     <div class="mt-4">
-        <span><a class="login-modal" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Already have an
-                Account? Log-In Here</a></span>
+        <span>
+            <a class="login-modal" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Already have an
+                Account? Log-In Here
+            </a>
+        </span>
     </div>
 </div>
 

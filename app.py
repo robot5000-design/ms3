@@ -19,6 +19,7 @@ if os.path.exists("env.py"):
 
 app = Flask(__name__)
 
+# Configuration settimgs
 app.secret_key = os.environ.get("SECRET_KEY")
 app.api_key = os.environ.get("API_KEY")
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
@@ -29,6 +30,7 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Lax',
 )
 
+# Talisman CSP settings
 csp = {
     'default-src': [
         '\'none\''
@@ -48,7 +50,6 @@ csp = {
     ],
     'style-src': [
         '\'self\'',
-        # 'code.jquery.com',
         'cdn.jsdelivr.net',
         'cdnjs.cloudflare.com',
         'fonts.googleapis.com'
@@ -70,15 +71,21 @@ csp = {
     ]
 }
 
+# Applies Talisman CSP protection to the app
 talisman = Talisman(app, content_security_policy=csp)
-mongo = PyMongo(app)
+# Applies CSRF protection for all forms
 csrf = CSRFProtect(app)
 
+mongo = PyMongo(app)
 
+
+# TMDB URL's for poster, general search and getting apecific item details
 tmdb_urls = {
     "tmdb_poster_url": "https://image.tmdb.org/t/p/w500/",
-    "search_url": "https://api.themoviedb.org/3/search/{media}?api_key={api_key}&language=en-US&page={page}&include_adult=false&query={query}",
-    "detail_url": "https://api.themoviedb.org/3/{media}/{tmdb_id}?api_key={api_key}&language=en-US"
+    "search_url": "https://api.themoviedb.org/3/search/{media}?api_key={api_key}&language=\
+        en-US&page={page}&include_adult=false&query={query}",
+    "detail_url": "https://api.themoviedb.org/3/{media}/{tmdb_id}?api_key={api_key}&language=\
+        en-US"
 }
 
 
@@ -422,9 +429,9 @@ def edit_review(tmdb_id, my_reviews_sort):
                 "inlineRadioOptions"))
             try:
                 updated_overall_rating = round(float(((
-                    current_overall_rating * current_number_reviews
-                    ) - existing_review_rating + adjusted_review_rating
-                    ) / current_number_reviews), 2)
+                    current_overall_rating * current_number_reviews)
+                    - existing_review_rating + adjusted_review_rating)
+                    / current_number_reviews), 2)
             except ZeroDivisionError:
                 flash("Oops, division by zero error")
                 updated_overall_rating = current_overall_rating
@@ -552,6 +559,27 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
 
 @app.route("/add_like/<object_id>/<tmdb_id>/<media_type>")
 def add_like(object_id, tmdb_id, media_type):
+    """ Handles the add like functionality.
+
+    First, checks if a valid user is in session cookie with
+    check_user_permission, otherwise redirects them to index. It then adds the
+    user to the likes list of the review in question. It then redirects the
+    user back review_detail.
+
+    Args:
+        object_id (hexadecimal): This is the mongodb id representing each
+        document in a collection.
+        tmdb_id (str): This is the id that TMDB API use to identify a certain
+        movie or tv series.
+        media_type (str): Used to identify whether the search is for a movie
+        or tv series and to use the approriate API url.
+
+    Returns:
+        Upon updating the collection with adding a like, it returns a redirect
+        to review_detail.
+        If not a valid user, flashes an appropriate message and returns a
+        redirect to index.
+    """
     if check_user_permission() == "valid-user":
         mongo.db.reviews.update_one(
             {"_id": ObjectId(object_id)},
@@ -566,7 +594,7 @@ def add_like(object_id, tmdb_id, media_type):
 
 @app.route("/search", methods=["GET", "POST"])
 def search_movies():
-    """ Handles search of TMDB API for new reviews.
+    """ Handles search form for new reviews.
 
     This function serves as a redirect to the search_pagination
     function, to avoid form resubmission on page back in the browser.
@@ -591,7 +619,17 @@ def search_movies():
 
 @app.route("/search_pagination/<int:page>", methods=["GET", "POST"])
 def search_pagination(page):
-    """ 
+    """ Handles search_pagination of TMDB API for new reviews.
+
+    Args:
+        page (int): The API returns 20 results at a time. Page number is used
+        to select results page required.
+
+    Returns:
+        A redirect to search_movies.
+        If a search query already in session it returns a call of the
+        api_request function.
+        If POST request returns a call of the api_request function.
     """
     if request.method == "POST":
         session["search"] = True
@@ -626,8 +664,12 @@ def api_request(page):
         JSONDecodeError: If the return from the request cannot be converted
         to json.
     """
-    search_url_movie = tmdb_urls["search_url"].format(media="movie", api_key=app.api_key, page=page, query=session['search_query'])
-    search_url_tv = tmdb_urls["search_url"].format(media="tv", api_key=app.api_key, page=page, query=session['search_query'])
+    search_url_movie = tmdb_urls["search_url"].format(
+        media="movie", api_key=app.api_key, page=page,
+        query=session['search_query'])
+    search_url_tv = tmdb_urls["search_url"].format(
+        media="tv", api_key=app.api_key, page=page,
+        query=session['search_query'])
     if session["media_type"] == "tv":
         search_url = search_url_tv
     else:
@@ -778,8 +820,9 @@ def update_overall_rating(details_exist):
     Raises:
         ZeroDivisionError: if number_reviews = 0
     """
-    total_rating = details_exist["overall_rating"] + float(
-                    request.form.get("inlineRadioOptions"))
+    total_rating = ((details_exist["overall_rating"]
+                    * details_exist["number_reviews"])
+                    + float(request.form.get("inlineRadioOptions")))
     number_reviews = details_exist["number_reviews"] + 1
     try:
         updated_overall_rating = total_rating / number_reviews
@@ -825,8 +868,10 @@ def get_choice_detail(tmdb_id, media_type):
         JSONDecodeError: If the return from the request cannot be converted
         to json.
     """
-    tv_detail_url = tmdb_urls["detail_url"].format(media="tv", tmdb_id=tmdb_id, api_key=app.api_key)
-    movie_detail_url = tmdb_urls["detail_url"].format(media="movie", tmdb_id=tmdb_id, api_key=app.api_key)
+    tv_detail_url = tmdb_urls["detail_url"].format(
+        media="tv", tmdb_id=tmdb_id, api_key=app.api_key)
+    movie_detail_url = tmdb_urls["detail_url"].format(
+        media="movie", tmdb_id=tmdb_id, api_key=app.api_key)
     session["media_type"] = media_type
     if media_type == "tv":
         detail_url = tv_detail_url

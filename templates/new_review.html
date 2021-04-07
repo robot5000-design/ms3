@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="container">
     <div class="row">
         <div class="col-2 px-0 pt-4 mt-1">
@@ -13,9 +14,9 @@
         <!-- Image -->
         <div class="col-12 col-md-6 px-0 pb-5 pt-5 text-center">
             {% if media_detail.poster_path == None %}
-            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
+                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
             {% else %}
-            <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="">
+                <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="">
             {% endif %}
         </div>
         <!-- movie details -->
@@ -23,76 +24,76 @@
             <h1 class="heading py-3">{{ media_detail.original_title }}</h1>
             <div class="pb-2">
                 {% if media_detail.release_date == None %}
-                <div>Released: Not available.</div>
+                    <div>Released: Not available.</div>
                 {% else %}
-                <div>Released: {{ media_detail.release_date }} {{ media_detail.media_type.capitalize() }}</div>
+                    <div>Released: {{ media_detail.release_date }} {{ media_detail.media_type.capitalize() }}</div>
                 {% endif %}
             </div>
             <div class="pb-2">
                 {% if media_detail.overall_rating %}
-                <div>Overall Rating: {{ media_detail.overall_rating }} / 5</div>
+                    <div>Overall Rating: {{ media_detail.overall_rating }} / 5</div>
                 {% else %}
-                <div>Overall Rating: No Rating</div>
+                    <div>Overall Rating: No Rating</div>
                 {% endif %}
             </div>
             {% if media_detail.overview != None %}
-            <div class="pb-5 pt-3">{{ media_detail.overview }}</div>
+                <div class="pb-5 pt-3">{{ media_detail.overview }}</div>
             {% endif %}
-            <div class="pb-5 pt-1">
+                <div class="pb-5 pt-1">
                 {% if not session.user %}
-                <a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
                 {% elif already_reviewed %}
-                <div>You've already reviewed this.</div>
+                    <div>You've already reviewed this.</div>
                 {% else %}
-                <form class="review-form" method="POST"
-                    action="{{ url_for('new_review', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                    <select class="select-genre mb-3 py-1" name="select-genre" aria-label="Select Genre" required>
-                        <option value="" selected disabled>Choose a Genre:</option>
-                        {% for genre in genres %}
-                        <option value="{{ genre.genre_name }}" required>{{ genre.genre_name.title() }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="mb-4">
-                        <label for="review-text" class="form-label"></label>
-                        <textarea class="form-control" id="review-text" name="review-text" rows="5"
-                            placeholder="Write your review here" required></textarea>
-                    </div>
-                    <div class="pb-2 pt-3">What's your rating?</div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                            value="1" required>
-                        <label class="form-check-label" for="inlineRadio1">1</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                            value="2" required>
-                        <label class="form-check-label" for="inlineRadio2">2</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
-                            value="3" required>
-                        <label class="form-check-label" for="inlineRadio3">3</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4"
-                            value="4" required>
-                        <label class="form-check-label" for="inlineRadio4">4</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5"
-                            value="5" required>
-                        <label class="form-check-label" for="inlineRadio5">5</label>
-                    </div>
-                    <div class="col py-4 mt-3">
-                        <button type="submit" class="btn btn-primary submit-edit">Submit</button>
-                    </div>
-                </form>
+                    <!-- Reviews Form -->
+                    <form class="review-form" method="POST"
+                        action="{{ url_for('new_review', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <select class="select-genre mb-3 py-1" name="select-genre" aria-label="Select Genre" required>
+                            <option value="" selected disabled>Choose a Genre:</option>
+                            {% for genre in genres %}
+                                <option value="{{ genre.genre_name }}" required>{{ genre.genre_name.title() }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="mb-4">
+                            <label for="review-text" class="form-label"></label>
+                            <textarea class="form-control" id="review-text" name="review-text" rows="5"
+                                placeholder="Write your review here" required></textarea>
+                        </div>
+                        <div class="pb-2 pt-3">What's your rating?</div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                                value="1" required>
+                            <label class="form-check-label" for="inlineRadio1">1</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                                value="2" required>
+                            <label class="form-check-label" for="inlineRadio2">2</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
+                                value="3" required>
+                            <label class="form-check-label" for="inlineRadio3">3</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4"
+                                value="4" required>
+                            <label class="form-check-label" for="inlineRadio4">4</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5"
+                                value="5" required>
+                            <label class="form-check-label" for="inlineRadio5">5</label>
+                        </div>
+                        <div class="col py-4 mt-3">
+                            <button type="submit" class="btn btn-primary submit-edit">Submit</button>
+                        </div>
+                    </form>
                 {% endif %}
             </div>
         </div>
     </div>
-</div>
 </div>
 
 {% endblock %}

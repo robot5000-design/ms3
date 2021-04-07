@@ -8,7 +8,7 @@
     <!-- emailjs -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"
         integrity="sha384-9LLJQ84WqavR1HCyGiVZ8NWsnBN49uk6kSvqVdy3Rjvwz8VHc/qfQ6sI7e7cN/dK" crossorigin="anonymous">
-    </script>
+        </script>
     <!-- font-awesome link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
         integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
@@ -46,29 +46,36 @@
                     <a class="nav-link" href="{{ url_for('search_movies') }}">New Review</a>
                     <a class="nav-link" href="{{ url_for('browse_reviews', page=0) }}">Browse Reviews</a>
                     {% if "user" in session %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ session.user.title() }}'s Account
-                        </a>
-                        <ul class="dropdown-menu text-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item"
-                                    href="{{ url_for('my_reviews', user=session['user'], my_reviews_sort='latest', page=0) }}">My
-                                    Reviews</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a>
-                            </li>
-                            {% if session.user == "admin" %}
-                            <li><a class="dropdown-item" href="{{ url_for('admin_controls') }}">Admin Controls</a></li>
-                            {% endif %}
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
-                        </ul>
-                    </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ session.user.title() }}'s Account
+                            </a>
+                            <ul class="dropdown-menu text-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ url_for('my_reviews', user=session['user'], my_reviews_sort='latest', page=0) }}">My
+                                        Reviews</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a>
+                                </li>
+                                {% if session.user == "admin" %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url_for('admin_controls') }}">Admin Controls</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+                                </li>
+                            </ul>
+                        </li>
                     {% else %}
-                    <a class="nav-link login-modal" data-bs-toggle="modal" data-bs-target="#logInModal" href="#">Log
-                        In</a>
+                        <a class="nav-link login-modal" data-bs-toggle="modal" data-bs-target="#logInModal" href="#">Log
+                            In</a>
                     {% endif %}
                 </div>
             </div>
@@ -77,13 +84,13 @@
     <section class="flash text-center">
         <!-- flash messages -->
         {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <div class="">
-            <h4 class="">{{ message }}</h4>
-        </div>
-        {% endfor %}
-        {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="">
+                        <h4 class="">{{ message }}</h4>
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
     </section>
 
@@ -157,7 +164,8 @@
                     </form>
                     <div>
                         <span><a href="{{ url_for('register') }}" id="show-register" class="show-register">No
-                                Account? Register Here</a></span>
+                                Account? Register Here</a>
+                        </span>
                     </div>
                 </div>
             </div>

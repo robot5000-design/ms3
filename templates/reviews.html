@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="container-fluid text-center">
     <div class="row py-4">
         <div class="col">
@@ -9,7 +10,7 @@
     <div class="row search-box">
         <div class="col-12">
             <form action="{{ url_for('browse_reviews', page=0) }}" method="post" id="browse-reviews-form">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <div class="row pb-4">
                     <div class="col">
                         <label for="search-box" class="form-label pb-4">Search</label>
@@ -24,23 +25,23 @@
                     <div class="col">
                         <div class="dropdown">
                             {% if browse_reviews_sort == "rating" %}
-                            <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
-                                <option value="rating" selected>Sort-by: Rating</option>
-                                <option value="latest">Sort-by: Latest</option>
-                                <option value="popularity">Sort-by: Popularity</option>
-                            </select>
+                                <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
+                                    <option value="rating" selected>Sort-by: Rating</option>
+                                    <option value="latest">Sort-by: Latest</option>
+                                    <option value="popularity">Sort-by: Popularity</option>
+                                </select>
                             {% elif browse_reviews_sort == "popularity" %}
-                            <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
-                                <option value="popularity" selected>Sort-by: Popularity</option>
-                                <option value="latest">Sort-by: Latest</option>
-                                <option value="rating">Sort-by: Rating</option>
-                            </select>
+                                <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
+                                    <option value="popularity" selected>Sort-by: Popularity</option>
+                                    <option value="latest">Sort-by: Latest</option>
+                                    <option value="rating">Sort-by: Rating</option>
+                                </select>
                             {% else %}
-                            <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
-                                <option value="latest" selected>Sort-by: Latest</option>
-                                <option value="popularity">Sort-by: Popularity</option>
-                                <option value="rating">Sort-by: Rating</option>
-                            </select>
+                                <select name="browse_reviews_sort" class="form-select" aria-label="Default select example">
+                                    <option value="latest" selected>Sort-by: Latest</option>
+                                    <option value="popularity">Sort-by: Popularity</option>
+                                    <option value="rating">Sort-by: Rating</option>
+                                </select>
                             {% endif %}
                         </div>
                     </div>
@@ -54,54 +55,56 @@
         </div>
     </div>
     {% if movie_details | length() > 0 %}
-    <div class="row">
-        {% for movie in movie_details %}
-        <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-0">
-            <div class="card index-card">
-                <div class="row">
-                    <a
-                        href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}">
-                        <img src="{{ tmdb_poster_url }}{{ movie['poster_path'] }}" class="card-img-top" alt="...">
-                    </a>
-                </div>
-                <div class="card-body row align-items-end">
-                    <div class="col-12 text-center">
-                        <div class="card-title">{{ movie.original_title }}</div>
+        <div class="row">
+            {% for movie in movie_details %}
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-0">
+                    <div class="card index-card">
+                        <div class="row">
+                            <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}">
+                                <img src="{{ tmdb_poster_url }}{{ movie['poster_path'] }}" class="card-img-top" alt="...">
+                            </a>
+                        </div>
+                        <div class="card-body row align-items-end">
+                            <div class="col-12 text-center">
+                                <div class="card-title">{{ movie.original_title }}</div>
+                            </div>
+                            <div class="col-12 text-center">
+                                <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}"
+                                    class="btn btn-primary get-reviews-btn">Get Reviews
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-12 text-center">
-                        <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}"
-                            class="btn btn-primary get-reviews-btn">Get
-                            Reviews</a>
-                    </div>
                 </div>
+            {% endfor %}
+        </div>
+        <div class="row mx-auto pt-5 pb-3">
+            <div class="col">
+                {% if review_count > 12 %}
+                    <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
+                {% endif %}
             </div>
         </div>
-        {% endfor %}
-    </div>
-    <div class="row mx-auto pt-5 pb-3">
-        <div class="col">
-            {% if review_count > 12 %}
-            <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
-            {% endif %}
+        <div class="row mx-auto pb-5">
+            <div class="col">
+                {% if page > 0 %}
+                    <a href="{{ url_for('browse_reviews', page=page-1) }}"
+                        class="btn btn-secondary previous-button">Previous
+                    </a>
+                {% endif %}
+                {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %}
+                    <a href="{{ url_for('browse_reviews', page=page+1) }}"
+                        class="btn btn-secondary next-button">Next                
+                    </a>
+                {% endif %}
+            </div>
         </div>
-    </div>
-    <div class="row mx-auto pb-5">
-        <div class="col">
-            {% if page > 0 %}
-            <a href="{{ url_for('browse_reviews', page=page-1) }}"
-                class="btn btn-secondary previous-button">Previous</a>
-            {% endif %}
-            {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %}
-            <a href="{{ url_for('browse_reviews', page=page+1) }}" class="btn btn-secondary next-button">Next</a>
-            {% endif %}
-        </div>
-    </div>
     {% else %}
-    <div class="row">
-        <div class="col">
-            <h3 class="p-5">No Results!</h3>
+        <div class="row">
+            <div class="col">
+                <h3 class="p-5">No Results!</h3>
+            </div>
         </div>
-    </div>
     {% endif %}
 </div>
 

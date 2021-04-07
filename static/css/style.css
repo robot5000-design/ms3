@@ -1,76 +1,101 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v7.0.29,
+* Autoprefixer: v9.7.6
+* Browsers: last 4 version
+*/
 
-
+/*--------------------------------------------------------General Rules */
 
 /* Import Font */
-@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Montserrat:wght@500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Montserrat:wght@500;700&display=swap");
 
 * {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: "Montserrat", sans-serif;
-    font-size: 100%;
-    background-color: #191958;
-    color: #eee9e1;
+  font-family: "Montserrat", sans-serif;
+  font-size: 100%;
+  background-color: #191958;
+  color: #eee9e1;
 }
 
 .btn {
-    color: #eee9e1;
+  color: #eee9e1;
+  font-size: 1em;
 }
 
 form .form-control,
 .form-select,
 .review-form select,
 .list-group li {
-    background-color: #eee9e1;
-}
-
-.navbar .navbar-brand {
-    color: #eee9e1;
-    font-family: "Alfa Slab One", cursive;
-}
-
-.heading {
-    font-size: 1.5em;
-    color: #ffa30f;
-    font-family: "Alfa Slab One", cursive;
-    line-height: 1.6em;
-}
-
-.reviews {
-    font-size: .85em;
-}
-
-.reviews-heading {
-    font-size: 1.5em;
-}
-
-.stats-group {
-    color: #000;
-    font-size: .9em;
-}
-
-.table {
-    font-size: 3.5vw;
-}
-
-.review-text {
-    color: #ffa30f;
+  background-color: #eee9e1;
 }
 
 i {
-    color: #ffa30f;
+  color: #ffa30f;
 }
 
-.reviews .dropdown .btn,
-.dropdown-item {
-    font-size: .85em;
+h1 {
+  font-size: 1.7em;
 }
+
+h2 {
+  font-size: 1.2em;
+}
+
+.heading {
+  font-size: 1.5em;
+  color: #ffa30f;
+  font-family: "Alfa Slab One", cursive;
+  line-height: 1.6em;
+}
+
+.call-delete,
+.confirm-delete,
+.submit-edit,
+.delete-genre,
+.confirm-genre,
+.confirm-block,
+.confirm-unblock {
+  font-size: 0.9em;
+}
+
+.review-this,
+.call-delete,
+.confirm-delete,
+.submit-edit {
+  width: 45%;
+  max-width: 150px;
+}
+
+.page-number {
+  color: #8b8989;
+  text-align: center;
+}
+
+.previous-button,
+.next-button {
+  margin-top: 10px;
+  width: 100px;
+  font-size: 0.9em;
+}
+
+.btn-primary {
+  background-color: #316dc6;
+}
+
+.input-group:not(.has-validation)
+  > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+  border-radius: 0.25rem;
+}
+
+/*--------------------------------------------------------Background Images */
 
 .backing-image {
   background: url(../images/back-image.jpg) repeat top center scroll;
@@ -86,366 +111,352 @@ i {
   right: 0;
 }
 
-h1 {
-    font-size: 1.7em;
-}
+/*--------------------------------------------------------Navbar */
 
-h2 {
-    font-size: 1.2em;
+.navbar-brand {
+  color: #eee9e1;
+  font-family: "Alfa Slab One", cursive;
+  font-size: 3vw;
 }
 
 #navbarNavAltMarkup {
-    -webkit-box-pack: end;
-    -ms-flex-pack: end;
-    justify-content: flex-end;
-}
-
-.navbar-brand {
-    color: #ffa30f;
-    font-size: 3vw;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
 }
 
 .navbar-brand i {
-    font-size: 15vw;
-    padding-right: 7px;
-    color: #ffa30f;
+  font-size: 15vw;
+  padding-right: 7px;
+  color: #ffa30f;
 }
 
+/*--------------------------------------------------------Admin Controls */
+
+.stats-group {
+  color: #000;
+  font-size: 0.9em;
+}
+
+.table {
+  font-size: 3.5vw;
+}
+
+/*--------------------------------------------------------API Search Form */
+
 .api-search-form {
-    color: #eee9e1;
-    max-width: 80vw;
-    margin: 0 auto;
+  color: #eee9e1;
+  max-width: 80vw;
+  margin: 0 auto;
 }
 
 .form-check {
-    display: inline-block;
+  display: inline-block;
 }
 
 .form-check-input:checked {
-    border: 10px solid red;
+  border: 10px solid red;
 }
 
 .form-check-tv {
-    padding-left: 17%;
-    font-size: 1.2em;
+  padding-left: 17%;
+  font-size: 1.2em;
 }
 
 .form-check-movie {
-    padding-left: 60px;
-    font-size: 1.2em;
+  padding-left: 60px;
+  font-size: 1.2em;
 }
 
 .search-api-button {
-    width: 100%;
-}
-
-.btn {
-    font-size: 1em;
-}
-
-.call-delete,
-.confirm-delete,
-.submit-edit,
-.delete-genre,
-.confirm-genre,
-.confirm-block,
-.confirm-unblock {
-    font-size: .9em;    
-}
-
-.call-delete,
-.confirm-delete,
-.submit-edit {
-    width: 45%;
-    max-width: 150px;
-}
-
-.page-number {
-    color: #8b8989;
-    text-align: center;
+  width: 100%;
 }
 
 .img-thumbnail {
-    width: 100%;
-    padding: 0;
+  width: 100%;
+  padding: 0;
 }
 
-.previous-button,
-.next-button {
-    margin-top: 10px;
-    width: 100px;
-    font-size: .9em;
+.thumbnail-title a {
+  font-family: "Alfa Slab One", cursive;
+  font-size: 1.2em;
+  color: #ffa30f;
+  padding-top: 7px;
 }
 
-.btn-primary {
-    background-color: #316dc6;
+.api-results-card {
+  width: 70vw;
+  margin: 0 auto;
+  text-align: center;
+  border: 0;
+  background-color: #eee9e100;
+}
+
+.search-icon > i {
+  font-size: 38px;
 }
 
 .tmdb-result-list {
-    font-size: .8em;
+  font-size: 0.8em;
 }
 
-.index-card {
-    height: 100%;
-    width: 100%;
-    background-color: #191958;
-    font-size: .8em;
+/*--------------------------------------------------------Reviews */
+
+.review-text {
+  color: #ffa30f;
 }
 
-#carousel-3X4 {
-    display: none;
+.reviews .dropdown .btn,
+.dropdown-item {
+  font-size: 0.85em;
 }
 
-#carousel-4X3 {
-    display: none;
+.reviews {
+  font-size: 0.85em;
 }
 
-#carousel-6X2 {
-    display: none;
-}
-
-#carousel-12X1 {
-    width: 100%;
-    display: block;
-}
-
-.carousel-review {
-    display: inline-block;
-    margin-left: -4px;
-}
-
-.carousel {
-    padding-bottom: 50px;
-    margin-bottom: 70px;
-}
-
-.carousel-inner {
-    background-color: #000000;
-}
-
-.carousel-review img {
-    width: 100%;
-    height: auto;
-}
-
-body .carousel-control-prev-icon,
-body .carousel-control-next-icon {
-    background-color: rgba(255, 0, 0, 0.699);
+.reviews-heading {
+  font-size: 1.5em;
 }
 
 .get-reviews-btn,
 .edit-review-btn {
-    font-size: .9em;
-}
-
-.thumbnail-title a {
-    font-family: "Alfa Slab One", cursive;
-    font-size: 1.2em;
-    color: #ffa30f;
-    padding-top: 7px;
-}
-
-.api-results-card {
-    width: 70vw;
-    margin: 0 auto;
-    text-align: center;
-    border: 0;
-    background-color: #eee9e100;
-}
-
-.search-icon > i {
-    font-size: 38px;
+  font-size: 0.9em;
 }
 
 .review-image {
-    width: 100%;
-    margin: 0 auto;
-    border: 3px solid #000;
-    border-radius: 5%;
+  width: 100%;
+  margin: 0 auto;
+  border: 3px solid #000;
+  border-radius: 5%;
 }
+
+.index-card {
+  height: 100%;
+  width: 100%;
+  background-color: #191958;
+  font-size: 0.8em;
+}
+
+/*--------------------------------------------------------Register / Contact */
 
 .register-wrapper,
 .contact-wrapper {
-    width: 100%;
-    margin-top: 50px;
+  width: 100%;
+  margin-top: 50px;
 }
+
+/*--------------------------------------------------------Browse Reviews / My Reviews */
 
 .search-box {
-    width: 100%;
-    margin: 0 auto;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
-    border-radius: .25rem;
+/*--------------------------------------------------------Carousel */
+
+#carousel-3X4 {
+  display: none;
 }
+
+#carousel-4X3 {
+  display: none;
+}
+
+#carousel-6X2 {
+  display: none;
+}
+
+#carousel-12X1 {
+  width: 100%;
+  display: block;
+}
+
+.carousel-review {
+  display: inline-block;
+  margin-left: -4px;
+}
+
+.carousel {
+  padding-bottom: 50px;
+  margin-bottom: 70px;
+}
+
+.carousel-inner {
+  background-color: #000000;
+}
+
+.carousel-review img {
+  width: 100%;
+  height: auto;
+}
+
+body .carousel-control-prev-icon,
+body .carousel-control-next-icon {
+  background-color: rgba(255, 0, 0, 0.699);
+}
+
+/*--------------------------------------------------------Modal */
 
 .modal {
-    color: #8b8989;
+  color: #8b8989;
 }
 
 /*--------------------------------------------------------Footer */
 
 .footer-container {
-    background-color: #000;
-    min-height: 140px;
-    text-align: center;
-    position: relative;
+  background-color: #000;
+  min-height: 140px;
+  text-align: center;
+  position: relative;
+  padding-bottom: 30px;
 }
 
 .footer-container li a i {
-    color: #eee9e1;
-    font-size: 28px;
+  color: #eee9e1;
+  font-size: 28px;
 }
 
 .footer-terms a,
 .footer-terms {
-    font-family: "Roboto Mono", monospace;
-    font-weight: 500;
-    color: #eee9e1;
-    margin: 0 auto;
-    text-decoration: none;
+  font-family: "Roboto Mono", monospace;
+  font-weight: 500;
+  color: #eee9e1;
+  margin: 0 auto;
+  text-decoration: none;
 }
 
 /* Color change on hover */
 .footer-container li a i,
 .footer-terms a {
-    transition: all 0.15s ease-in-out;
-    -moz-transition: all 0.15s ease-in-out;
-    -webkit-transition: all 0.15s ease-in-out;
-    -o-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+  -moz-transition: all 0.15s ease-in-out;
+  -webkit-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
 }
 
 .footer-terms a:hover,
 .footer-container li a i:hover {
-    color: #316dc6;
+  color: #316dc6;
 }
 
 .footer-terms .footer-terms-item {
-    padding-bottom: 20px;
+  height: 44px;
 }
 
+/*--------------------------------------------------------Media Queries */
+
 @media screen and (min-width: 350px) {
-    .table {
-        font-size: .9em;
-    }
+  .table {
+    font-size: 0.9em;
+  }
 }
 
 @media screen and (min-width: 400px) {
-    .navbar-brand {
-        font-size: 2.7vw;
-    }
-    .navbar-brand i {
-        font-size: 13vw;
-    }
-    .review-image {
-        width: 80%;
-    }
-    .review-wrapper {
-        padding-left: 40px;
-    }
+  .navbar-brand {
+    font-size: 2.7vw;
+  }
+  .navbar-brand i {
+    font-size: 13vw;
+  }
+  .review-image {
+    width: 80%;
+  }
+  .review-wrapper {
+    padding-left: 40px;
+  }
 }
 
 @media screen and (min-width: 576px) {
-    .navbar-brand {
-        font-size: 1.2em;
-    }
-    .navbar-brand i {
-        font-size: 4.5em;
-    }
-    .api-results-card {
-        font-size: 1em;
-        width: 100%;
-    }
-    .previous-button,
-    .next-button {
-        margin-top: 10px;
-        width: 120px;
-        font-size: 1em;
-    }
-    .img-thumbnail {
-        margin-right: 20px;
-        width: 100%;
-    }
-    .register-wrapper,
-    .contact-wrapper {
-        width: 60%;
-    }
-    .search-box {
-        width: 80%;
-    }
-    .heading {
-        font-size: 1.8em;
-    }
+  .navbar-brand {
+    font-size: 1.2em;
+  }
+  .navbar-brand i {
+    font-size: 4.5em;
+  }
+  .api-results-card {
+    font-size: 1em;
+    width: 100%;
+  }
+  .previous-button,
+  .next-button {
+    margin-top: 10px;
+    width: 120px;
+    font-size: 1em;
+  }
+  .img-thumbnail {
+    margin-right: 20px;
+    width: 100%;
+  }
+  .register-wrapper,
+  .contact-wrapper {
+    width: 60%;
+  }
+  .search-box {
+    width: 80%;
+  }
+  .heading {
+    font-size: 1.8em;
+  }
 }
 
 @media screen and (min-width: 768px) {
-    #carousel-12X1 {
-        display: none;
-    }
-
-    #carousel-6X2 {
-        width: 100%;
-        display: block;
-    }
-
-    .search-box {
-        width: 65%;
-    }
-    .review-image {
-        width: 100%;
-    }
-    .review-wrapper {
-        padding-top: 30px;
-    }
+  #carousel-12X1 {
+    display: none;
+  }
+  #carousel-6X2 {
+    width: 100%;
+    display: block;
+  }
+  .search-box {
+    width: 65%;
+  }
+  .review-image {
+    width: 100%;
+  }
+  .review-wrapper {
+    padding-top: 30px;
+  }
 }
 
 @media screen and (min-width: 992px) {
-    .search-api-button {
-        width: 85%;
-    }
-
-    .register-wrapper,
-    .contact-wrapper {
-        width: 40%;
-    }
-
-    #carousel-12X1 {
-        display: none;
-    }
-
-    #carousel-6X2 {
-        display: none;
-    }
-
-    #carousel-4X3 {
-        width: 100%;
-        display: block;
-    }
-
-    .search-box {
-        width: 50%;
-    }
+  .search-api-button {
+    width: 85%;
+  }
+  .register-wrapper,
+  .contact-wrapper {
+    width: 40%;
+  }
+  #carousel-12X1 {
+    display: none;
+  }
+  #carousel-6X2 {
+    display: none;
+  }
+  #carousel-4X3 {
+    width: 100%;
+    display: block;
+  }
+  .search-box {
+    width: 50%;
+  }
 }
 
 @media screen and (min-width: 1200px) {
-    #carousel-12X1 {
-        display: none;
-    }
-
-    #carousel-6X2 {
-        display: none;
-    }
-    
-    #carousel-4X3 {
-        display: none;
-    }
-
-    #carousel-3X4 {
-        width: 100%;
-        display: block;
-    }
-
-    .search-box {
-        width: 40%;
-    }
+  #carousel-12X1 {
+    display: none;
+  }
+  #carousel-6X2 {
+    display: none;
+  }
+  #carousel-4X3 {
+    display: none;
+  }
+  #carousel-3X4 {
+    width: 100%;
+    display: block;
+  }
+  .search-box {
+    width: 40%;
+  }
 }

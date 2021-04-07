@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="container pt-4 pb-5">
     <div class="row">
         <div class="col-12 col-lg-6 pb-5">
@@ -32,16 +33,22 @@
                 </thead>
                 <tbody>
                     {% for index in range(most_likes | length()) %}
-                    <tr>
-                        <th scope="row">{{ index + 1 }}</th>
-                        <td><a class="text-decoration-none"
-                                href="{{ url_for('my_reviews', user=most_likes[index].created_by, my_reviews_sort='latest', page=0) }}">{{ most_likes[index].created_by }}</a>
-                        </td>
-                        <td><a class="text-decoration-none"
-                                href="{{ url_for('review_detail', tmdb_id=most_likes[index].tmdb_id, media_type=most_likes[index].media_type, review_detail_sort='latest', page=0) }}">{{ most_likes[index].original_title }}</a>
-                        </td>
-                        <td>{{ most_likes[index].sum_likes }}</td>
-                    </tr>
+                        <tr>
+                            <th scope="row">{{ index + 1 }}</th>
+                            <td>
+                                <a class="text-decoration-none"
+                                    href="{{ url_for('my_reviews', user=most_likes[index].created_by, my_reviews_sort='latest', page=0) }}">
+                                    {{ most_likes[index].created_by }}
+                                </a>
+                            </td>
+                            <td>
+                                <a class="text-decoration-none"
+                                    href="{{ url_for('review_detail', tmdb_id=most_likes[index].tmdb_id, media_type=most_likes[index].media_type, review_detail_sort='latest', page=0) }}">
+                                    {{ most_likes[index].original_title }}
+                                </a>
+                            </td>
+                            <td>{{ most_likes[index].sum_likes }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -50,26 +57,32 @@
     <div class="row">
         <div class="col-12 col-lg-6 mb-5">
             <h3>Add/Remove Genres:</h3>
-            <p>Pick from the list below to remove a genre and/or add a new one in the input box</p>
-            <form class="needs-validation adjust-genres" action="{{ url_for('admin_controls') }}" method="POST" novalidate>
+            <p>
+                Pick from the list below to remove a genre and/or add a new one in the
+                input box
+            </p>
+            <form class="needs-validation adjust-genres" action="{{ url_for('admin_controls') }}" method="POST"
+                novalidate>
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <select class="form-select select-genre" name="select-genre" size="10"
                     aria-label="Size 10 Select Genre">
                     <option value="" disabled>Genre List:</option>
                     <option value="">Select None</option>
                     {% for genre in genres %}
-                    <option value="{{ genre.genre_name }}">{{ genre.genre_name.title() }}</option>
+                        <option value="{{ genre.genre_name }}">
+                            {{ genre.genre_name.title() }}
+                        </option>
                     {% endfor %}
                 </select>
                 <div class="input-group mt-2 mb-2">
                     <input type="text" name="new-genre" aria-label="Add genre" placeholder="Add a New Genre Here"
-                        class="form-control" minlength="3" pattern="^[a-zA-Z\-]{3,15}$" maxlength="15">
+                        class="form-control" minlength="3" pattern="^[a-zA-Z\-]{3,15}$" maxlength="15" />
                     <span class="invalid-feedback">must be 3-15 letters (including '-')</span>
                 </div>
                 <div class="btn btn-primary delete-genre">Add and/or Delete Genre</div>
                 <button type="submit" id="submit-form-1" name="submit-form-1"
-                    class="btn btn-danger confirm-genre invisible">Confirm
-                    Add/Delete Genre
+                    class="btn btn-danger confirm-genre invisible">
+                    Confirm Add/Delete Genre
                 </button>
             </form>
         </div>
@@ -77,17 +90,17 @@
             <h3>Block User(s):</h3>
             <form class="" action="{{ url_for('admin_controls') }}" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <select class="form-select select-user mb-2" name="block-selected" size="10" aria-label="Size 10 Select User"
-                    multiple required>
+                <select class="form-select select-user mb-2" name="block-selected" size="10"
+                    aria-label="Size 10 Select User" multiple required>
                     <option value="" disabled>User List:</option>
                     <option value="">Select None</option>
                     {% for user in user_list %}
-                    <option value="{{ user }}">{{ user }}</option>
+                        <option value="{{ user }}">{{ user }}</option>
                     {% endfor %}
                 </select>
                 <button type="submit" id="submit-form-3" name="submit-form-3"
-                    class="btn btn-danger confirm-block col-6 offset-6">Confirm
-                    Block User
+                    class="btn btn-danger confirm-block col-6 offset-6">
+                    Confirm Block User
                 </button>
             </form>
         </div>
@@ -95,17 +108,17 @@
             <h3>Unblock User(s):</h3>
             <form class="" action="{{ url_for('admin_controls') }}" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <select class="form-select select-user mb-2" name="unblock-selected" size="10" aria-label="Size 10 Select User"
-                    multiple required>
+                <select class="form-select select-user mb-2" name="unblock-selected" size="10"
+                    aria-label="Size 10 Select User" multiple required>
                     <option value="" disabled>User List:</option>
                     <option value="">Select None</option>
                     {% for user in blocked_users %}
-                    <option value="{{ user }}">{{ user }}</option>
+                        <option value="{{ user }}">{{ user }}</option>
                     {% endfor %}
                 </select>
                 <button type="submit" id="submit-form-4" name="submit-form-4"
-                    class="btn btn-danger confirm-unblock col-6 offset-6">Confirm
-                    Unblock User
+                    class="btn btn-danger confirm-unblock col-6 offset-6">
+                    Confirm Unblock User
                 </button>
             </form>
         </div>
