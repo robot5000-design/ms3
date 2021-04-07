@@ -75,6 +75,13 @@ mongo = PyMongo(app)
 csrf = CSRFProtect(app)
 
 
+tmdb_urls = {
+    "tmdb_poster_url": "https://image.tmdb.org/t/p/w500/",
+    "search_url": "https://api.themoviedb.org/3/search/{media}?api_key={api_key}&language=en-US&page={page}&include_adult=false&query={query}",
+    "detail_url": "https://api.themoviedb.org/3/{media}/{tmdb_id}?api_key={api_key}&language=en-US"
+}
+
+
 @app.route('/', methods=["GET", "POST"])
 @app.route('/index', methods=["GET", "POST"])
 def index():
@@ -96,7 +103,7 @@ def index():
     movie_details = list(mongo.db.movie_details.find().sort(
         "last_review_date", -1).limit(12))
     if movie_details:
-        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+        tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
         return render_template("index.html", movie_details=movie_details,
                                tmdb_poster_url=tmdb_poster_url)
     return render_template("index.html")
@@ -183,7 +190,7 @@ def search_reviews(query, browse_reviews_sort, page):
             "last_review_date", -1).skip(page * 12).limit(12))
     if movie_details:
         try:
-            tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+            tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
         except KeyError as error:
             error = f"Key Error: {error}"
             return render_template("error.html", error=error)
@@ -258,8 +265,7 @@ def my_reviews(user, my_reviews_sort, page):
             iteration += 1
         if movie_details:
             try:
-                tmdb_poster_url = mongo.db.tmdb_urls.find_one()[
-                    "tmdb_poster_url"]
+                tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
             except KeyError as error:
                 error = f"Key Error: {error}"
                 return render_template("error.html", error=error)
@@ -442,7 +448,7 @@ def edit_review(tmdb_id, my_reviews_sort):
         except IndexError:
             flash("That resource does not exist")
             return redirect(url_for("index"))
-        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+        tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
         genres = mongo.db.genres.find().sort("genre_name", 1)
         return render_template("edit_review.html", review_fields=review_fields,
                                media_detail=media_detail,
@@ -522,7 +528,7 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
         except IndexError:
             flash("That resource does not exist")
             return redirect(url_for("index"))
-        tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+        tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
         if "user" in session:
             already_reviewed = list(mongo.db.reviews.find({"tmdb_id": tmdb_id,
                                     "created_by": session["user"]}))
@@ -620,10 +626,8 @@ def api_request(page):
         JSONDecodeError: If the return from the request cannot be converted
         to json.
     """
-    search_url_movie = mongo.db.tmdb_urls.find()[0]['search_url'].format(
-        "movie", app.api_key, page, session['search_query'])
-    search_url_tv = mongo.db.tmdb_urls.find()[0]['search_url'].format(
-        "tv", app.api_key, page, session['search_query'])
+    search_url_movie = tmdb_urls["search_url"].format(media="movie", api_key=app.api_key, page=page, query=session['search_query'])
+    search_url_tv = tmdb_urls["search_url"].format(media="tv", api_key=app.api_key, page=page, query=session['search_query'])
     if session["media_type"] == "tv":
         search_url = search_url_tv
     else:
@@ -739,7 +743,7 @@ def new_review(tmdb_id, media_type):
         else:
             return redirect(url_for("search_movies"))
     genres = mongo.db.genres.find().sort("genre_name", 1)
-    tmdb_poster_url = mongo.db.tmdb_urls.find_one()["tmdb_poster_url"]
+    tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
     return render_template("new_review.html", media_detail=media_detail,
                            genres=genres,
                            tmdb_poster_url=tmdb_poster_url,
@@ -821,10 +825,8 @@ def get_choice_detail(tmdb_id, media_type):
         JSONDecodeError: If the return from the request cannot be converted
         to json.
     """
-    tv_detail_url = mongo.db.tmdb_urls.find()[0]['detail_url'].format(
-        "tv", tmdb_id, app.api_key)
-    movie_detail_url = mongo.db.tmdb_urls.find()[0]['detail_url'].format(
-        "movie", tmdb_id, app.api_key)
+    tv_detail_url = tmdb_urls["detail_url"].format(media="tv", tmdb_id=tmdb_id, api_key=app.api_key)
+    movie_detail_url = tmdb_urls["detail_url"].format(media="movie", tmdb_id=tmdb_id, api_key=app.api_key)
     session["media_type"] = media_type
     if media_type == "tv":
         detail_url = tv_detail_url
