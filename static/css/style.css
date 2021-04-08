@@ -131,6 +131,12 @@ h2 {
   color: #ffa30f;
 }
 
+.flash div {
+  background-color: #ffa30f;
+  font-weight: 700;
+  color: #281594  ;
+}
+
 /*--------------------------------------------------------Admin Controls */
 
 .stats-group {
