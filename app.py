@@ -107,11 +107,11 @@ def index():
         session["search_query"] = request.form.get("query")
         session["media_type"] = request.form.get("media_type")
         return api_request(page=1)
-    movie_details = list(mongo.db.movie_details.find().sort(
+    media_details = list(mongo.db.media_details.find().sort(
         "last_review_date", -1).limit(12))
-    if movie_details:
+    if media_details:
         tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
-        return render_template("index.html", movie_details=movie_details,
+        return render_template("index.html", media_details=media_details,
                                tmdb_poster_url=tmdb_poster_url)
     return render_template("index.html")
 
@@ -184,24 +184,24 @@ def search_reviews(query, browse_reviews_sort, page):
             query = ""
         else:
             search_term = {"$text": {"$search": query}}
-    review_count = mongo.db.movie_details.find(search_term).count()
+    review_count = mongo.db.media_details.find(search_term).count()
     total_pages = math.ceil(review_count / 12)
     if browse_reviews_sort == "rating":
-        movie_details = list(mongo.db.movie_details.find(search_term).sort(
+        media_details = list(mongo.db.media_details.find(search_term).sort(
             "overall_rating", -1).skip(page * 12).limit(12))
     elif browse_reviews_sort == "popularity":
-        movie_details = list(mongo.db.movie_details.find(search_term).sort(
+        media_details = list(mongo.db.media_details.find(search_term).sort(
             "number_reviews", -1).skip(page * 12).limit(12))
     else:
-        movie_details = list(mongo.db.movie_details.find(search_term).sort(
+        media_details = list(mongo.db.media_details.find(search_term).sort(
             "last_review_date", -1).skip(page * 12).limit(12))
-    if movie_details:
+    if media_details:
         try:
             tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
         except KeyError as error:
             error = f"Key Error: {error}"
             return render_template("error.html", error=error)
-        return render_template("reviews.html", movie_details=movie_details,
+        return render_template("reviews.html", media_details=media_details,
                                tmdb_poster_url=tmdb_poster_url,
                                browse_reviews_sort=browse_reviews_sort,
                                page=page,
@@ -263,20 +263,20 @@ def my_reviews(user, my_reviews_sort, page):
         review_count = mongo.db.reviews.find({"created_by": user}).count()
         total_pages = math.ceil(review_count / 12)
         # pick out the movies details that we need
-        movie_details = []
+        media_details = []
         iteration = 0
         while iteration < len(movie_id_list):
-            movie_detail = list(mongo.db.movie_details.find(
+            media_detail = list(mongo.db.media_details.find(
                 {"tmdb_id": movie_id_list[iteration]}))
-            movie_details.extend(movie_detail)
+            media_details.extend(media_detail)
             iteration += 1
-        if movie_details:
+        if media_details:
             try:
                 tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
             except KeyError as error:
                 error = f"Key Error: {error}"
                 return render_template("error.html", error=error)
-        return render_template("my_reviews.html", movie_details=movie_details,
+        return render_template("my_reviews.html", media_details=media_details,
                                tmdb_poster_url=tmdb_poster_url,
                                page=page, my_reviews_sort=my_reviews_sort,
                                review_count=review_count,
@@ -320,11 +320,11 @@ def delete_review(tmdb_id, user):
             other_reviews = mongo.db.reviews.find_one(
                 {"tmdb_id": tmdb_id})
             if not other_reviews:
-                mongo.db.movie_details.delete_one(
+                mongo.db.media_details.delete_one(
                     {"tmdb_id": tmdb_id})
             else:
                 # adjust the overall rating to take account of deleted review
-                details_exist = mongo.db.movie_details.find_one(
+                details_exist = mongo.db.media_details.find_one(
                     {"tmdb_id": tmdb_id})
                 current_rating = details_exist["overall_rating"]
                 current_number_reviews = details_exist["number_reviews"]
@@ -343,7 +343,7 @@ def delete_review(tmdb_id, user):
                     "overall_rating": round(updated_overall_rating, 2),
                     "number_reviews": updated_number_reviews
                 }
-                mongo.db.movie_details.update_one(
+                mongo.db.media_details.update_one(
                     {"tmdb_id": tmdb_id},
                     {"$set": update_items})
             if session["user"] == "admin":
@@ -373,7 +373,7 @@ def delete_all(tmdb_id):
         if session["user"] == "admin":
             mongo.db.reviews.delete_many(
                 {"tmdb_id": tmdb_id})
-            mongo.db.movie_details.delete_one(
+            mongo.db.media_details.delete_one(
                 {"tmdb_id": tmdb_id})
             flash("Movie & Reviews Successfully Deleted")
             return redirect(url_for('browse_reviews', page=0))
@@ -391,7 +391,7 @@ def edit_review(tmdb_id, my_reviews_sort):
     movie and review details from mongodb and renders the edit_review template.
     If POST request, it prepares a review update object populated with the form
     inputs. It updates the overall rating and then inserts the review and
-    updates the movie_details. It then redirects the user to my_reviews.
+    updates the media_details. It then redirects the user to my_reviews.
 
     Args:
         tmdb_id (str): This is the id that TMDB API use to identify a certain
@@ -418,7 +418,7 @@ def edit_review(tmdb_id, my_reviews_sort):
                 "review_date": datetime.datetime.now()
             }
             # adjust the overall rating to take account of edited review
-            media_details = mongo.db.movie_details.find_one(
+            media_details = mongo.db.media_details.find_one(
                 {"tmdb_id": tmdb_id})
             existing_review = mongo.db.reviews.find_one(
                 {"tmdb_id": tmdb_id, "created_by": session["user"]})
@@ -437,7 +437,7 @@ def edit_review(tmdb_id, my_reviews_sort):
                 updated_overall_rating = current_overall_rating
             if updated_overall_rating > 5:
                 updated_overall_rating = 5
-            mongo.db.movie_details.update_one(
+            mongo.db.media_details.update_one(
                 {"tmdb_id": tmdb_id},
                 {"$set": {"overall_rating": updated_overall_rating}})
             mongo.db.reviews.update_one(
@@ -447,7 +447,7 @@ def edit_review(tmdb_id, my_reviews_sort):
             return redirect(url_for('my_reviews', user=session['user'],
                                     my_reviews_sort=my_reviews_sort, page=0))
         try:
-            media_detail = list(mongo.db.movie_details.find(
+            media_detail = list(mongo.db.media_details.find(
                                 {"tmdb_id": tmdb_id}))[0]
             review_fields = list(mongo.db.reviews.find(
                 {"tmdb_id": tmdb_id, "created_by": session[
@@ -530,7 +530,7 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
         review_count = mongo.db.reviews.find({"tmdb_id": tmdb_id}).count()
         total_pages = math.ceil(review_count / 6)
         try:
-            movie_detail = list(mongo.db.movie_details.find(
+            media_detail = list(mongo.db.media_details.find(
                 {"tmdb_id": tmdb_id}))[0]
         except IndexError:
             flash("That resource does not exist")
@@ -541,12 +541,12 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
                                     "created_by": session["user"]}))
         else:
             already_reviewed = False
-        overall_rating = movie_detail["overall_rating"]
+        overall_rating = media_detail["overall_rating"]
         session["overall_rating"] = overall_rating
         for review in reviews:
             review["review_date"] = review["review_date"].strftime("%d-%m-%Y")
         return render_template("review_detail.html", reviews=reviews,
-                               movie_detail=movie_detail,
+                               media_detail=media_detail,
                                tmdb_poster_url=tmdb_poster_url,
                                overall_rating=overall_rating,
                                already_reviewed=already_reviewed,
@@ -707,11 +707,11 @@ def new_review(tmdb_id, media_type):
     First, checks if a valid user is in session cookie with
     check_user_permission. Then checks if the user has already reviewed the
     movie. Then checks if the movie details already exist in the database
-    movie_details collection. If they do not, get_choice_details is called.
+    media_details collection. If they do not, get_choice_details is called.
     This invokes a request to the TMDB API for the details. Then confirms the
     results are valid, before rendering the new_review template.
     If POST request for a new review, it checks if the movie details exist. If
-    not, it inserts the details in the database movie_details collection. It
+    not, it inserts the details in the database media_details collection. It
     then updates the movie overall rating and prepares and inserts the
     new_review object. Relevant items are then removed from the session cookie.
 
@@ -731,7 +731,7 @@ def new_review(tmdb_id, media_type):
     if check_user_permission() == "valid-user":
         if request.method == "POST":
             # check if movie details already exist in db and if not, add them
-            details_exist = mongo.db.movie_details.find_one(
+            details_exist = mongo.db.media_details.find_one(
                 {"tmdb_id": tmdb_id})
             if not details_exist:
                 insert_new_movie()
@@ -740,7 +740,7 @@ def new_review(tmdb_id, media_type):
                 # update overall rating and number of reviews for sorting
                 # purposes
                 update_items = update_overall_rating(details_exist)
-                mongo.db.movie_details.update_one(
+                mongo.db.media_details.update_one(
                     {"tmdb_id": tmdb_id},
                     {"$set": update_items})
                 original_title = details_exist["original_title"]
@@ -768,7 +768,7 @@ def new_review(tmdb_id, media_type):
             {"tmdb_id": tmdb_id, "created_by": session["user"]}))
     else:
         already_reviewed = None
-    details_exist = list(mongo.db.movie_details.find(
+    details_exist = list(mongo.db.media_details.find(
         {"tmdb_id": tmdb_id}))
     if details_exist:
         media_detail = details_exist[0]
@@ -795,12 +795,12 @@ def new_review(tmdb_id, media_type):
 def insert_new_movie():
     """ Add and initialise rating and number of reviews to the selected_media
     session object and insert object of new movie details into the database
-    movie_details collection.
+    media_details collection.
     """
     session["selected_media"]["overall_rating"] = int(
         request.form.get("inlineRadioOptions"))
     session["selected_media"]["number_reviews"] = 1
-    mongo.db.movie_details.insert_one(dict(
+    mongo.db.media_details.insert_one(dict(
         session["selected_media"]))
 
 
@@ -1043,7 +1043,7 @@ def admin_controls():
             unblock_users()
     if check_user_permission() and session["user"] == "admin":
         number_users = mongo.db.users.count()
-        number_movies = mongo.db.movie_details.count()
+        number_movies = mongo.db.media_details.count()
         number_reviews = mongo.db.reviews.count()
         most_likes = list(mongo.db.reviews.aggregate([
             {
@@ -1060,9 +1060,9 @@ def admin_controls():
         # find media_type for the top 5 most liked reviews
         for review in most_likes:
             tmdb_id = review["tmdb_id"]
-            movie_detail = mongo.db.movie_details.find_one(
+            media_detail = mongo.db.media_details.find_one(
                 {"tmdb_id": tmdb_id})
-            review["media_type"] = movie_detail["media_type"]
+            review["media_type"] = media_detail["media_type"]
         genres = mongo.db.genres.find().sort("genre_name", 1)
         user_list = [user["username"] for user in mongo.db.users.find(
             ).sort("username", 1)]
