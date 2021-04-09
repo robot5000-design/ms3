@@ -1298,8 +1298,8 @@ def all_other_errors(error):
 def handle_csrf_error(error):
     """ Handles a CSRF token expired error
     """
-    error = f"For security the form Token has Expired: \
-        {error.description} Go back and Refresh the page and try again."
+    error = f"For security: {error.description} Go back and \
+        Refresh the page and try again."
     return render_template('error.html', error=error), 400
 
 

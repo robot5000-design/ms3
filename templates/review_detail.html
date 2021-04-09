@@ -41,6 +41,9 @@
                 {% endif %}
             </div>
             <div class="pb-2">Overall Rating: {{ overall_rating }} / 5</div>
+            {% if movie_detail.overview != None %}
+                <div class="pb-5 pt-3">{{ movie_detail.overview }}</div>
+            {% endif %}
             <!-- reviews section -->
             <div class="reviews">
                 <div class="pb-4 pt-2">

@@ -116,7 +116,7 @@ h2 {
 .navbar-brand {
   color: #eee9e1;
   font-family: "Alfa Slab One", cursive;
-  font-size: 3vw;
+  font-size: 3.2vw;
 }
 
 #navbarNavAltMarkup {
@@ -360,10 +360,7 @@ body .carousel-control-next-icon {
 
 @media screen and (min-width: 400px) {
   .navbar-brand {
-    font-size: 2.7vw;
-  }
-  .navbar-brand i {
-    font-size: 13vw;
+    font-size: 3.3vw;
   }
   .review-image {
     width: 80%;
@@ -378,7 +375,7 @@ body .carousel-control-next-icon {
     font-size: 1.2em;
   }
   .navbar-brand i {
-    font-size: 4.5em;
+    font-size: 4.4em;
   }
   .api-results-card {
     font-size: 1em;
