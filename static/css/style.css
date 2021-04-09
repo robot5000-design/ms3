@@ -98,15 +98,17 @@ h2 {
 /*--------------------------------------------------------Background Images */
 
 .backing-image {
-  background: url(../images/back-image.jpg) no-repeat top center fixed;
+  background: url(../images/back-image.jpg) no-repeat top center scroll;
   background-size: 100% 100%;
-  min-height: 100vh;
+  min-height: 80vh;
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: -10;
 }
 
 /*--------------------------------------------------------Navbar */
