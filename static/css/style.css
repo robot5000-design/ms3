@@ -100,6 +100,7 @@ h2 {
 .backing-image {
   background: url(../images/back-image.jpg) repeat top center fixed;
   background-size: 100% 100%;
+  min-height: 120vh;
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
