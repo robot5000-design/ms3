@@ -73,6 +73,7 @@ csp = {
 
 # Applies Talisman CSP protection to the app
 talisman = Talisman(app, content_security_policy=csp)
+
 # Applies CSRF protection for all forms
 csrf = CSRFProtect(app)
 
@@ -107,11 +108,11 @@ def index():
         session["search_query"] = request.form.get("query")
         session["media_type"] = request.form.get("media_type")
         return api_request(page=1)
-    media_details = list(mongo.db.media_details.find().sort(
+    media_detail = list(mongo.db.media_details.find().sort(
         "last_review_date", -1).limit(12))
-    if media_details:
+    if media_detail:
         tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
-        return render_template("index.html", media_details=media_details,
+        return render_template("index.html", media_detail=media_detail,
                                tmdb_poster_url=tmdb_poster_url)
     return render_template("index.html")
 
@@ -187,21 +188,21 @@ def search_reviews(query, browse_reviews_sort, page):
     review_count = mongo.db.media_details.find(search_term).count()
     total_pages = math.ceil(review_count / 12)
     if browse_reviews_sort == "rating":
-        media_details = list(mongo.db.media_details.find(search_term).sort(
+        media_detail = list(mongo.db.media_details.find(search_term).sort(
             "overall_rating", -1).skip(page * 12).limit(12))
     elif browse_reviews_sort == "popularity":
-        media_details = list(mongo.db.media_details.find(search_term).sort(
+        media_detail = list(mongo.db.media_details.find(search_term).sort(
             "number_reviews", -1).skip(page * 12).limit(12))
     else:
-        media_details = list(mongo.db.media_details.find(search_term).sort(
+        media_detail = list(mongo.db.media_details.find(search_term).sort(
             "last_review_date", -1).skip(page * 12).limit(12))
-    if media_details:
+    if media_detail:
         try:
             tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
         except KeyError as error:
             error = f"Key Error: {error}"
             return render_template("error.html", error=error)
-        return render_template("reviews.html", media_details=media_details,
+        return render_template("reviews.html", media_detail=media_detail,
                                tmdb_poster_url=tmdb_poster_url,
                                browse_reviews_sort=browse_reviews_sort,
                                page=page,
@@ -263,20 +264,20 @@ def my_reviews(user, my_reviews_sort, page):
         review_count = mongo.db.reviews.find({"created_by": user}).count()
         total_pages = math.ceil(review_count / 12)
         # pick out the movies details that we need
-        media_details = []
+        media_detail = []
         iteration = 0
         while iteration < len(movie_id_list):
-            media_detail = list(mongo.db.media_details.find(
+            movie_details = list(mongo.db.media_details.find(
                 {"tmdb_id": movie_id_list[iteration]}))
-            media_details.extend(media_detail)
+            media_detail.extend(movie_details)
             iteration += 1
-        if media_details:
+        if media_detail:
             try:
                 tmdb_poster_url = tmdb_urls["tmdb_poster_url"]
             except KeyError as error:
                 error = f"Key Error: {error}"
                 return render_template("error.html", error=error)
-        return render_template("my_reviews.html", media_details=media_details,
+        return render_template("my_reviews.html", media_detail=media_detail,
                                tmdb_poster_url=tmdb_poster_url,
                                page=page, my_reviews_sort=my_reviews_sort,
                                review_count=review_count,
@@ -418,12 +419,12 @@ def edit_review(tmdb_id, my_reviews_sort):
                 "review_date": datetime.datetime.now()
             }
             # adjust the overall rating to take account of edited review
-            media_details = mongo.db.media_details.find_one(
+            media_detail = mongo.db.media_details.find_one(
                 {"tmdb_id": tmdb_id})
             existing_review = mongo.db.reviews.find_one(
                 {"tmdb_id": tmdb_id, "created_by": session["user"]})
-            current_overall_rating = media_details["overall_rating"]
-            current_number_reviews = media_details["number_reviews"]
+            current_overall_rating = media_detail["overall_rating"]
+            current_number_reviews = media_detail["number_reviews"]
             existing_review_rating = float(existing_review["rating"])
             adjusted_review_rating = float(request.form.get(
                 "inlineRadioOptions"))
