@@ -98,10 +98,10 @@ h2 {
 /*--------------------------------------------------------Background Images */
 
 .backing-image {
-  background: url(../images/back-image.jpg) repeat top center fixed;
+  background: url(../images/back-image.jpg) no-repeat top center fixed;
   background-size: 100% 100%;
-  min-height: 120vh;
-  position: relative;
+  height: auto;
+  position: fixed;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -109,6 +109,11 @@ h2 {
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: -1000;
+}
+
+.main-container {
+  min-height: 80vh;
 }
 
 /*--------------------------------------------------------Navbar */
