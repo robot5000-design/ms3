@@ -8,7 +8,11 @@
 
 ---
 
-The brief for this project was to build a full-stack website with which users can interact with their own data as well as other users data. Rush Reviews is a movie and tv series review site. The back-end is built using the Flask micro-framework with jinja templating. A non-relational database MongoDB is used, providing full CRUD operations for users. For the front-end, the Bootstrap 5 framework is used for responsiveness and styling. The site also makes use of the TMDB API to allow users to search for movies and ideas of what they would like to review. The design is based on user experience principles. Clean coding and a responsive mobile first method was employed. The purpose of this website is to provide users with:
+The brief for this project was to build a full-stack website with which users can interact with their own data as well as other users data. Rush Reviews is a movie and tv series review site. The back-end is built using the Flask micro-framework with Jinja templating. A non-relational database MongoDB is used, providing full CRUD operations for users. For the front-end, the Bootstrap 5 framework is used to aid responsiveness and styling. In addition, the site makes use of the TMDB API to allow users to search for movies and ideas of what they would like to review. The design is based on user experience principles. Clean coding and a responsive mobile first method was employed. The purpose of this website is to provide users with:
+
+- an easy and fun to use movie and tv series reviews website.
+
+- a secure user experiance, even though no user personal data is saved.
 
 - 
 
@@ -20,7 +24,7 @@ Click the image to be taken to a live demo of the site:
 
 [![homepage][1]][2]
 
-[1]: ./documentation/images-for-readme/am-i-responsive.jpg
+[1]: ./documentation/images_for_readme/am-i-responsive.jpg
 [2]: https://rush-reviews-movies-tv.herokuapp.com "Live Site"
 
 ---
