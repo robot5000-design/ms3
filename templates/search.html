@@ -110,14 +110,14 @@
                                                             {% if result.poster_path %}
                                                                 {% if result.poster_path == "" or result.poster_path == None %}
                                                                     <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                                        class="img-thumbnail" alt="">
+                                                                        class="img-thumbnail" alt="no image available">
                                                                 {% else %}
                                                                     <img src="https://image.tmdb.org/t/p/w500/{{ result.poster_path }}"
-                                                                        class="img-thumbnail" alt="">
+                                                                        class="img-thumbnail" alt="{{ result.original_title }}">
                                                                 {% endif %}
                                                             {% else %}
                                                                 <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                                    class="img-thumbnail" alt="">
+                                                                    class="img-thumbnail" alt="no image available">
                                                             {% endif %}
                                                         </a>
                                                     </div>
@@ -136,14 +136,14 @@
                                                             {% if result.poster_path %}
                                                                 {% if result.poster_path == "" or result.poster_path == None %}
                                                                     <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                                        class="img-thumbnail" alt="">
+                                                                        class="img-thumbnail" alt="no image available">
                                                                 {% else %}
                                                                     <img src="https://image.tmdb.org/t/p/w500/{{ result.poster_path }}"
-                                                                        class="img-thumbnail" alt="">
+                                                                        class="img-thumbnail" alt="{{ result.name }}">
                                                                 {% endif %}
                                                             {% else %}
                                                                 <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                                    class="img-thumbnail" alt="">
+                                                                    class="img-thumbnail" alt="no image available">
                                                             {% endif %}
                                                         </a>
                                                     </div>

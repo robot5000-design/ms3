@@ -14,9 +14,9 @@
         <!-- Image -->
         <div class="col-12 col-md-6 px-0 pb-5 pt-5 text-center">
             {% if media_detail.poster_path == None %}
-                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
+                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="no image available">
             {% else %}
-                <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="">
+                <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="{{ media_detail.original_title }}">
             {% endif %}
         </div>
         <!-- movie details -->

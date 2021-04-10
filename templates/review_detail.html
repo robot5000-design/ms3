@@ -1,37 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container">
+<div class="container reviews-container">
     <div class="row">
         <div class="col-2 px-0 pt-4 mt-1">
             <a href="#" class="btn btn-secondary go-back fs-2 px-2 py-0"><i class="fas fa-chevron-circle-left"></i></a>
         </div>
         <div class="col-9 text-center">
-            <h2 class="pt-4 mt-2 reviews-heading">Reviews for:</h2>
+            <h2 class="pt-4 mt-2 pe-4 reviews-heading">Reviews for:</h2>
         </div>
     </div>
-    {% if "user" in session %}
-        {% if session["user"].lower() == "admin" %}
-            <div class="pt-3 text-center">
-                <div class="btn btn-primary call-delete">Delete Movie
-                </div>
-                <a href="{{ url_for('delete_all', tmdb_id=media_detail.tmdb_id) }}"
-                    class="btn btn-danger confirm-delete invisible">Confirm Delete
-                </a>
-            </div>
-        {% endif %}
-    {% endif %}
     <div class="row">
         <!-- Image -->
         <div class="col-12 col-md-6 px-0 pb-5 pt-5 text-center">
             {% if media_detail.poster_path == None %}
-                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
+                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="no image available">
             {% else %}
-                <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="">
+                <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="{{ media_detail.original_title }}">
             {% endif %}
         </div>
         <!-- movie details -->
         <div class="col-12 col-md-6 review-wrapper">
+            {% if "user" in session %}
+                {% if session["user"].lower() == "admin" %}
+                    <div class="pb-3 pt-2">
+                        <a class="btn btn-danger call-delete" data-bs-toggle="modal" href="#movieDeleteModal">
+                            Delete Movie
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
             <h1 class="heading py-3">{{ media_detail.original_title }}</h1>
             <div class="pb-2">
                 {% if media_detail.release_date == "" %}
@@ -97,11 +95,10 @@
                     {% if "user" in session %}
                         {% if session["user"].lower() == "admin" %}
                             <div class="py-3">
-                                <a class="btn btn-primary call-delete">
+                                <a class="btn btn-danger call-delete" id="reviewDelete" 
+                                    data-bs-review="{{ url_for('delete_review', tmdb_id=media_detail.tmdb_id, user=review.created_by) }}" 
+                                    data-bs-toggle="modal" href="#reviewDeleteModal">
                                     Delete Review
-                                </a>
-                                <a href="{{ url_for('delete_review', tmdb_id=media_detail.tmdb_id, user=review.created_by) }}"
-                                    class="btn btn-danger confirm-delete invisible">Confirm Delete
                                 </a>
                             </div>
                         {% endif %}
@@ -151,6 +148,47 @@
                 {% else %}
                     <h3>No reviews found</h3>
                 {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal confirm movie delete -->
+<div class="modal fade" id="movieDeleteModal" tabindex="-1" aria-labelledby="movieDeleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="movieDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>Are you sure you want to delete?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <span><a href="{{ url_for('delete_all', tmdb_id=media_detail.tmdb_id) }}" id="" class="btn btn-danger">Confirm</a></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal confirm review delete -->
+<div class="modal fade" id="reviewDeleteModal" tabindex="-1" aria-labelledby="reviewDeleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>Are you sure you want to delete?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <span>
+                    <a href="#" id="reviewConfirmDelete"
+                    class="btn btn-danger">Confirm</a>
+                </span>
             </div>
         </div>
     </div>

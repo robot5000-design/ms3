@@ -99,9 +99,9 @@ function goBack() {
 
 // makes the delete process a two step process. Press the call-delete
 // button  and the confirm-delete goes from invisible to visible
-$(".call-delete, .delete-genre").click(function () {
+$(".delete-genre").click(function () {
     $(this).addClass("invisible");
-    $(this).siblings(".confirm-delete, .confirm-genre").removeClass("invisible");
+    $(this).siblings(".confirm-genre").removeClass("invisible");
 });
 
 // On submitting a new review form, submit button is disabled 
@@ -143,3 +143,12 @@ $("#user-reviews-form").on('submit', function () {
 
 // Call the goBack function which goes back to the previous page in history
 $(".go-back").click(goBack)
+
+// Handles modal for confirming deletion of individual reviews
+$(document).on('show.bs.modal', "#reviewDeleteModal", function (event) {
+    // Button that triggered the modal
+    let button = event.relatedTarget;
+    // Extract info from data-bs-* attributes
+    let recipient = $(button).attr('data-bs-review');
+    $("#reviewConfirmDelete").attr("href", recipient);
+});

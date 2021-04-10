@@ -14,9 +14,9 @@
         <!-- Image -->
         <div class="col-12 col-md-6 px-0 pb-5 pt-5 text-center">
             {% if media_detail.poster_path == None %}
-                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="">
+                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="no image available">
             {% else %}
-                <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="">
+                <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="{{ media_detail.original_title }}">
             {% endif %}
         </div>
         <!-- movie details -->
@@ -111,15 +111,32 @@
                     </div>
                     <div class="row">
                         <div class="col pb-5">
-                            <div class="btn btn-primary call-delete">Delete
-                                Review</div>
-                            <a href="{{ url_for('delete_review', tmdb_id=review_fields.tmdb_id, user=session['user']) }}"
-                                class="btn btn-danger confirm-delete invisible">Confirm Delete
-                            </a>
+                            <div class="btn btn-danger call-delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Delete
+                                Review
+                            </div>
                         </div>
                     </div>
                 {% endif %}
             </form>
+        </div>
+    </div>
+</div>
+
+ <!-- Modal confirm delete -->
+ <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>Are you sure you want to delete?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <span><a href="{{ url_for('delete_review', tmdb_id=review_fields.tmdb_id, user=session['user']) }}" id="" class="btn btn-danger">Confirm</a></span>
+            </div>
         </div>
     </div>
 </div>

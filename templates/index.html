@@ -80,10 +80,10 @@
                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                         {% if media_detail[index].poster_path == None %}
                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                class="card-img-top" alt="">
+                                                class="card-img-top" alt="no image available">
                                         {% else %}
                                             <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                class="card-img-top" alt="...">
+                                                class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                         {% endif %}
                                     </a>
                                 {% endfor %}
@@ -95,10 +95,10 @@
                                             href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                         {% if media_detail[index].poster_path == None %}
                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                class="card-img-top" alt="">
+                                                class="card-img-top" alt="no image available">
                                         {% else %}
                                             <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                class="card-img-top" alt="...">
+                                                class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                         {% endif %}
                                         </a>
                                     {% endfor %}
@@ -136,10 +136,10 @@
                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                         {% if media_detail[index].poster_path == None %}
                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                class="card-img-top" alt="">
+                                                class="card-img-top" alt="no image available">
                                         {% else %}
                                             <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                class="card-img-top" alt="...">
+                                                class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                         {% endif %}
                                     </a>
                                 {% endfor %}
@@ -151,10 +151,10 @@
                                             href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                         {% if media_detail[index].poster_path == None %}
                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                class="card-img-top" alt="">
+                                                class="card-img-top" alt="no image available">
                                         {% else %}
                                             <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                class="card-img-top" alt="...">
+                                                class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                         {% endif %}
                                         </a>
                                     {% endfor %}
@@ -192,10 +192,10 @@
                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                         {% if media_detail[index].poster_path == None %}
                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                class="card-img-top" alt="">
+                                                class="card-img-top" alt="no image available">
                                         {% else %}
                                             <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                class="card-img-top" alt="...">
+                                                class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                         {% endif %}
                                     </a>
                                 {% endfor %}
@@ -207,10 +207,10 @@
                                             href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                             {% if media_detail[index].poster_path == None %}
                                                 <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                    class="card-img-top" alt="">
+                                                    class="card-img-top" alt="no image available">
                                             {% else %}
                                                 <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                    class="card-img-top" alt="...">
+                                                    class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                             {% endif %}
                                         </a>
                                     {% endfor %}
@@ -247,10 +247,10 @@
                                     href="{{ url_for('review_detail', tmdb_id=media_detail[0].tmdb_id, media_type=media_detail[0].media_type, review_detail_sort='popular', page=0) }}">
                                     {% if media_detail[0].poster_path == None %}
                                         <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                            class="card-img-top" alt="">
+                                            class="card-img-top" alt="no image available">
                                     {% else %}
                                         <img src="{{ tmdb_poster_url }}{{ media_detail[0].poster_path }}"
-                                            class="card-img-top" alt="...">
+                                            class="card-img-top" alt="{{ media_detail[0].original_title }}">
                                     {% endif %}
                                 </a>
                             </div>
@@ -260,10 +260,10 @@
                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                         {% if media_detail[index].poster_path == None %}
                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                class="card-img-top" alt="">
+                                                class="card-img-top" alt="no image available">
                                         {% else %}
                                             <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                class="card-img-top" alt="...">
+                                                class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                         {% endif %}
                                     </a>
                                 </div>
