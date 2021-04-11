@@ -118,7 +118,103 @@ Based on the results of the Strategy research the features to be included are:
 
 From the strategy table all the above features appear viable. The only feature deemed not viable and outside the scope of this project for the moment, is the ability of users to share content and follow other users.
 
+#### Structure
+
+- A reasonably straightforward structure with 5 basic pages, all accessible from any page from the Navbar at the top of the page. The contact page is accessible from the footer on every page.
+- Latest reviewed movies are available through the carousel on the homepage.
+- Editing or deletion of reviews is accessed by the user through their own my_reviews page.
+- User account features such as my_reviews, change password or log out are accessible through a dropdown sub-menu in the Navbar.
+- Custom error page, for 404, 500 and CSRF errors so in the case of a broken internal link or where a CSRF form token has expired, a button is provided for the user to return to safety.
+
+#### Skeleton
+
+Wireframes made in Balsamiq Wireframes were used for basic layout. These can be viewed here:
+
+[Landing Page All Sizes](./documentation/images_for_readme/wireframes/landing_page.png)
+
+[Admin Controls Page All Sizes](./documentation/images_for_readme/wireframes/admin_controls.png)
+
+[Browse Reviews Page All Sizes](./documentation/images_for_readme/wireframes/browse_my_reviews.png)
+
+[New Review Search Page All Sizes](./documentation/images_for_readme/wireframes/new_review_search.png)
+
+[New/Edit Review Page All Sizes](./documentation/images_for_readme/wireframes/new_edit_review.png)
+
+[Review Detail Page All Sizes](./documentation/images_for_readme/wireframes/review_detail.png)
+
+[Register Page All Sizes](./documentation/images_for_readme/wireframes/register.png)
+
+[Change Password Page All Sizes](./documentation/images_for_readme/wireframes/change_password.png)
+
+[Contact Page All Sizes](./documentation/images_for_readme/wireframes/contact_page.png)
+
+#### Surface
+
+[Pixabay](https://pixabay.com/) provided the free background image and the logo is a font-awesome icon enlarged. The main font is a movie style font called Alfa Slab One with the secondary font being Montserrat, both supplied by Google fonts.
+The main colors used were #191958 predominant in the background image, #FFA30F for headings, #EEE9E1 for other text, #212529 for the Navbar, #000 for the footer and #316DC6 for some of the buttons.
+
+![ColourChoices][3]
+
+[3]: ./documentation/images_for_readme/palette.png "Colour Choices"
+
+---
+
+### **2. Features and Functionality**
+
+The site was designed with a mobile first approach. Customised Bootstrap was used to help with the responsiveness and layout of the site. In addition targeted media queries were used to assist with this.
+
+Probably the most important feature of the site from a users perspective is the use of the TMDB API as this gives the site a real world relevance for users. From a UX point of view they can spend more time reading and writing reviews on all the available shows.
+
+_Landing Page:_
+
+The landing page features a simple design and layout with a large CTA to search for something to review. There's also easy access to all the latest reviews through the multi image carousel which features a different number of images at different breakpoints. To acheive this, four seperate carousels are used. There is little explanation of how to use the site as the developer didn't feel it would add anything and because the site is self explanatory and straightforward. The navbar gives access to browse reviews or to login. When the user chooses login, a modal appears and if they don't have an account there is a link to the register page.
+
+_Register, Login and Change Password Forms:_
+
+All these forms are validated using a combination of regex patterns on the inputs and Bootstrap javascript for validation messaging.
+
+_Search New Review Form:_
+
+This searches the TMDB API using a python request. As part of defensive programming try/except blocks are used to handle ConnectionError and JSONDecodeError on these requests and returned results. It returns 20 results at a time which are paginated using python and jinja. The results are validated using the validate_choice python function. The results are slightly tricky to validate because all parameters are optional and vary depending on whether it's a movie or tv series.
+
+_Browse Reviews/My Reviews:_
+
+These pages are similar in that they allow the user to sort and search reviews. Browse reviews gives access to read reviews. If a user clicks in to to read details they have the option to leave a review. My reviews on the other hand allows the user to click in to review detail but this time to edit or delete their own review. The my reviews page is also used to display other users reviews when selected for viewing. A user can only review a title once. Both browse reviews and my reviews paginate the results, showing 12 titles at a time (which works great for different screen sizes).
+
+_Review Detail:_
+
+This page allows a user to view details about a movie, such as an image, an overview, an overall rating and reviews left by users. The reviews matching a tmdb_id are picked out of the mongodb reviews collection using a mongodb aggregate which is also used to sum the likes and arrange by most popular. The reviews are paginated, 6 at a time. These reviews can be sorted by popularity or most recent. A logged in user can upvote/like a review. The username is stored in a list array on that review, so the user can only do it once per review. If a user is not logged in, a message is displayed asking them to login if they would like to leave a review. If they are logged in a button will give them the option to leave a review. If they have already reviewed that movie, a message will be displayed advising them that they have already reviewed that title.
+
+_New Review/Edit Review:_
+
+This page is only accessible to logged in users. It contains a form which is used by a user to submit a new review or to edit an existing review. The user can give a rating to a movie. Ratings are adjusted if a review is deleted or the score adjusted.
+
+_Admin Controls:_
+
+This page exclusive to the admin account, allows the admin to see some relevant stats regarding the site and a list of the most popular reviews where they can link directly to the review or user. The admin can also add/remove genres from the genre list, or block/unblock users. It should also be noted the admin account has extra features on the review_detail page. Here there are additional buttons which allows the admin to delete individual reviews or even a complete movie entry and all reviews with it.
+
+_Contact Page:_
+
+Contains a form which can be used by any user to contact the admin. EmailJS is used to provide this service.
+
+_Error Page:_
+
+Used to display error messages such as 404 page not found or 500 internal server error or KeyError exceptions in the code. It is also used to display CSRF errors, such as CSRF token expired. The catch-all exception error handler is used to catch all other exceptions not already caught, such as PyMongoError or RequestException or any others.
+
+_Other features of the backend of the site:_
+
+__Defensive Programming__: As mentioned previously defensive programming was a key consideration. KeyError's, ZeroDivisionError's, IndexError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all catered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message. 
+
+__Security Considerations__: Security was considered for the site in a number of ways. Mainly, Flask Talisman was used for it's CSP policy, which restricts where the site can load a resource from. It tells the browser to convert all HTTP requests to HTTPS which prevents man-in-the-middle attacks. It also helps to prevent XSS cross-site-scripting attacks. The session cookie is set to secure. Cross-Site Request Forgery (CSRF) attacks are dealt with by CSRFProtect imported from Flask-WTF.csrf. This is used to apply a unique CSRF token to every form on the site. All passwords are hashed using werkzeug.security's generate_password_hash. Certain sensitive information is saved in an env.py environmental variable file which is included in gitignore and so is not pushed to Github. These include, the secret key used to securely sign the session cookie, the TMDB API password and the MongoDB URI.
+
+__MongoDB Database Collections Schema__:
+
+![DatabaseSchema][4]
+
+[3]: ./documentation/images_for_readme/database_schema.jpg "Database Schema"
 
 
 
-Rather than having users fill in details on an empty site, it was deemed far more valuable, user friendly and appealing to allow users to sear
+
+
+

@@ -505,7 +505,7 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
             {"tmdb_id": tmdb_id}).sort("review_date", -1).skip(
                 page * 6).limit(6))
     else:
-        # Following aggregate based on information in this thread
+        # The following aggregate is based on information in this thread
         # https://stackoverflow.com/questions/9040161/mongo-order-by-length-of-array
         # finds reviews matched by tmdb_id, returns all fields sorted by number
         # of likes
@@ -775,7 +775,7 @@ def new_review(tmdb_id, media_type):
         media_detail = details_exist[0]
     else:
         media_detail = get_choice_detail(tmdb_id, media_type)
-
+        # check the results returned are of valid type
         if isinstance(media_detail, dict) and "status_code" in media_detail:
             if media_detail["status_code"] == 34:
                 flash("Sorry. This resource cannot be found.")
