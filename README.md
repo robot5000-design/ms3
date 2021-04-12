@@ -211,7 +211,31 @@ __MongoDB Database Collections Schema__:
 
 ![DatabaseSchema][4]
 
-[3]: ./documentation/images_for_readme/database_schema.jpg "Database Schema"
+[4]: ./documentation/images_for_readme/database_schema.jpg "Database Schema"
+
+The database consists of 5 collections with some common fields to each other as marked on the diagram above:
+
+_users:_
+
+- consists of usernames and hashed passwords.
+
+_blocked_users:_
+
+- consists of usernames, the accounts of which have been blocked. Originally intended for admin to be able to delete accounts, but because they could easily be reopened, it is better to view them as blocked.
+
+_genres:_
+
+- collection of genres available to a user when describing and reviewing a title. These can be adjusted from the admin controls dashboard.
+
+_movie_details:_
+
+- each review saved to the database also saves basic information about the movie rather than requesting it from TMDB each time. The advantage of this is that even if the TMDB API service was down, the reviews section of the site will continue to function for the reviews already on the site. After making that decision, rather than saving that information repetitively to every review, it obviously makes more sense to save them just once in its own collection. The tmdb_id allows the correct description to be called for a given review.
+
+_reviews:_
+
+- this collection consists of every individual review left by a user. The tmdb_id field is used to link the review to a particular movie or tv series. The original_title field is only included to allow for searching of the users reviews by title name. The created_by field is the review authors username and ties the review to a particular user. The likes field is an array containing all usernames that gave that review a like/upvote. So reviews can be arranged by popularity. It also means that users can only like a review once, as it is recorded.
+
+
 
 
 

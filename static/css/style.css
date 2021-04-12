@@ -26,7 +26,7 @@ body {
 }
 
 .btn {
-  color: #eee9e1;
+  color: #fff;
   font-size: 1em;
 }
 
@@ -238,6 +238,7 @@ h2 {
 
 .review-image {
   width: 100%;
+  max-width: 500px;
   margin: 0 auto;
   border: 3px solid #000;
   border-radius: 5%;
