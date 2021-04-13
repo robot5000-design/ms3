@@ -41,7 +41,7 @@ Click the image to be taken to a live demo of the site:
 
 [3. Technologies Used](#3-technologies-used)
 
-[4. Testing](#4a-testing-part-1)
+[4. Testing](#4-testing)
 
 [5. Deployment](#5-deployment)
 
@@ -85,6 +85,7 @@ As a user:
 - I want to be able to be able to read a specific user reviews.
 - I want to be able to 'like' other users reviews to show appreciation.
 - I want to be able to leave reviews myself and be able to edit, or delete those reviews.
+- I want to be able to rate movies.
 - I want to be able to search and sort my reviews.
 - I want to be able to register and change my password.
 - I want to know that the site is secure and safe to use.
@@ -311,25 +312,9 @@ As per industry practice and to reduce the number of small commits on the master
 
 ---
 
-### **4a. Testing Part 1**
+### **4. Testing**
 
-The first part of testing was to confirm that all user stories requirements have been met. There is large crossover between both sets of user stories.
-
----
-
-### **4b. Testing Part 2**
-
-The site has been tested on both mobile and desktop for responsiveness. Only manual testing was
-conducted for this project.
-
-Any issues have been cataloged in the Issues section on Github and closed when a sufficient solution
-was reached. Prior to final testing of the live site, functional testing was carried out using judiciously 
-placed console logs before they were removed. These are saved in a separate file [here](./documentation/manual-test-ref.md)
-and are included only for reference. There are no known exisiting issues with the final deployed version.
-
-__Final testing of links, responsiveness and Live Website test cases can be found in the [final testing document here](./documentation/final-testing.md).__
-
-All HTML and CSS files have been passed through the w3c validation service https://validator.w3.org/ with no significant issues.
+__Final testing of links, responsiveness and Live Website test cases can be found in the [final testing document here](./documentation/testing.md).__
 
 ---
 
