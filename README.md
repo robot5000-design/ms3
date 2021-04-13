@@ -163,7 +163,15 @@ The main colors used were #191958 predominant in the background image, #FFA30F f
 
 The site was designed with a mobile first approach. Customised Bootstrap was used to help with the responsiveness and layout of the site. In addition targeted media queries were used to assist with this.
 
-Probably the most important feature of the site from a users perspective is the use of the TMDB API as this gives the site a real world relevance for users. From a UX point of view they can spend more time reading and writing reviews on all the available shows.
+Probably the most important feature of the site from a users perspective is the use of the TMDB API as this gives the site a real world relevance for users. From a UX point of view they can spend more time reading and writing reviews on all the available shows. The TMDB API URL's are declared globally in a dictionary, so that they are in one place, easy to change if TMDB change them.
+
+Loading spinners are added to buttons where appropriate, where the user might see a small delay in operation, such as saving a new review or retrieving data from a TMDB request.
+
+To combat double entries of reviews in the database by an impatient user pressing the submit button more than once, the button is disabled with javascript on the first click and the page is immediately redirected also.
+
+Ratings take account of reviews being adjusted or deleted, something which is easy to overlook.
+
+One of the problems which arose was when searching the TMDB API for something new to review or searching browse reviews, when the user selects a movie but then changes their mind and goes back, the browsers in-built functionality requests that the page with the search form is reloaded for resubmission. To get around this, when the search is performed the results are presented after a redirect through another route. Now when the user clicks back, the resubmission is not requested. It makes for a much better user experience.
 
 _Landing Page:_
 
@@ -203,7 +211,7 @@ Used to display error messages such as 404 page not found or 500 internal server
 
 _Other features of the backend of the site:_
 
-__Defensive Programming__: As mentioned previously defensive programming was a key consideration. KeyError's, ZeroDivisionError's, IndexError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all catered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message. 
+__Defensive Programming__: As mentioned previously defensive programming was a key consideration. KeyError's, ZeroDivisionError's, IndexError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all catered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message.
 
 __Security Considerations__: Security was considered for the site in a number of ways. Mainly, Flask Talisman was used for it's CSP policy, which restricts where the site can load a resource from. It tells the browser to convert all HTTP requests to HTTPS which prevents man-in-the-middle attacks. It also helps to prevent XSS cross-site-scripting attacks. The session cookie is set to secure. Cross-Site Request Forgery (CSRF) attacks are dealt with by CSRFProtect imported from Flask-WTF.csrf. This is used to apply a unique CSRF token to every form on the site. All passwords are hashed using werkzeug.security's generate_password_hash. Certain sensitive information is saved in an env.py environmental variable file which is included in gitignore and so is not pushed to Github. These include, the secret key used to securely sign the session cookie, the TMDB API password and the MongoDB URI.
 
@@ -235,10 +243,127 @@ _reviews:_
 
 - this collection consists of every individual review left by a user. The tmdb_id field is used to link the review to a particular movie or tv series. The original_title field is only included to allow for searching of the users reviews by title name. The created_by field is the review authors username and ties the review to a particular user. The likes field is an array containing all usernames that gave that review a like/upvote. So reviews can be arranged by popularity. It also means that users can only like a review once, as it is recorded.
 
+Connecting to the MongoDB database:
 
+1. In the left side menu on MongoDB, select Clusters.
 
+2. Select Connect and Connect Your Application.
 
+3. Select Driver Python and version 3.6 or later. The URI is displayed below that but the password must be substituted as instructed (the password was set when setting up the database).
 
+4. The URI and database name are set up as environmental variables in the env.py file.
 
+---
 
+### **3. Technologies Used**
+
+_IDE and Languages:_
+
+- Gitpod - IDE used.
+- HTML - Base structural language.
+- CSS - Language used for styling.
+- JavaScript - for application functionality and DOM manipulation.
+- Python - for backend functionality.
+- Jinja- templating language for Flask templates.
+- PyMongo - Python tool for working with MongoDB.
+
+_Libraries & frameworks:_
+
+- Flask - micro web framework used to build the backend.
+- Flask Talisman - a small Flask extension that handles setting HTTP headers that can help protect against a few common web application security issues.
+- Werkzeug - is a Web Server Gateway Interface web application library.
+- CSRFProtect - used to apply a CSRF token to every form to protect against cross site request forgery.
+- jQuery 3.5.1 - used to speed up selection of elements in javascript.
+- Bootstrap 5.0.0 - Used to help with grid layout and screen size responsiveness.
+- JavaScript, Popper.js, and jQuery as part of Bootstrap.
+- Font Awesome for icons.
+- Google Fonts for Alfa Slab One and Montserrat fonts.
+
+_Database:_
+
+- MongoDB - Non-Relational Database.
+
+_API's:_
+
+- TMDB - Free Movie and TV Series API
+- Emailjs - For feedback email service.
+
+_Hosting and Version Control:_
+
+- GitHub - Holding repository.
+- Git - Version control.
+- Heroku - for hosting the site.
+
+_Other Tools:_
+
+- Balsamiq - For wireframes.
+- Microsoft Paint 3D - For editing images.
+- Browserstack - To check base compatibility.
+- freeformatter.com - to format html files.
+- tinyjpg.com - to reduce image file size.
+- Autoprefixer - used to automatically add browser compatibility prefixes.
+- w3c - for HTML and CSS validation.
+- jshint - for JavaScript validation.
+- pylint - for python validation.
+- Chrome Development Tools - for checking performance and accessibility.
+
+As per industry practice and to reduce the number of small commits on the master branch, seperate branches were created and used for features (where appropriate) and for the readme file as they were developed. These were squashed, merged and deleted after use.
+
+---
+
+### **4a. Testing Part 1**
+
+The first part of testing was to confirm that all user stories requirements have been met. There is large crossover between both sets of user stories.
+
+---
+
+### **4b. Testing Part 2**
+
+The site has been tested on both mobile and desktop for responsiveness. Only manual testing was
+conducted for this project.
+
+Any issues have been cataloged in the Issues section on Github and closed when a sufficient solution
+was reached. Prior to final testing of the live site, functional testing was carried out using judiciously 
+placed console logs before they were removed. These are saved in a separate file [here](./documentation/manual-test-ref.md)
+and are included only for reference. There are no known exisiting issues with the final deployed version.
+
+__Final testing of links, responsiveness and Live Website test cases can be found in the [final testing document here](./documentation/final-testing.md).__
+
+All HTML and CSS files have been passed through the w3c validation service https://validator.w3.org/ with no significant issues.
+
+---
+
+### **5. Deployment**
+
+The live site is deployed to [Heroku](https://www.heroku.com), a cloud application platform. The deployment procedure for this was as follows:
+
+1. In the IDE CLI make a requirements file containing all installed dependencies using the following command:
+    - pip3 freeze --local > requirements.txt
+
+2. Again in the IDE CLI make a Procfile using command:
+    - echo web: python app.py > Procfile
+
+3. Debug must be set to False for production.
+
+4. In the Heroku application
+
+---
+
+### **6. Credits and Notes**
+
+- All code in this project is completely the authors unless otherwise indicated in the code.
+
+- Movie data API is supplied by https://themoviedb.org
+
+- Free background image supplied from pixabay.com and are free to use without attribution.
+
+- My Mentor for their time and advice.
+
+- Friends and family who tested the site.
+
+---
+
+### **Disclaimer**
+
+- This website is for educational purposes only.
 
