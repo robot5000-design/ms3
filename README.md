@@ -345,7 +345,41 @@ The live site is deployed to [Heroku](https://www.heroku.com), a cloud applicati
 
 3. Debug must be set to False for production.
 
-4. In the Heroku application
+4. Make a Heroku account and create a new App.
+
+![CreateNewApp][5]
+
+[5]: ./documentation/images_for_readme/create-new-app.jpg "Create New App"
+
+5. Give it a name and choose the appropriate region.
+
+![NameApp][6]
+
+[6]: ./documentation/images_for_readme/name-app.jpg "Name New App"
+
+6. Go to settings and click on Reveal Config Vars.
+
+![Settings][7]
+
+[7]: ./documentation/images_for_readme/settings.jpg "Settings"
+
+7. Enter the environmental variables for the project from the env.py file.
+
+![EnvVariables][8]
+
+[8]: ./documentation/images_for_readme/env-variables.jpg "Environmental Variables"
+
+8. Then select Deploy and click connect to Github. Type the repository name in the search box and press search. Just below that, this should find the repository. Click Connect. Heroku is now connected to the Github repository.
+
+![ConnectGithub][9]
+
+[9]: ./documentation/images_for_readme/connect-github.jpg "Connect Github"
+
+9. Finally select the correct branch (in this case Master) and click on Deploy Branch. Automatic or manual deployment can be used as preferred. The message "Your app was successfully deployed." should appear. Click View to view the now deployed app.
+
+![DeployBranch][10]
+
+[10]: ./documentation/images_for_readme/deploy-branch.jpg "Deploy Branch"
 
 ---
 
