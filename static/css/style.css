@@ -335,12 +335,21 @@ body .carousel-control-next-icon {
 }
 
 .footer-terms a,
-.footer-terms {
+.footer-terms,
+.tmdb-disclaimer {
   font-family: "Roboto Mono", monospace;
   font-weight: 500;
   color: #eee9e1;
   margin: 0 auto;
   text-decoration: none;
+}
+
+.tmdb-disclaimer {
+  font-size: .8em;
+}
+
+.tmdb-logo {
+  width: 150px;
 }
 
 /* Color change on hover */

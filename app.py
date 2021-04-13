@@ -36,7 +36,8 @@ csp = {
         '\'none\''
     ],
     'script-src': [
-        '\'self\'',
+        '\'strict-dynamic\'',
+        '\'unsafe-inline\'',
         'code.jquery.com',
         'cdn.jsdelivr.net',
         'cdnjs.cloudflare.com',
@@ -66,13 +67,25 @@ csp = {
     'object-src': [
         '\'none\''
     ],
+    'frame-src': [
+        'cdn.jsdelivr.net'
+    ],
     'base-uri': [
         '\'none\''
+    ],
+    'frame-ancestors': [
+        '\'none\''
     ]
+    #'form-action': [
+     #   'http://*/login'
+    #]
 }
 
 # Applies Talisman CSP protection to the app
-talisman = Talisman(app, content_security_policy=csp)
+talisman = Talisman(app,
+                    force_https=True,
+                    content_security_policy_nonce_in=['script-src'],
+                    content_security_policy=csp)
 
 # Applies CSRF protection for all forms
 csrf = CSRFProtect(app)
@@ -1307,4 +1320,4 @@ def handle_csrf_error(error):
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=True)
+            debug=False)

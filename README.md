@@ -387,7 +387,7 @@ The live site is deployed to [Heroku](https://www.heroku.com), a cloud applicati
 
 - All code in this project is completely the authors unless otherwise indicated in the code.
 
-- Movie data API is supplied by https://themoviedb.org
+- Movie data API is supplied by https://themoviedb.org. This product uses the TMDb API but is not endorsed or certified by TMDb.
 
 - Free background image supplied from pixabay.com and are free to use without attribution.
 
