@@ -41,12 +41,16 @@ i {
   color: #ffa30f;
 }
 
-h1 {
+h1,
+.primary-brand {
   font-size: 1.7em;
+  line-height: 1.2em;
 }
 
-h2 {
+h2,
+.secondary-brand {
   font-size: 1.2em;
+  line-height: 1.2em;
 }
 
 .heading {
@@ -132,7 +136,7 @@ h2 {
   color: #ffa30f;
 }
 
-.flash div {
+.flash {
   background-color: #ffa30f;
   font-weight: 700;
   color: #281594;

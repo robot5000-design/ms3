@@ -64,7 +64,7 @@
                         <div class="dropdown col">
                             {% if review_detail_sort == "latest" %}
                                 <div class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                                    aria-expanded="false" role="button">
                                     Sort by: Latest
                                 </div>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -77,7 +77,7 @@
                                 </ul>
                             {% elif review_detail_sort == "popular" %}
                                 <div class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                                    aria-expanded="false" role="button">
                                     Sort by: Most Popular
                                 </div>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -166,7 +166,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <span><a href="{{ url_for('delete_all', tmdb_id=media_detail.tmdb_id) }}" id="" class="btn btn-danger">Confirm</a></span>
+                <span><a href="{{ url_for('delete_all', tmdb_id=media_detail.tmdb_id) }}" class="btn btn-danger">Confirm</a></span>
             </div>
         </div>
     </div>

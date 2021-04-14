@@ -266,40 +266,131 @@ and tested on a Google Pixel 5:
 
 - Chrome 89.0.4389.105
 
-All HTML and CSS files have been passed through the w3c validation service here https://validator.w3.org/ 
-with no significant issues. It advised not to use aria-disabled on disabled buttons. These were removed.
+All HTML and CSS files have been passed through the w3c validation service here https://validator.w3.org/ with the only issue raised in relation to CSP as shown below. Considering the positive reports on the Google CSP Evaluator and Mozilla Observatory CSP evaluator, this w3 warning is being ignored for now.
 
-Javascript files were passed through jshint.com without any significant issues. Jshint suggested using
-dot notation rather than square brackets, accessing the highscore object, so this has been changed.
-Also it suggested that line 650 in main.js !!scienceQuiz.token === false was confusing use of !, so this 
-was changed to Boolean(scienceQuiz.token) === false.
+![w3cValidator][21]
 
-The site does not function on Internet Explorer 11, but considering its overall low usage and the fact that
-it is being discontinued in 2021, it was deemed not worth spending time on.
+[21]: ./documentation/images_for_readme/w3-warning.jpg "W3C Validator"
+
+Javascript files were passed through jshint.com without any significant issues.
+
+Python code was passed through pylint and there are no outstanding issues.
+
+The Javascript on the site does not function on Internet Explorer 11, but considering its overall low usage and the fact that it is being discontinued in 2021, it was deemed not worth spending time on.
 
 ---
 
 ## 3. Final Testing Test Cases on Live Website:
-- TC01
 
-    Description: 
-
-    - Verify all links on Index page function as expected.
-
-    Procedure: 
-
-
-
-
-
-The site has been tested on both mobile and desktop for responsiveness. Only manual testing was
-conducted for this project.
+The site has been tested on both mobile and desktop for responsiveness and functionality. Only manual testing was conducted for this project.
 
 Any issues have been cataloged in the Issues section on Github and closed when a sufficient solution
-was reached. Prior to final testing of the live site, functional testing was carried out using judiciously 
-placed console logs before they were removed. These are saved in a separate file [here](./documentation/manual-test-ref.md)
-and are included only for reference. There are no known exisiting issues with the final deployed version.
+was reached. There are no known exisiting issues with the final deployed version.
 
+- TC01
 
+    Description:
 
-All HTML and CSS files have been passed through the w3c validation service https://validator.w3.org/ with no significant issues.
+  - Verify all navbar and footer links on Index page function as expected which will also confirm that the base template links work.
+
+    Procedure:
+
+    1. Navigate to [Index](https://rush-reviews-movies-tv.herokuapp.com/index). Check the navbar logo. It should link to index. __PASS__
+
+    2. Check the navbar menu item links all work as expected. Home, New Review, Browse Reviews, Login. Login should pop up a model. __PASS__
+
+    3. Login and check the user sub-menu in the navbar. My Reviews, Change Password and Logout should all work as expected. __PASS__
+
+    4. After logout press login again but click on 'No Account? Register here'. Should open the Register page. __PASS__
+
+    5. Check the footer links work as expected. Social links should open in a new tab. Contact Us should open the Contact Us page. __PASS__
+
+- TC02
+
+    Description:
+
+  - Verify navbar links on Index page specific to the Admin account, function as expected which will also confirm that the base template links work.
+
+    Procedure:
+
+    1. Navigate to [Index](https://rush-reviews-movies-tv.herokuapp.com/index). Login with admin username and password. Page should redirect to admin control page. __PASS__
+
+    2. Check the navbar menu item my reviews goes to the admin account reviews. __PASS__
+
+    3. Check the navbar submenu admin controls links to the admin controls page. __PASS__
+
+- TC03
+
+    Description:
+
+  - Verify index page content works as expected.
+
+    Procedure:
+
+    1. Navigate to [Index](https://rush-reviews-movies-tv.herokuapp.com/index). Check search input works as expected by performing a search. Results should appear with a url route ending /search_pagination/1 __PASS__
+
+    2. Check that all carousel sizes slide automatically. There are 4 sizes at 3 breakpoints, medium, large and extra-large. One image at screen size smaller than medium, two images at screen size smaller than large, three images at screen size smaller than extra-large and four images at screen size greater than extra-large. __PASS__
+
+    3. Check that carousel images link to the correct movie at each carousel size. __PASS__
+
+- TC04
+
+    Description:
+
+  - Verify New Review Search functionality works correctly.
+
+    Procedure:
+
+    1. Navigate to [New Review](https://rush-reviews-movies-tv.herokuapp.com/search). Verify all inputs are required. Make a search with random numbers. Confirm No Results message. __PASS__
+
+    2. Make a valid search. Check results links works as expected. Should open route ending /new_review/tmdb_id/media, where tmdb_id is an integer and media is tv or movie, if the movie is not already in the database. Otherwise for movies/tv already in the database, should open a route ending /review_detail/tmdb_id/media/popular/0, where tmdb_id is an integer and media is tv or movie. __PASS__
+
+    3. Search with the search term 'marvel', for example. Verify pagination works correctly. Previous should not appear on first page and Next should not appear on last page. __PASS__
+
+- TC05
+
+    Description:
+
+  - Verify New Review page works as intended.
+
+    Procedure:
+
+    1. Logout if logged in. Navigate to [New Review](https://rush-reviews-movies-tv.herokuapp.com/search). Search for and select a movie or tv series that is not already in the database. This can be verified as the route will end in /new_review/tmdb_id/media, where tmdb_id is an integer and media is tv or movie.
+
+    2. The top of page heading should read 'Make New Review'. A message should be displayed 'Please Log-In to submit a Review'. __PASS__
+
+    3. Click 'Please Log-In to submit a Review'. Login Modal should appear. __PASS__
+
+    4. Login with standard user account. Click back until 'Make New Review' appears again. Now the new review form should be displayed. Fill in the required form fields, one by one, pressing the submit button to confirm all inputs are required. __PASS__
+
+    5. Press Submit. Verify loading spinner on button and button disabled. __PASS__
+
+    6. Verify flash message 'Review Posted Successfully!'. Verify Page redirected to Browse Reviews. __PASS__
+
+- TC06
+
+    Description:
+
+  - Verify Overall Ratings and Edit Review page work as intended.
+
+    Procedure:
+
+    1. Login as a standard user and leave a review. Login as a different user and leave another review for the same movie/tv. Navigate to My Reviews. Select Edit/Delete Review for that review. The overall rating should be an average of the two reviews. __PASS__
+
+    2. Modify all inputs. Press Submit. Verify Flash message 'Your review has been updated'. __PASS__
+
+    3. Select Edit/Delete Review for the same review again. Verify the overall rating has updated correctly. __PASS__
+
+    4. Press Delete Review and confirm. Verify Flash message 'Review Successfully Deleted'. Navigate to Browse Reviews and select the same movie again. Confirm Overall Rating has adjusted correctly. Should be the value of the first review in step one. __PASS__
+
+- TC07
+
+    Description:
+
+  - Verify Admin additional features work as intended.
+
+    Procedure:
+
+    1. Confirm that there are reviews in Browse Reviews. Login as Admin. Page should redirect to Admin Controls. __PASS__
+
+    2. 

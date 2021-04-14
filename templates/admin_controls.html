@@ -95,7 +95,9 @@
                     <option value="" disabled>User List:</option>
                     <option value="">Select None</option>
                     {% for user in user_list %}
-                        <option value="{{ user }}">{{ user }}</option>
+                        {% if user.lower() != "admin" %}
+                            <option value="{{ user }}">{{ user }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 <button type="submit" id="submit-form-3" name="submit-form-3"

@@ -28,8 +28,8 @@
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="fas fa-film"></i>
                 <div class="d-inline-block">
-                    <h1>Rush Reviews</h1>
-                    <h2>TV & Movie Reviews</h2>
+                    <div class="primary-brand mb-2">Rush Reviews</div>
+                    <div class="secondary-brand mb-2">TV & Movie Reviews</div>
                 </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
@@ -82,9 +82,7 @@
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
-                    <div class="py-3">
-                        <h4 class="">{{ message }}</h4>
-                    </div>
+                    <h4 class="py-3">{{ message }}</h4>                   
                 {% endfor %}
             {% endif %}
         {% endwith %}

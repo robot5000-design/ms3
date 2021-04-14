@@ -238,11 +238,11 @@ _genres:_
 
 _movie_details:_
 
-- each review saved to the database also saves basic information about the movie rather than requesting it from TMDB each time. The advantage of this is that even if the TMDB API service was down, the reviews section of the site will continue to function for the reviews already on the site. After making that decision, rather than saving that information repetitively to every review, it obviously makes more sense to save them just once in its own collection. The tmdb_id allows the correct description to be called for a given review.
+- each review saved to the database also saves basic information about the movie rather than requesting it from TMDB each time. The advantage of this is that even if the TMDB API service was down, the reviews section of the site will continue to function for the reviews already on the site. After making that decision, rather than saving that information repetitively to every review, it makes more sense to save them just once in its own collection. The tmdb_id allows the correct description to be called for a given review. This minimises the amount of data saved to the database.
 
 _reviews:_
 
-- this collection consists of every individual review left by a user. The tmdb_id field is used to link the review to a particular movie or tv series. The original_title field is only included to allow for searching of the users reviews by title name. The created_by field is the review authors username and ties the review to a particular user. The likes field is an array containing all usernames that gave that review a like/upvote. So reviews can be arranged by popularity. It also means that users can only like a review once, as it is recorded.
+- this collection consists of every individual review left by a user. The tmdb_id field is used to link the review to a particular movie or tv series. The original_title field is only included so an index could be created, to allow for searching of the users reviews by title name. The created_by field is the review authors username and ties the review to a particular user. The likes field is an array containing all usernames that gave that review a like/upvote. So reviews can be arranged by popularity. It also means that users can only like a review once, as it is recorded.
 
 Connecting to the MongoDB database:
 
