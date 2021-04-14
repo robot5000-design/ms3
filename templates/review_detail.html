@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container reviews-container">
+<div class="container-fluid reviews-container">
     <div class="row">
         <div class="col-2 px-0 pt-4 mt-1">
             <a href="#" class="btn btn-secondary go-back fs-2 px-2 py-0" aria-label="go-back"><i class="fas fa-chevron-circle-left"></i></a>
@@ -40,7 +40,7 @@
             </div>
             <div class="pb-2">Overall Rating: {{ overall_rating }} / 5</div>
             {% if media_detail.overview != None %}
-                <div class="pb-5 pt-3">{{ media_detail.overview }}</div>
+                <div class="pb-5 pt-3 overview">{{ media_detail.overview }}</div>
             {% endif %}
             <!-- reviews section -->
             <div class="reviews">

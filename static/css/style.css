@@ -231,6 +231,10 @@ h2 {
   font-size: 1.5em;
 }
 
+.overview {
+  font-size: .9em;
+}
+
 .get-reviews-btn,
 .edit-review-btn {
   font-size: 0.9em;
@@ -247,8 +251,9 @@ h2 {
 .index-card {
   height: 100%;
   width: 100%;
-  background-color: #191958;
+  background-color: #19195879;
   font-size: 0.8em;
+  color:#ffa30f;
 }
 
 .select-genre {
@@ -388,9 +393,6 @@ body .carousel-control-next-icon {
   .review-image {
     width: 80%;
   }
-  .review-wrapper {
-    padding-left: 40px;
-  }
 }
 
 @media screen and (min-width: 576px) {
@@ -466,6 +468,9 @@ body .carousel-control-next-icon {
   .search-box {
     width: 50%;
   }
+  .overview {
+    font-size: 1em;
+  }
 }
 
 @media screen and (min-width: 1200px) {
@@ -484,5 +489,8 @@ body .carousel-control-next-icon {
   }
   .search-box {
     width: 40%;
+  }
+  .review-wrapper {
+    padding-right: 60px;
   }
 }

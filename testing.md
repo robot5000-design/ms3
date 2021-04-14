@@ -211,7 +211,82 @@ Example Error:
 
 ---
 
+## 2. Page Responsiveness
 
+### Testing responsiveness of each html page
+
+Using Chrome and Chrome Dev Tools.
+
+Breakpoints | index | admin controls | change password | contact | edit review | new review | register | login | review detail | search | browse reviews | my reviews | error
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+W280px | y | y | y | y | y | y | y | y | y | y | y | y | y | y
+W400px | y | y | y | y | y | y | y | y | y | y | y | y | y | y
+W576px | y | y | y | y | y | y | y | y | y | y | y | y | y | y
+W768px | y | y | y | y | y | y | y | y | y | y | y | y | y | y
+W992px | y | y | y | y | y | y | y | y | y | y | y | y | y | y
+W1200px | y | y | y | y | y | y | y | y | y | y | y | y | y | y
+
+- In addition, each page is checked for responsiveness using Chrome Dev Tools infinitely adjustable sliding re-sizer tool. From 280px (Samsung Galaxy Fold) up to full width 1536px on a 4k laptop. Although not optimised for 280px, it is perfectly useable.
+- All tests passed.
+
+### __Summary:__
+
+- No problems found.
+
+---
+
+## 3. List of devices tested
+
+- Google Pixel 5
+- Samsung Galaxy S7
+- Samsung A21s
+- Samsung Galaxy S10
+- Huawei P30 Pro
+- iPhone 11 Safari through Browserstack (limited test)
+- Asus k501u 4k laptop
+- Chrome Dev Tools Device Emulator:
+  - Samsung Galaxy Fold
+  - Samsung S5
+  - Google Pixel 2
+  - iPhone 5
+  - iPhone X
+  - iPad
+  - iPad Pro
+
+The site has been tested on the following browsers on Windows 10:
+
+- Internet Explorer 11
+- Firefox 87.0
+- Google Chrome 89.0.4389.114
+- Opera 75.0.3969.149
+- Microsoft Edge 89.0.774.68
+- Safari 10.1 on Mac using www.browserstack.com (limited test)
+
+and tested on a Google Pixel 5:
+
+- Chrome 89.0.4389.105
+
+All HTML and CSS files have been passed through the w3c validation service here https://validator.w3.org/ 
+with no significant issues. It advised not to use aria-disabled on disabled buttons. These were removed.
+
+Javascript files were passed through jshint.com without any significant issues. Jshint suggested using
+dot notation rather than square brackets, accessing the highscore object, so this has been changed.
+Also it suggested that line 650 in main.js !!scienceQuiz.token === false was confusing use of !, so this 
+was changed to Boolean(scienceQuiz.token) === false.
+
+The site does not function on Internet Explorer 11, but considering its overall low usage and the fact that
+it is being discontinued in 2021, it was deemed not worth spending time on.
+
+---
+
+## 3. Final Testing Test Cases on Live Website:
+- TC01
+
+    Description: 
+
+    - Verify all links on Index page function as expected.
+
+    Procedure: 
 
 
 
