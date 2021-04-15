@@ -1153,7 +1153,7 @@ def login():
             if check_password_hash(
                     existing_user["password"], request.form.get("password")):
                 session["user"] = username.lower()
-                flash(f"Welcome, {username}")
+                flash(f"Welcome, {username.capitalize()}")
                 if username.lower() != "admin":
                     return redirect(url_for("my_reviews", user=session[
                         'user'], my_reviews_sort='latest', page=0))

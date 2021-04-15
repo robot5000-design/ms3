@@ -37,6 +37,10 @@ form .form-control,
   background-color: #eee9e1;
 }
 
+.form-text {
+  color: #8d949b;
+}
+
 i {
   color: #ffa30f;
 }
@@ -236,7 +240,7 @@ h2,
 }
 
 .overview {
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .get-reviews-btn,
@@ -257,7 +261,7 @@ h2,
   width: 100%;
   background-color: #19195879;
   font-size: 0.8em;
-  color:#ffa30f;
+  color: #ffa30f;
 }
 
 .select-genre {
@@ -354,7 +358,7 @@ body .carousel-control-next-icon {
 }
 
 .tmdb-disclaimer {
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 .tmdb-logo {

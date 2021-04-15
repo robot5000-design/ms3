@@ -280,7 +280,7 @@ The Javascript on the site does not function on Internet Explorer 11, but consid
 
 ---
 
-## 3. Final Testing Test Cases on Live Website:
+## 3. Final Testing Test Cases on Live Website
 
 The site has been tested on both mobile and desktop for responsiveness and functionality. Only manual testing was conducted for this project.
 
@@ -299,13 +299,39 @@ was reached. There are no known exisiting issues with the final deployed version
 
     2. Check the navbar menu item links all work as expected. Home, New Review, Browse Reviews, Login. Login should pop up a model. __PASS__
 
-    3. Login and check the user sub-menu in the navbar. My Reviews, Change Password and Logout should all work as expected. __PASS__
+    3. Login and check the user sub-menu in the navbar. My Reviews, Change Password and Logout should all link as expected. __PASS__
 
     4. After logout press login again but click on 'No Account? Register here'. Should open the Register page. __PASS__
 
     5. Check the footer links work as expected. Social links should open in a new tab. Contact Us should open the Contact Us page. __PASS__
 
 - TC02
+
+    Description:
+
+  - Verify Register account, Login and Change Password.
+
+    Procedure:
+
+    1. Click on Login in the navbar. Click on 'No Account? Register here'. Try entering a username less than 5 characters and then more than 15. A message should be displayed and it should not be allowed. __PASS__
+
+    2. Try entering symbols for username. Should not be allowed. __PASS__
+
+    3. Repeat steps 1 and 2 for the password. A message should be displayed and it should not be allowed. __PASS__
+
+    4. Register a new username and account. Now try to login. A flash message should welcome the user. __PASS__
+
+    5. Logout and try to login again with the same username but an incorrect password. Should not be allowed. A flash message should appear to say 'Incorrect Username and/or Password'. __PASS__
+
+    6. Try to register the same username. Should not be allowed. A flash message should appear to say 'Username already exists'. __PASS__
+
+    7. Login with the correct password. Click Change Password in the navbar. Check the inputs by repeating steps 1 and 2 for each input. Should not be allowed. __PASS__
+
+    8. Try to change password but with differing new password inputs. A flash message should appear to say 'Passwords do not match!'. __PASS__
+
+    9. Proceed to change password. A flash message should appear to say 'Password Updated'. __PASS__
+
+- TC03
 
     Description:
 
@@ -319,7 +345,7 @@ was reached. There are no known exisiting issues with the final deployed version
 
     3. Check the navbar submenu admin controls links to the admin controls page. __PASS__
 
-- TC03
+- TC04
 
     Description:
 
@@ -333,7 +359,7 @@ was reached. There are no known exisiting issues with the final deployed version
 
     3. Check that carousel images link to the correct movie at each carousel size. __PASS__
 
-- TC04
+- TC05
 
     Description:
 
@@ -345,9 +371,9 @@ was reached. There are no known exisiting issues with the final deployed version
 
     2. Make a valid search. Check results links works as expected. Should open route ending /new_review/tmdb_id/media, where tmdb_id is an integer and media is tv or movie, if the movie is not already in the database. Otherwise for movies/tv already in the database, should open a route ending /review_detail/tmdb_id/media/popular/0, where tmdb_id is an integer and media is tv or movie. __PASS__
 
-    3. Search with the search term 'marvel', for example. Verify pagination works correctly. Previous should not appear on first page and Next should not appear on last page. __PASS__
+    3. Search with the search term 'marvel', for example. This will result in multiple results. Verify pagination works correctly. Previous should not appear on first page and Next should not appear on last page. __PASS__
 
-- TC05
+- TC06
 
     Description:
 
@@ -367,7 +393,7 @@ was reached. There are no known exisiting issues with the final deployed version
 
     6. Verify flash message 'Review Posted Successfully!'. Verify Page redirected to Browse Reviews. __PASS__
 
-- TC06
+- TC07
 
     Description:
 
@@ -383,7 +409,7 @@ was reached. There are no known exisiting issues with the final deployed version
 
     4. Press Delete Review and confirm. Verify Flash message 'Review Successfully Deleted'. Navigate to Browse Reviews and select the same movie again. Confirm Overall Rating has adjusted correctly. Should be the value of the first review in step one. __PASS__
 
-- TC07
+- TC08
 
     Description:
 
@@ -393,4 +419,134 @@ was reached. There are no known exisiting issues with the final deployed version
 
     1. Confirm that there are reviews in Browse Reviews. Login as Admin. Page should redirect to Admin Controls. __PASS__
 
-    2. 
+    2. Check that the Website Stats on Admin Controls page make sense. __PASS__
+
+    3. Check that the links in Most Popular Reviews redirect to the correct review or the users reviews as expected. __PASS__
+
+    4. Check that a Genre can be added and/or removed. __PASS__
+
+    5. Block a user and logout. Try to login as the blocked user. The flash message 'User has been Blocked. Contact the Administrator', should be displayed. __PASS__
+
+    6. Login as Admin. Select any review and confirm Delete Review deletes only the review selected. If it's the only review of a movie, the movie should automatically be removed from the site. Select another review and confirm Delete Movie deletes the movie from the site. __PASS__
+
+- TC09
+
+    Description:
+
+  - Verify Review Detail works as expected.
+
+    Procedure:
+
+    1. If logged-in, logout. Click on Browse Reviews in the navbar and select any review. This should open a route ending /review_detail/tmdb_id/media/popular/0, where tmdb_id is an integer and media is tv or movie. On the Review Detail page, a message should be displayed 'Please Log-In to submit a Review'. __PASS__
+
+    2. Login. Click on Browse Reviews in the navbar and select any review. Now on the Review Detail page, there should be a Review This button. Click the Review this button and it should open the New Review page. __PASS__
+
+- TC10
+
+    Description:
+
+  - Verify Add Like/Upvote works as expected.
+
+    Procedure:
+
+    1. If logged-in, logout. Select any review. Should not be able to select like (thumbs-up) button. __PASS__
+
+    2. Login. Select one of logged-in users reviews. Should not be able to select like (thumbs-up) button. __PASS__
+
+    3. Select any other users review. Click the like button. The page should reload and that reviews like count should be incremented by 1. It should not now be possible to click the 'like' button for that review again. __PASS__
+
+- TC11
+
+    Description:
+
+  - Verify the Contact Us page works as expected.
+
+    Procedure:
+
+    1. Click on Contact Us in the Footer. Verify all inputs are required. __PASS__
+
+    2. Fill in the form and submit. A message of success 'Status 200' or failure 'Status 400' should be displayed. __PASS__
+
+- TC12
+
+    Description:
+
+  - Verify the Browse Reviews page works as expected.
+
+    Procedure:
+
+    1. Click on Browse Reviews in the navbar. Clicking on any review should link to the Review Detail page. __PASS__
+
+    2. Click Go Back to return to Browse Reviews. Verify that a search input gives the appropriate result. __PASS__
+
+    3. Verify that the Sort dropdown values give the expected sort order. __PASS__
+
+- TC13
+
+    Description:
+
+  - Verify the My Reviews page works as expected.
+
+    Procedure:
+
+    1. Login. Click on My Reviews in the sub-menu of the navbar. Clicking on any review should link to the Edit Review page. __PASS__
+
+    2. Click Go Back to return to My Reviews. Verify that a search input gives the appropriate result. __PASS__
+
+    3. Verify that the Sort dropdown values give the expected sort order. __PASS__
+
+- TC14
+
+    Description:
+
+  - Verify not-logged-in user cannot access certain pages.
+
+    Procedure:
+
+    1. Logout, if logged-in. Type https://rush-reviews-movies-tv.herokuapp.com/change_password into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    2. Type https://rush-reviews-movies-tv.herokuapp.com/admin_controls into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    3. Type https://rush-reviews-movies-tv.herokuapp.com/login into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    4. Type https://rush-reviews-movies-tv.herokuapp.com/register into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    5. Login. Select a review to Edit/Delete. Then logout. Press the back button on the browser. The page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    6. Login. Select New Review in the navbar and search for a movie that has not already been reviewed. Select the movie and this should open the Make New Review page. Then logout. Press the back button on the browser. The Make New Review page should open again but this time the new review form will not be visible. Instead the message 'Please Log-In to submit a Review'. __PASS__
+
+    7. Login. Select Browse Reviews in the navbar and select any review. Examine the reviews on the review detail page and choose one that has not already been 'liked'. Right click and copy link address for the 'like' thumbs-up icon. Logout. Paste the copied url into the browser address bar and press return. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    8. Logout, if logged-in. Select Browse Reviews in the navbar and select any review. The url will be something like https://rush-reviews-movies-tv.herokuapp.com/review_detail/299534/movie/popular/0. The number between review detail and movie(or tv) is the tmdb_id. In this example 299534 is the tmdb_id. Record the tmdb_id in the url. Then type https://rush-reviews-movies-tv.herokuapp.com/delete_review/<tmdb_id> with the tmdb_id added to the end. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+- TC15
+
+    Description:
+
+  - Verify logged-in user cannot access certain pages.
+
+    Procedure:
+
+    1. Login as standard user. Type https://rush-reviews-movies-tv.herokuapp.com/admin_controls into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    2. Type https://rush-reviews-movies-tv.herokuapp.com/login into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    3. Type https://rush-reviews-movies-tv.herokuapp.com/register into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+    4. Select My Reviews from the navbar sub-menu. Click on a movie to edit/delete. Copy the url address. Logout and log-in as a different user. Then either paste the copied url in the address bar or click the browser back button twice. Page should redirect to index with the flash message 'That resource does not exist'. __PASS__
+
+    5. Login. Select Browse Reviews in the navbar and select any review. The url will be something like https://rush-reviews-movies-tv.herokuapp.com/review_detail/299534/movie/popular/0. The number between review detail and movie(or tv) is the tmdb_id. In this example 299534 is the tmdb_id. Record the tmdb_id in the url. Then type https://rush-reviews-movies-tv.herokuapp.com/delete_review/<tmdb_id> with the tmdb_id added to the end. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+
+
+
+## 4. Other Tests
+
+Although difficult to test all aspects of the Talisman CSP policy, the resource restrictions are easy to test by removing the CSP settings. It can be observed through Chrome Development Tools that the resources are now blocked and the site is missing many features including images, styling, Bootstrap, javascript, jquery etc.
+
+The form CSRF protection can be checked by leaving a page with form untouched for over 60 minutes. The CSRF token expires by default after 3600 seconds (60 mins). The CSRF error message is displayed asking the user to go back and reload the page.
+
+The CSRF token itself can be tested by replacing it with javascript on page load using $('#csrf_token').val('invalidToken'); and applying the id="csrf_token" attribute to any form to be tested. The 'CSRF token is invalid' error is raised.
+
+A duplicate empty mongodb databse was created and this showed that the carousel on the home page was generating index errors. So some conditional statements and appropriate messages for the user were added. Now minimal non-sliding carousels work while reviews are being added until 12 reviews are completed, then carousels function normally. The mobile size carousel will function correctly for any number of reviews.
+
+Chrome Development Tools Lighthouse suggested that some of the buttons had insufficient contrast on the font color, so this text was modified to be more white. It suggested that autocomplete attributes to help password managers were added to all login, register and change password forms, so they were added. It suggested that a hidden username input be added to the change password form to help password managers also.

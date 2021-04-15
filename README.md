@@ -254,6 +254,18 @@ Connecting to the MongoDB database:
 
 4. The URI and database name are set up as environmental variables in the env.py file.
 
+_Indexes:_
+
+- The following index for the my_reviews page search was created on the reviews collection:
+  - {"original_title": "text"}
+
+- The following index for the reviews page search was created on the media_details collection:
+  - {
+      "media_type": "text",
+      "original_title": "text",
+      "release_date": "text"
+    }
+
 ---
 
 ### **3. Technologies Used**
