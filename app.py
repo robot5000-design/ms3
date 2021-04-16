@@ -1277,7 +1277,7 @@ def logout():
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
-'''
+
 @app.errorhandler(404)
 def page_not_found(error):
     """ Handles a 404 page not found error
@@ -1302,7 +1302,7 @@ def all_other_errors(error):
         error = "System Error: Problem connecting with TMDB API."
     else:
         error = f"System Error: {error}"
-    return render_template("error.html", error=error)'''
+    return render_template("error.html", error=error)
 
 
 @app.errorhandler(CSRFError)
@@ -1317,4 +1317,4 @@ def handle_csrf_error(error):
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=True)
+            debug=False)

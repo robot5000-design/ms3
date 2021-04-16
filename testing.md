@@ -537,16 +537,44 @@ was reached. There are no known exisiting issues with the final deployed version
 
     5. Login. Select Browse Reviews in the navbar and select any review. The url will be something like https://rush-reviews-movies-tv.herokuapp.com/review_detail/299534/movie/popular/0. The number between review detail and movie(or tv) is the tmdb_id. In this example 299534 is the tmdb_id. Record the tmdb_id in the url. Then type https://rush-reviews-movies-tv.herokuapp.com/delete_review/<tmdb_id> with the tmdb_id added to the end. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
+- TC16
 
+    Description:
 
-## 4. Other Tests
+  - Verify the 404 error page.
+
+    Procedure:
+
+    1. On the home page. Add a random letter to the end of index in the url in the browser address bar. The 404 Not Found error message should be displayed. __PASS__
+
+---
+
+## 4. Other Testing
 
 Although difficult to test all aspects of the Talisman CSP policy, the resource restrictions are easy to test by removing the CSP settings. It can be observed through Chrome Development Tools that the resources are now blocked and the site is missing many features including images, styling, Bootstrap, javascript, jquery etc.
 
-The form CSRF protection can be checked by leaving a page with form untouched for over 60 minutes. The CSRF token expires by default after 3600 seconds (60 mins). The CSRF error message is displayed asking the user to go back and reload the page.
+The form CSRF protection can be checked by leaving a page with form untouched for over 60 minutes. The CSRF token expires by default after 3600 seconds (60 mins). The CSRF error message is displayed asking the user to go back and refresh the page.
 
-The CSRF token itself can be tested by replacing it with javascript on page load using $('#csrf_token').val('invalidToken'); and applying the id="csrf_token" attribute to any form to be tested. The 'CSRF token is invalid' error is raised.
+The CSRF token itself can be tested by replacing it with javascript on page load, using $('#csrf_token').val('invalidToken'); and applying the id="csrf_token" attribute to any form to be tested. The 'CSRF token is invalid' error is raised.
+
+To test if the site automatically redirects to https from http for greater security, this can be tested in the browser url address bar, by trying to manually change the address to http. As expected the site automatically loads as https. The security cert information for the site from Chrome Development Tools is shown below.
+
+![devToolsSecurityCert][22]
+
+[22]: ./documentation/images_for_readme/dev-tools-security-cert.jpg "Dev Tools Security Cert"
+
+Other errors or exceptions such as Index, JSON, Connection, Zero Division Exceptions were tested by raising them where expected in the app.py code. The handling of requests to the TMDB API were tested using http://httpstat.us/. This url was substituted for the TMDB API url's. Then a number of whatever error is to be tested can be tagged to the end, for example, http://httpstat.us/404 to simulate a 'not found' return. After some code adjustement, all potential errors handled as expected.
 
 A duplicate empty mongodb databse was created and this showed that the carousel on the home page was generating index errors. So some conditional statements and appropriate messages for the user were added. Now minimal non-sliding carousels work while reviews are being added until 12 reviews are completed, then carousels function normally. The mobile size carousel will function correctly for any number of reviews.
 
-Chrome Development Tools Lighthouse suggested that some of the buttons had insufficient contrast on the font color, so this text was modified to be more white. It suggested that autocomplete attributes to help password managers were added to all login, register and change password forms, so they were added. It suggested that a hidden username input be added to the change password form to help password managers also.
+Chrome Development Tools Lighthouse suggested that some of the buttons had insufficient contrast on the font color, so this text was modified to be more white. It suggested that autocomplete attributes to help password managers were added to all login, register and change password forms, so they were added. It suggested that a hidden username input be added to the change password form to also help password managers.
+
+Examples of the test scores from Chrome Development Tools Lighthouse. In general the scores are very good. The Best Practices section is marked down because of blocked resources due to CSP, but this is what the CSP is there for. Also it mentions that the image resolution is lower than expected. However, these are the largest resolution images supplied through the TMDB API. Some are from quite old movies and they are perfectly adequete for the intended purpose.
+
+![browseReviewsLighthouse][23]
+
+[23]: ./documentation/images_for_readme/browse-reviews-lighthouse.jpg "Browse Reviews Lighthouse"
+
+![reviewDetailLighthouse][24]
+
+[24]: ./documentation/images_for_readme/review-detail-lighthouse.jpg "Review Detail Lighthouse"

@@ -319,6 +319,7 @@ _Other Tools:_
 - jshint - for JavaScript validation.
 - pylint - for python validation.
 - Chrome Development Tools - for checking performance and accessibility.
+- http://httpstat.us/ - used for testing handling of requests errors.
 
 As per industry practice and to reduce the number of small commits on the master branch, seperate branches were created and used for features (where appropriate) and for the readme file as they were developed. These were squashed, merged and deleted after use.
 
