@@ -549,7 +549,7 @@ was reached. There are no known exisiting issues with the final deployed version
 
 ---
 
-## 4. Other Testing
+## 4. Testing Site Security
 
 Although difficult to test all aspects of the Talisman CSP policy, the resource restrictions are easy to test by removing the CSP settings. It can be observed through Chrome Development Tools that the resources are now blocked and the site is missing many features including images, styling, Bootstrap, javascript, jquery etc.
 
@@ -563,7 +563,13 @@ To test if the site automatically redirects to https from http for greater secur
 
 [22]: ./documentation/images_for_readme/dev-tools-security-cert.jpg "Dev Tools Security Cert"
 
-Other errors or exceptions such as Index, JSON, Connection, Zero Division Exceptions were tested by raising them where expected in the app.py code. The handling of requests to the TMDB API were tested using http://httpstat.us/. This url was substituted for the TMDB API url's. Then a number of whatever error is to be tested can be tagged to the end, for example, http://httpstat.us/404 to simulate a 'not found' return. After some code adjustement, all potential errors handled as expected.
+---
+
+## 5. Other Error/Exception Testing
+
+Other errors or exceptions such as Index, JSON, Connection, Zero Division Exceptions were tested by raising them where expected in the app.py code. The handling of requests and potential errors related to requests to the TMDB API, were tested using http://httpstat.us/. This service can be used to simulate a variety of responses including errors. This url was substituted for the TMDB API url's. Then an integer representing whatever error is to be tested can be added to the end, for example, http://httpstat.us/404 to simulate a 'not found' return. That way, the code and how it handles a variety of responses was tested. After some code adjustement, all potential errors handled as expected.
+
+Any exceptions outside of the scope of those tested, are caught by the Internal Server Error 500 or failing that the catch all, all_other_errors(error) function with decorator @app.errorhandler(Exception). This same function is used to deal with potential Pymongo errors associated with mongodb or request exceptions not caught locally in the code.
 
 A duplicate empty mongodb databse was created and this showed that the carousel on the home page was generating index errors. So some conditional statements and appropriate messages for the user were added. Now minimal non-sliding carousels work while reviews are being added until 12 reviews are completed, then carousels function normally. The mobile size carousel will function correctly for any number of reviews.
 
@@ -578,3 +584,9 @@ Examples of the test scores from Chrome Development Tools Lighthouse. In general
 ![reviewDetailLighthouse][24]
 
 [24]: ./documentation/images_for_readme/review-detail-lighthouse.jpg "Review Detail Lighthouse"
+
+---
+
+## 6. Accessibility
+
+The site scores well on Chrome Development Tools Lighthouse for accessibility. Where suggestions of an aria label or descriptor were made, these were put in place. Any suggestions for improving contrast ratio were acted upon.

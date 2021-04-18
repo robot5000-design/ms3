@@ -95,7 +95,7 @@
                     <option value="" disabled>User List:</option>
                     <option value="">Select None</option>
                     {% for user in user_list %}
-                        {% if user.lower() != "admin" %}
+                        {% if user.lower() != "admin" and user not in blocked_users %}
                             <option value="{{ user }}">{{ user }}</option>
                         {% endif %}
                     {% endfor %}

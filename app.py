@@ -13,9 +13,10 @@ from flask_wtf.csrf import CSRFProtect
 from flask_wtf.csrf import CSRFError
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+from helpers import (
+    block_users, unblock_users)
 if os.path.exists("env.py"):
     import env
-
 
 app = Flask(__name__)
 
@@ -903,7 +904,6 @@ def get_choice_detail(tmdb_id, media_type):
                 return redirect(url_for("search_movies"))
             else:
                 return media_detail
-
     flash("Status " + str(detail_request.status_code) + " " + detail_request.reason + ". \
         Cannot get results from the TMDB database at this time. \
         Please try again later.")
@@ -991,41 +991,6 @@ def add_remove_genre():
             flash("This Entry Already Exists!")
     if not add_genre and not remove_genre:
         flash("Nothing to Update")
-
-
-def block_users():
-    """ Blocks users from using the site.
-
-    Gets values from the block_selected form. Validates that the
-    list returned has entries and that the user is not already blocked
-    and inserts them in the blocked_users collection in the database.
-    """
-    block_list_users = request.form.getlist("block-selected")
-    if len(block_list_users) != 0:
-        for user in block_list_users:
-            already_blocked = mongo.db.blocked_users.find_one(
-                {"username": user})
-            if already_blocked:
-                flash("User(s) Already Blocked")
-            else:
-                mongo.db.blocked_users.insert_one(
-                    {"username": user})
-        flash("User(s) Blocked")
-
-
-def unblock_users():
-    """ Unblocks users from using the site.
-
-    Requests values from the unblock_selected form. Validates that the
-    list returned has entries and removes them from the blocked_users
-    collection in the database.
-    """
-    unblock_list_users = request.form.getlist("unblock-selected")
-    if len(unblock_list_users) != 0:
-        for user in unblock_list_users:
-            mongo.db.blocked_users.delete_one(
-                {"username": user})
-        flash("User(s) Unblocked")
 
 
 @app.route("/admin_controls", methods=["GET", "POST"])

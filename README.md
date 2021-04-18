@@ -172,11 +172,11 @@ To combat double entries of reviews in the database by an impatient user pressin
 
 Ratings take account of reviews being adjusted or deleted, something which is easy to overlook.
 
-One of the problems which arose was when searching the TMDB API for something new to review or searching browse reviews, when the user selects a movie but then changes their mind and goes back, the browsers in-built functionality requests that the page with the search form is reloaded for resubmission. To get around this, when the search is performed the results are presented after a redirect through another route. Now when the user clicks back, the resubmission is not requested. It makes for a much better user experience.
+One of the problems which arose, was that when searching the TMDB API for something new to review or searching browse reviews, when the user selects a movie but then changes their mind and goes back, the browsers in-built functionality requests that the page with the search form is reloaded for resubmission. To get around this, when the search is performed the results are presented after a redirect through another route. Now when the user clicks back, the resubmission is not requested. It makes for a much better user experience. Initially attempted to use an AJAX request through Javascript, but although the AJAX request worked and the data was sent from the frontend to the backend, it did not result in solving the form resubmission issue. So, the 'redirect through another route' method was employed instead.
 
 _Landing Page:_
 
-The landing page features a simple design and layout with a large CTA to search for something to review. There's also easy access to all the latest reviews through the multi image carousel which features a different number of images at different breakpoints. To acheive this, four seperate carousels are used. There is little explanation of how to use the site as the developer didn't feel it would add anything and because the site is self explanatory and straightforward. The navbar gives access to browse reviews or to login. When the user chooses login, a modal appears and if they don't have an account there is a link to the register page.
+The landing page features a simple design and layout with a large CTA to search for something to review. There's also easy access to all the latest reviews through the multi image carousel which features a different number of images at different breakpoints. To acheive this, four seperate carousels are used. There is little explanation of how to use the site as the developer didn't feel it would add anything and because the site is self explanatory with the branding, in addition to being straightforward to use. The navbar gives access to browse reviews or to login. When the user chooses login, a modal appears and if they don't have an account there is a link to the register page.
 
 _Register, Login and Change Password Forms:_
 
@@ -184,7 +184,7 @@ All these forms are validated using a combination of regex patterns on the input
 
 _Search New Review Form:_
 
-This searches the TMDB API using a python request. As part of defensive programming try/except blocks are used to handle ConnectionError and JSONDecodeError on these requests and returned results. It returns 20 results at a time which are paginated using python and jinja. The results are validated using the validate_choice python function. The results are slightly tricky to validate because all parameters are optional and vary depending on whether it's a movie or tv series.
+This searches the TMDB API using a python request. As part of defensive programming try/except blocks are used to handle ConnectionError and JSONDecodeError on these requests and returned results. It returns 20 results at a time which are paginated using python and jinja. The results are validated using the validate_choice python function. The results returned from the TMDB API are slightly tricky to validate because all parameters are optional and vary depending on whether it's a movie or tv series.
 
 _Browse Reviews/My Reviews:_
 
@@ -212,9 +212,18 @@ Used to display error messages such as 404 page not found or 500 internal server
 
 _Other features of the backend of the site:_
 
-__Defensive Programming__: As mentioned previously defensive programming was a key consideration. KeyError's, ZeroDivisionError's, IndexError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all catered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message.
+__Defensive Programming__: As mentioned previously defensive programming was a key consideration. KeyError's, ZeroDivisionError's, IndexError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all considered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message and if blocked users try to do anything they will be kicked out.
 
-__Security Considerations__: Security was considered for the site in a number of ways. Mainly, Flask Talisman was used for it's CSP policy, which restricts where the site can load a resource from. It tells the browser to convert all HTTP requests to HTTPS which prevents man-in-the-middle attacks. It also helps to prevent XSS cross-site-scripting attacks. The session cookie is set to secure. Cross-Site Request Forgery (CSRF) attacks are dealt with by CSRFProtect imported from Flask-WTF.csrf. This is used to apply a unique CSRF token to every form on the site. All passwords are hashed using werkzeug.security's generate_password_hash. Certain sensitive information is saved in an env.py environmental variable file which is included in gitignore and so is not pushed to Github. These include, the secret key used to securely sign the session cookie, the TMDB API password and the MongoDB URI.
+_There are no known outstanding bugs in the site._
+
+__Security Considerations__: Security was considered for the site in a number of ways:
+
+- Mainly, Flask Talisman was used for it's CSP policy, which restricts where the site can load a resource from.
+- It tells the browser to convert all HTTP requests to HTTPS which prevents man-in-the-middle attacks.
+- It also helps to prevent XSS cross-site-scripting attacks. The session cookie is set to secure.
+- Cross-Site Request Forgery (CSRF) attacks are dealt with by CSRFProtect imported from Flask-WTF.csrf. This is used to apply a unique CSRF token to every form on the site.
+- All passwords are hashed using werkzeug.security's generate_password_hash. 
+- Certain sensitive information is saved in an env.py environmental variable file which is included in gitignore and so is not pushed to Github. These include, the secret key used to securely sign the session cookie, the TMDB API password and the MongoDB URI.
 
 __MongoDB Database Collections Schema__:
 
