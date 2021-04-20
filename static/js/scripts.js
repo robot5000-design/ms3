@@ -4,8 +4,8 @@
  * Sends the feedback form values to the emailjs service template
  * @param { object } contactForm - feedback form values
  */
-function sendMail(contactForm) {
-    emailjs.send("service_ceip qpk", "template_7pribcf", {
+ function sendMail(contactForm) {
+    emailjs.send("service_ceipqpk", "template_7pribcf", {
         "from_name": contactForm.name.value,
         "from_email": contactForm.emailaddress.value,
         "feed_back": contactForm.feedback.value
@@ -51,21 +51,21 @@ function handleMailResponse(responseObject, message) {
  * Disables form submissions if there are invalid fields
  */
 (function () {
-    'use strict'
+    'use strict';
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.querySelectorAll('.needs-validation')
+    var forms = document.querySelectorAll('.needs-validation');
     // Loop over them and prevent submission
     Array.prototype.slice.call(forms)
         .forEach(function (form) {
             form.addEventListener('submit', function (event) {
                 if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
-                form.classList.add('was-validated')
-            }, false)
-        })
-})()
+                form.classList.add('was-validated');
+            }, false);
+        });
+})();
 
 /**
  * Adds a loading spinner and disables the button referenced as the argument
@@ -114,7 +114,7 @@ $(".review-form").on('submit', function () {
 // reloading so that a success or failure message can be displayed
 $(".contact-form").on('submit', function (event) {
     addLoadingSpinner(".submit-contact");
-    $(".contact-error").html("")
+    $(".contact-error").html("");
     sendMail(this);
     event.preventDefault();
 });
@@ -142,9 +142,10 @@ $("#user-reviews-form").on('submit', function () {
 });
 
 // Call the goBack function which goes back to the previous page in history
-$(".go-back").click(goBack)
+$(".go-back").click(goBack);
 
 // Handles modal for confirming deletion of individual reviews
+// adapted from bootstrap docs
 $(document).on('show.bs.modal', "#reviewDeleteModal", function (event) {
     // Button that triggered the modal
     let button = event.relatedTarget;
