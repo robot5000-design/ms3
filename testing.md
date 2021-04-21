@@ -439,7 +439,13 @@ was reached. There are no known exisiting issues with the final deployed version
 
     1. If logged-in, logout. Click on Browse Reviews in the navbar and select any review. This should open a route ending /review_detail/tmdb_id/media/popular/0, where tmdb_id is an integer and media is tv or movie. On the Review Detail page, a message should be displayed 'Please Log-In to submit a Review'. __PASS__
 
-    2. Login. Click on Browse Reviews in the navbar and select any review. Now on the Review Detail page, there should be a Review This button. Click the Review this button and it should open the New Review page. __PASS__
+    2. Login. Click on Browse Reviews in the navbar and select any review. Now on the Review Detail page, there should be a Review This button. Click the Review this button and it should open the New Review page. Submit the review. __PASS__
+
+    3. Click on Browse Reviews again. Pick the last review, left in step 2. A message, "You've already reviewed this.", should be displayed. An Edit Review button should be available on that review only. __PASS__
+
+    4. Logout. Click on Browse Reviews again. Pick the last review, left in step 2. The Edit Review button should not be available. __PASS__
+
+    5. Login as a different user. Click on Browse Reviews again. Pick the last review, left in step 2. The Edit Review button should only be available for a review left by the logged-in user. __PASS__
 
 - TC10
 

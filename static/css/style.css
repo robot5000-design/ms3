@@ -267,6 +267,14 @@ h2,
   border-radius: 0.25rem;
 }
 
+.review-links {
+  color: #11d6f6;
+}
+
+.review-links i:hover {
+  color: #dd5608;
+}
+
 /*--------------------------------------------------------Register / Contact */
 
 .register-wrapper,

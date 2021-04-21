@@ -115,7 +115,7 @@
                     {% endif %}
                     <div class="pb-2">
                         Reviewed by: 
-                        <a class="text-decoration-none"
+                        <a class="text-decoration-none review-links"
                             href="{{ url_for('my_reviews', user=review.created_by, my_reviews_sort='latest', page=0) }}">
                             {{ review.created_by }}
                         </a>
@@ -125,7 +125,7 @@
                     <div>Genre: {{ review.genre }}</div>
                     <div class="pb-2">Rating: {{ review.rating }} / 5</div>
                     {% if "user" in session and session["user"] != review.created_by and session["user"] not in review.likes %}
-                        <a href="{{ url_for('add_like', object_id=review._id, tmdb_id=review.tmdb_id, media_type=media_detail.media_type) }}">
+                        <a class="review-links" href="{{ url_for('add_like', object_id=review._id, tmdb_id=review.tmdb_id, media_type=media_detail.media_type) }}">
                             <i class="fas fa-thumbs-up fs-5 pe-2"></i>
                             {{ review.likes | length }}
                         </a>
