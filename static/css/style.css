@@ -70,13 +70,16 @@ h2,
 .delete-genre,
 .confirm-genre,
 .confirm-block,
-.confirm-unblock {
+.confirm-unblock,
+.edit-review-btn,
+.get-reviews-btn {
   font-size: 0.9em;
 }
 
 .call-delete,
 .confirm-delete,
-.submit-edit {
+.submit-edit,
+.edit-review-btn {
   width: 164.5px;
 }
 
@@ -217,7 +220,8 @@ h2,
 
 /*--------------------------------------------------------Reviews */
 
-.review-text {
+.review-text,
+.already-reviewed {
   color: #ffa30f;
 }
 
@@ -240,11 +244,6 @@ h2,
 }
 
 .overview {
-  font-size: 0.9em;
-}
-
-.get-reviews-btn,
-.edit-review-btn {
   font-size: 0.9em;
 }
 
