@@ -13,9 +13,10 @@ from flask_wtf.csrf import CSRFProtect
 from flask_wtf.csrf import CSRFError
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+from helpers import (
+    block_users, unblock_users)
 if os.path.exists("env.py"):
     import env
-
 
 app = Flask(__name__)
 
@@ -36,7 +37,8 @@ csp = {
         '\'none\''
     ],
     'script-src': [
-        '\'self\'',
+        '\'strict-dynamic\'',
+        '\'unsafe-inline\'',
         'code.jquery.com',
         'cdn.jsdelivr.net',
         'cdnjs.cloudflare.com',
@@ -66,13 +68,22 @@ csp = {
     'object-src': [
         '\'none\''
     ],
+    'frame-src': [
+        'cdn.jsdelivr.net'
+    ],
     'base-uri': [
+        '\'none\''
+    ],
+    'frame-ancestors': [
         '\'none\''
     ]
 }
 
 # Applies Talisman CSP protection to the app
-talisman = Talisman(app, content_security_policy=csp)
+talisman = Talisman(app,
+                    force_https=True,
+                    content_security_policy_nonce_in=['script-src'],
+                    content_security_policy=csp)
 
 # Applies CSRF protection for all forms
 csrf = CSRFProtect(app)
@@ -505,7 +516,7 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
             {"tmdb_id": tmdb_id}).sort("review_date", -1).skip(
                 page * 6).limit(6))
     else:
-        # Following aggregate based on information in this thread
+        # The following aggregate is based on information in this thread
         # https://stackoverflow.com/questions/9040161/mongo-order-by-length-of-array
         # finds reviews matched by tmdb_id, returns all fields sorted by number
         # of likes
@@ -775,7 +786,7 @@ def new_review(tmdb_id, media_type):
         media_detail = details_exist[0]
     else:
         media_detail = get_choice_detail(tmdb_id, media_type)
-
+        # check the results returned are of valid type
         if isinstance(media_detail, dict) and "status_code" in media_detail:
             if media_detail["status_code"] == 34:
                 flash("Sorry. This resource cannot be found.")
@@ -893,7 +904,6 @@ def get_choice_detail(tmdb_id, media_type):
                 return redirect(url_for("search_movies"))
             else:
                 return media_detail
-
     flash("Status " + str(detail_request.status_code) + " " + detail_request.reason + ". \
         Cannot get results from the TMDB database at this time. \
         Please try again later.")
@@ -981,41 +991,6 @@ def add_remove_genre():
             flash("This Entry Already Exists!")
     if not add_genre and not remove_genre:
         flash("Nothing to Update")
-
-
-def block_users():
-    """ Blocks users from using the site.
-
-    Gets values from the block_selected form. Validates that the
-    list returned has entries and that the user is not already blocked
-    and inserts them in the blocked_users collection in the database.
-    """
-    block_list_users = request.form.getlist("block-selected")
-    if len(block_list_users) != 0:
-        for user in block_list_users:
-            already_blocked = mongo.db.blocked_users.find_one(
-                {"username": user})
-            if already_blocked:
-                flash("User(s) Already Blocked")
-            else:
-                mongo.db.blocked_users.insert_one(
-                    {"username": user})
-        flash("User(s) Blocked")
-
-
-def unblock_users():
-    """ Unblocks users from using the site.
-
-    Requests values from the unblock_selected form. Validates that the
-    list returned has entries and removes them from the blocked_users
-    collection in the database.
-    """
-    unblock_list_users = request.form.getlist("unblock-selected")
-    if len(unblock_list_users) != 0:
-        for user in unblock_list_users:
-            mongo.db.blocked_users.delete_one(
-                {"username": user})
-        flash("User(s) Unblocked")
 
 
 @app.route("/admin_controls", methods=["GET", "POST"])
@@ -1143,7 +1118,7 @@ def login():
             if check_password_hash(
                     existing_user["password"], request.form.get("password")):
                 session["user"] = username.lower()
-                flash(f"Welcome, {username}")
+                flash(f"Welcome, {username.capitalize()}")
                 if username.lower() != "admin":
                     return redirect(url_for("my_reviews", user=session[
                         'user'], my_reviews_sort='latest', page=0))
@@ -1267,7 +1242,7 @@ def logout():
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
-'''
+
 @app.errorhandler(404)
 def page_not_found(error):
     """ Handles a 404 page not found error
@@ -1292,7 +1267,7 @@ def all_other_errors(error):
         error = "System Error: Problem connecting with TMDB API."
     else:
         error = f"System Error: {error}"
-    return render_template("error.html", error=error)'''
+    return render_template("error.html", error=error)
 
 
 @app.errorhandler(CSRFError)
@@ -1307,4 +1282,4 @@ def handle_csrf_error(error):
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=True)
+            debug=False)

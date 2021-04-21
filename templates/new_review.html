@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-2 px-0 pt-4 mt-1">
-            <a href="#" class="btn btn-secondary go-back fs-2 px-2 py-0"><i class="fas fa-chevron-circle-left"></i></a>
+            <a href="#" class="btn btn-secondary go-back fs-2 px-2 py-0" aria-label="go-back"><i class="fas fa-chevron-circle-left"></i></a>
         </div>
-        <div class="col-9 text-center">
+        <div class="col-9 text-center ps-0">
             <h2 class="pt-4 mt-2 reviews-heading">Make New Review:</h2>
         </div>
     </div>
@@ -37,7 +37,7 @@
                 {% endif %}
             </div>
             {% if media_detail.overview != None %}
-                <div class="pb-5 pt-3">{{ media_detail.overview }}</div>
+                <div class="pb-5 pt-3 overview">{{ media_detail.overview }}</div>
             {% endif %}
                 <div class="pb-5 pt-1">
                 {% if not session.user %}
