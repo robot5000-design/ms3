@@ -4,7 +4,11 @@
 <div class="container-fluid text-center my-reviews-container">
     <div class="row py-4">
         <div class="col">
-            <h1 class="heading">{{ user.title() }}'s Reviews</h1>
+            {% if user == session["user"] %}
+                <h1 class="heading">My Reviews</h1>
+            {% else %}
+                <h1 class="heading">{{ user.title() }}'s Reviews</h1>
+            {% endif %}
         </div>
     </div>
     <div class="row search-box">

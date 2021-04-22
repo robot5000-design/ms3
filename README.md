@@ -131,23 +131,23 @@ From the strategy table all the above features appear viable. The only feature d
 
 Wireframes made in Balsamiq Wireframes were used for basic layout. These can be viewed here:
 
-[Landing Page All Sizes](./documentation/images_for_readme/wireframes/landing_page.png)
+[Landing Page All Sizes](./documentation/wireframes/landing_page.png)
 
-[Admin Controls Page All Sizes](./documentation/images_for_readme/wireframes/admin_controls.png)
+[Admin Controls Page All Sizes](./documentation/wireframes/admin_controls.png)
 
-[Browse Reviews Page All Sizes](./documentation/images_for_readme/wireframes/browse_my_reviews.png)
+[Browse Reviews Page All Sizes](./documentation/wireframes/browse_my_reviews.png)
 
-[New Review Search Page All Sizes](./documentation/images_for_readme/wireframes/new_review_search.png)
+[New Review Search Page All Sizes](./documentation/wireframes/new_review_search.png)
 
-[New/Edit Review Page All Sizes](./documentation/images_for_readme/wireframes/new_edit_review.png)
+[New/Edit Review Page All Sizes](./documentation/wireframes/new_edit_review.png)
 
-[Review Detail Page All Sizes](./documentation/images_for_readme/wireframes/review_detail.png)
+[Review Detail Page All Sizes](./documentation/wireframes/review_detail.png)
 
-[Register Page All Sizes](./documentation/images_for_readme/wireframes/register.png)
+[Register Page All Sizes](./documentation/wireframes/register.png)
 
-[Change Password Page All Sizes](./documentation/images_for_readme/wireframes/change_password.png)
+[Change Password Page All Sizes](./documentation/wireframes/change_password.png)
 
-[Contact Page All Sizes](./documentation/images_for_readme/wireframes/contact_page.png)
+[Contact Page All Sizes](./documentation/wireframes/contact_page.png)
 
 #### Surface
 

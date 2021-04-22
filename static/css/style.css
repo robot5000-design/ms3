@@ -72,14 +72,16 @@ h2,
 .confirm-block,
 .confirm-unblock,
 .edit-review-btn,
-.get-reviews-btn {
+.get-reviews-btn,
+.all-reviews-btn {
   font-size: 0.9em;
 }
 
 .call-delete,
 .confirm-delete,
 .submit-edit,
-.edit-review-btn {
+.edit-review-btn,
+.all-reviews-btn {
   width: 164.5px;
 }
 

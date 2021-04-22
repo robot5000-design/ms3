@@ -106,14 +106,22 @@
                     </div>
                     <div class="row">
                         <div class="col mt-5 mb-4">
-                            <button type="submit" class="btn btn-primary submit-edit">Submit Edit</button>
+                            <button type="submit" class="btn btn-success submit-edit">Submit Edit</button>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col pb-5">
+                        <div class="col pb-4">
                             <div class="btn btn-danger call-delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Delete
                                 Review
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-5">
+                            <a class="btn btn-primary all-reviews-btn"
+                                href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort='popular', page=0) }}">See
+                                    All Reviews
+                            </a>
                         </div>
                     </div>
                 {% endif %}

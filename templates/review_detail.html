@@ -53,7 +53,7 @@
                         <div class="already-reviewed">You've already reviewed this.</div>
                     {% else %}
                         <a href="{{ url_for('new_review', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type) }}"
-                            class="btn btn-success review-this">Review This
+                            class="btn btn-primary review-this">Review This
                         </a>
                     {% endif %}
                 </div>
@@ -95,8 +95,8 @@
                     {% if "user" in session %}
                         <div class="pb-3">
                             {% if session["user"] == review.created_by %}
-                                <div class="pb-2">
-                                    <a class="btn btn-success edit-review-btn"
+                                <div class="py-2">
+                                    <a class="btn btn-primary edit-review-btn"
                                         href="{{ url_for('edit_review', tmdb_id=media_detail.tmdb_id, my_reviews_sort='latest') }}">
                                         Edit Review
                                     </a>

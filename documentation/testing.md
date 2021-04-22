@@ -21,7 +21,7 @@ _These requirements have been met by a bold interface with eye-catching font and
 
 ![EasyNavigation][1]
 
-[1]: ./documentation/images_for_readme/easy-nav.jpg "Easy Navigation"
+[1]: ../documentation/images_for_readme/easy-nav.jpg "Easy Navigation"
 
 As the site owner/administrator:
 
@@ -36,15 +36,15 @@ _These requirements have been met by providing validated forms for users to regi
 
 ![Register][2]
 
-[2]: ./documentation/images_for_readme/register.jpg "Register"
+[2]: ../documentation/images_for_readme/register.jpg "Register"
 
 ![Login][3]
 
-[3]: ./documentation/images_for_readme/login.jpg "Login"
+[3]: ../documentation/images_for_readme/login.jpg "Login"
 
 ![ChangePassword][4]
 
-[4]: ./documentation/images_for_readme/change-pass.jpg "Change Password"
+[4]: ../documentation/images_for_readme/change-pass.jpg "Change Password"
 
 As the site owner/administrator:
 
@@ -59,11 +59,11 @@ Below images show results of CSP and security checks by [Google CSP Evaluator](h
 
 ![GoogleCSPEvaluator][5]
 
-[5]: ./documentation/images_for_readme/google-csp.jpg "Google CSP Evaluator"
+[5]: ../documentation/images_for_readme/google-csp.jpg "Google CSP Evaluator"
 
 ![MozillaObservatory][6]
 
-[6]: ./documentation/images_for_readme/mozilla-observatory.jpg "Mozilla Observatory"
+[6]: ../documentation/images_for_readme/mozilla-observatory.jpg "Mozilla Observatory"
 
 As the site owner/administrator:
 
@@ -77,7 +77,7 @@ _These requirements have been met by allowing the user to search and sort all re
 
 ![SortAllReviews][7]
 
-[7]: ./documentation/images_for_readme/sort-all-reviews.jpg "Sort All Reviews"
+[7]: ../documentation/images_for_readme/sort-all-reviews.jpg "Sort All Reviews"
 
 As a user:
 
@@ -87,7 +87,7 @@ _These requirements have been met by allowing the user to search and sort their 
 
 ![MyReviews][8]
 
-[8]: ./documentation/images_for_readme/my-reviews.jpg "My Reviews"
+[8]: ../documentation/images_for_readme/my-reviews.jpg "My Reviews"
 
 As a user:
 
@@ -97,7 +97,7 @@ _These requirements have been met by allowing the user to search and sort anothe
 
 ![OtherUsers][10]
 
-[10]: ./documentation/images_for_readme/other-users.jpg "Other Users"
+[10]: ../documentation/images_for_readme/other-users.jpg "Other Users"
 
 As the site owner/administrator:
 
@@ -111,7 +111,7 @@ _These requirements have been met by allowing the user to click on a like/thumbs
 
 ![Upvote][11]
 
-[11]: ./documentation/images_for_readme/upvote.jpg "Upvote"
+[11]: ../documentation/images_for_readme/upvote.jpg "Upvote"
 
 As the site owner/administrator:
 
@@ -126,12 +126,12 @@ _These requirements have been met by allowing the user to make a new review, edi
 New Review
 ![NewReview][12]
 
-[12]: ./documentation/images_for_readme/new-review.jpg "NewReview"
+[12]: ../documentation/images_for_readme/new-review.jpg "NewReview"
 
 Edit/Delete Review
 ![EditDeleteReview][13]
 
-[13]: ./documentation/images_for_readme/edit-delete-review.jpg "Edit/Delete Review"
+[13]: ../documentation/images_for_readme/edit-delete-review.jpg "Edit/Delete Review"
 
 As the site owner/administrator:
 
@@ -145,7 +145,7 @@ _These requirements have been met by allowing the user to choose a rating value 
 
 ![EditDeleteReview][14]
 
-[14]: ./documentation/images_for_readme/rating.jpg "Edit/Delete Review"
+[14]: ../documentation/images_for_readme/rating.jpg "Edit/Delete Review"
 
 As the site owner/administrator:
 
@@ -160,12 +160,12 @@ _These requirements have been met by including social links at the bottom of the
 Footer:
 ![Footer][15]
 
-[15]: ./documentation/images_for_readme/footer.jpg "Footer"
+[15]: ../documentation/images_for_readme/footer.jpg "Footer"
 
 Contact Form:
 ![ContactForm][16]
 
-[16]: ./documentation/images_for_readme/contact-form.jpg "Contact Form"
+[16]: ../documentation/images_for_readme/contact-form.jpg "Contact Form"
 
 As the site owner/administrator:
 
@@ -176,7 +176,7 @@ _These requirements have been met by including an exclusive admins controls dash
 
 ![AdminControls][17]
 
-[17]: ./documentation/images_for_readme/admin-controls.jpg "Admin Controls"
+[17]: ../documentation/images_for_readme/admin-controls.jpg "Admin Controls"
 
 As the site owner/administrator:
 
@@ -186,7 +186,7 @@ _These requirements have been met by including form validation on all forms that
 
 ![Validation][18]
 
-[18]: ./documentation/images_for_readme/validation.jpg "Form Validation"
+[18]: ../documentation/images_for_readme/validation.jpg "Form Validation"
 
 As the site owner/administrator:
 
@@ -202,12 +202,12 @@ _These requirements have been met by employing defensive programming. KeyError's
 Example of Invalid User:
 ![InvalidUser][19]
 
-[19]: ./documentation/images_for_readme/invalid-user.jpg "Invalid User"
+[19]: ../documentation/images_for_readme/invalid-user.jpg "Invalid User"
 
 Example Error:
 ![ErrorHandling][20]
 
-[20]: ./documentation/images_for_readme/error-handling.jpg "Error Handling"
+[20]: ../documentation/images_for_readme/error-handling.jpg "Error Handling"
 
 ---
 
@@ -270,7 +270,7 @@ All HTML and CSS files have been passed through the w3c validation service here 
 
 ![w3cValidator][21]
 
-[21]: ./documentation/images_for_readme/w3-warning.jpg "W3C Validator"
+[21]: ../documentation/images_for_readme/w3-warning.jpg "W3C Validator"
 
 Javascript files were passed through jshint.com without any significant issues.
 
@@ -567,7 +567,7 @@ To test if the site automatically redirects to https from http for greater secur
 
 ![devToolsSecurityCert][22]
 
-[22]: ./documentation/images_for_readme/dev-tools-security-cert.jpg "Dev Tools Security Cert"
+[22]: ../documentation/images_for_readme/dev-tools-security-cert.jpg "Dev Tools Security Cert"
 
 ---
 
@@ -585,14 +585,50 @@ Examples of the test scores from Chrome Development Tools Lighthouse. In general
 
 ![browseReviewsLighthouse][23]
 
-[23]: ./documentation/images_for_readme/browse-reviews-lighthouse.jpg "Browse Reviews Lighthouse"
+[23]: ../documentation/images_for_readme/browse-reviews-lighthouse.jpg "Browse Reviews Lighthouse"
 
 ![reviewDetailLighthouse][24]
 
-[24]: ./documentation/images_for_readme/review-detail-lighthouse.jpg "Review Detail Lighthouse"
+[24]: ../documentation/images_for_readme/review-detail-lighthouse.jpg "Review Detail Lighthouse"
 
 ---
 
 ## 6. Accessibility
 
 The site scores well on Chrome Development Tools Lighthouse for accessibility. Where suggestions of an aria label or descriptor were made, these were put in place. Any suggestions for improving contrast ratio were acted upon.
+
+---
+
+## 7. Debugging
+
+Although there are no known outstanding bugs, the main problematic bugs were reported in the issues section of Github and are copied below.
+
+1. My_reviews not displaying for sorting if no user logged in.
+
+    - Fixed issues #1 & #2 by including missing render_template variables.
+
+2. My_reviews & reviews not rendering after empty search.
+
+    - Fixed issues #1 & #2 by including missing render_template variables.
+
+3. Problem with Flask Talisman blocking some small Bootstrap Icons.
+
+    - Fixed by putting 'data:' in img-src of CSP policy.
+
+4. When click back from a movie detail to search list, search form requires re-submission and therefore page reload.
+
+    - Fixed by redirecting the search through the search pagination function.
+
+5. If user presses submit review multiple times it causes more than one review to be created.
+
+    - Solved by disabling the button with javascript and redirecting away from the page. Works well even with JS disabled.
+
+6. Similar to issue #4 but for browse reviews page. Going back a page requires form resubmission.
+
+    - Solved by same method as issue #4. Redirected through another route search_reviews which negates the issue.
+
+7. Carousel causing index errors when database is empty.
+
+    - Solved by using some conditional statements and now displays a message to the user.
+
+---
