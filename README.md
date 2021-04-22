@@ -212,6 +212,8 @@ Used to display error messages such as 404 page not found or 500 internal server
 
 _Other features of the backend of the site:_
 
+__Project File Structure__: The project is structured and folders named as per the Flask documentation. The HTML templates are in a templates folder, styling and javascript are in a static folder. The application backend python code is in 3 files; app.py is the main application, contant variables are in constants.py and helper functions for the main application are in the helper_functions.py file.
+
 __Defensive Programming__: As mentioned previously defensive programming was a key consideration. KeyError's, ZeroDivisionError's, IndexError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all considered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message and if blocked users try to do anything they will be kicked out.
 
 _There are no known outstanding bugs in the site._
@@ -296,7 +298,7 @@ _Libraries & frameworks:_
 - Werkzeug - is a Web Server Gateway Interface web application library.
 - CSRFProtect - used to apply a CSRF token to every form to protect against cross site request forgery.
 - jQuery 3.5.1 - used to speed up selection of elements in javascript.
-- Bootstrap 5.0.0 - Used to help with grid layout and screen size responsiveness.
+- Bootstrap 5.0.0 - Used to help with grid layout, screen size responsiveness and other features such as buttons and carousel.
 - JavaScript, Popper.js, and jQuery as part of Bootstrap.
 - Font Awesome for icons.
 - Google Fonts for Alfa Slab One and Montserrat fonts.
@@ -344,49 +346,63 @@ __Final testing of links, responsiveness and Live Website test cases can be foun
 
 The live site is deployed to [Heroku](https://www.heroku.com), a cloud application platform. The deployment procedure for this was as follows:
 
-1. In the IDE CLI make a requirements file containing all installed dependencies using the following command:
+1. The repository for the site was generated based on the [Code Institute Full Template](https://github.com/Code-Institute-Org/gitpod-full-template).
+
+2. The environmental variables for this Flask project were saved in an env.py file. A reference to the env.py is contained in the .gitignore file, which means it does not get pushed to the Github repository.
+
+3. The entries for the env.py file are:
+
+    - import os
+    - ("IP", "0.0.0.0")
+    - ("PORT", "5000")
+    - ("SECRET_KEY", "\<secret key\>")
+    - ("API_KEY", "\<api access key\>")
+    - ("MONGO_URI", "\<mongodb uri\>")
+    - ("MONGO_DBNAME", "movie_review")
+
+4. In the IDE CLI make a requirements file containing all installed dependencies using the following command:
     - pip3 freeze --local > requirements.txt
 
-2. Again in the IDE CLI make a Procfile using command:
+5. Again in the IDE CLI make a Procfile using command:
     - echo web: python app.py > Procfile
 
-3. Debug must be set to False for production.
+6. Debug must be set to False for production.
 
-4. Make a Heroku account and create a new App.
+7. Make a [Heroku](https://www.heroku.com) account and create a new App.
 
-![CreateNewApp][5]
+    ![CreateNewApp][5]
 
-[5]: ./documentation/images_for_readme/create-new-app.jpg "Create New App"
+    [5]: ./documentation/images_for_readme/create-new-app.jpg "Create New App"
 
-5. Give it a name and choose the appropriate region.
+8. Give it a name and choose the appropriate region.
 
-![NameApp][6]
+    ![NameApp][6]
 
-[6]: ./documentation/images_for_readme/name-app.jpg "Name New App"
+    [6]: ./documentation/images_for_readme/name-app.jpg "Name New App"
 
-6. Go to settings and click on Reveal Config Vars.
+9. Go to settings and click on Reveal Config Vars.
 
-![Settings][7]
+    ![Settings][7]
 
-[7]: ./documentation/images_for_readme/settings.jpg "Settings"
+    [7]: ./documentation/images_for_readme/settings.jpg "Settings"
 
-7. Enter the environmental variables for the project from the env.py file.
+10. Enter the environmental variables for the project from the env.py file.
 
-![EnvVariables][8]
+    ![EnvVariables][8]
 
-[8]: ./documentation/images_for_readme/env-variables.jpg "Environmental Variables"
+    [8]: ./documentation/images_for_readme/env-variables.jpg "Environmental Variables"
 
-8. Then select Deploy and click connect to Github. Type the repository name in the search box and press search. Just below that, this should find the repository. Click Connect. Heroku is now connected to the Github repository.
+11. Then select Deploy and click connect to Github. Type the repository name in the search box and press search. Just below that, this should find the repository. Click Connect. Heroku is now connected to the Github repository.
 
-![ConnectGithub][9]
+    ![ConnectGithub][9]
 
-[9]: ./documentation/images_for_readme/connect-github.jpg "Connect Github"
+    [9]: ./documentation/images_for_readme/connect-github.jpg "Connect Github"
 
-9. Finally select the correct branch (in this case Master) and click on Deploy Branch. Automatic or manual deployment can be used as preferred. The message "Your app was successfully deployed." should appear. Click View to view the now deployed app.
+12. Finally select the correct branch (in this case Master) and click on Deploy Branch. Automatic or manual deployment can be used as preferred. The message "Your app was successfully deployed." should appear. Click View to view the now deployed app.
 
-![DeployBranch][10]
+    ![DeployBranch][10]
 
-[10]: ./documentation/images_for_readme/deploy-branch.jpg "Deploy Branch"
+    [10]: ./documentation/images_for_readme/deploy-branch.jpg "Deploy Branch"
 
 ---
 
@@ -398,6 +414,8 @@ The live site is deployed to [Heroku](https://www.heroku.com), a cloud applicati
 
 - Free background image supplied from pixabay.com and are free to use without attribution.
 
+- In future it seems that it would be better to use this method shown [in the Flask documentation](https://flask.palletsprojects.com/en/1.1.x/patterns/packages/) or Flask Blueprints to allow this project to scale up with more features.
+
 - My Mentor for their time and advice.
 
 - Friends and family who tested the site.
@@ -408,3 +426,4 @@ The live site is deployed to [Heroku](https://www.heroku.com), a cloud applicati
 
 - This website is for educational purposes only.
 
+---
