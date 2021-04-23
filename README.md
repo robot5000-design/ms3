@@ -414,7 +414,7 @@ The live site is deployed to [Heroku](https://www.heroku.com), a cloud applicati
 
 - Free background image supplied from pixabay.com and are free to use without attribution.
 
-- In future it seems that it would be better to use this method shown [in the Flask documentation](https://flask.palletsprojects.com/en/1.1.x/patterns/packages/) or Flask Blueprints to allow this project to scale up with more features.
+- In future it seems that it would be advantageous to use this method shown [in the Flask documentation](https://flask.palletsprojects.com/en/1.1.x/patterns/packages/) or Flask Blueprints to allow this project to scale up with more features.
 
 - My Mentor for their time and advice.
 

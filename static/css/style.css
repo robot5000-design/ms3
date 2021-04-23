@@ -327,12 +327,23 @@ h2,
 
 .carousel-review img {
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 body .carousel-control-prev-icon,
 body .carousel-control-next-icon {
   background-color: #ff0000b2;
+  height: 30%;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+  width: auto;
+  height: 93%;
+}
+
+.carousel-control-next {
+  right: 3px;
 }
 
 /*--------------------------------------------------------Modal */
