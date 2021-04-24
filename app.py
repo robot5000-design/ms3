@@ -19,7 +19,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from helper_functions import (
     block_users, unblock_users, validate_choice,
     add_remove_genre, insert_new_movie, update_overall_rating,
-    get_choice_detail, api_request)
+    get_choice_detail, api_request, get_most_likes, get_review_count)
 from constants import CSP, TMDB_URLS
 if os.path.exists("env.py"):
     import env
@@ -69,10 +69,14 @@ def index():
         return api_request(page=1)
     media_detail = list(mongo.db.media_details.find().sort(
         "last_review_date", -1).limit(12))
+    most_likes = get_most_likes()
+    most_reviews = get_review_count()
     if media_detail:
         tmdb_poster_url = TMDB_URLS["tmdb_poster_url"]
         return render_template("index.html", media_detail=media_detail,
-                               tmdb_poster_url=tmdb_poster_url)
+                               tmdb_poster_url=tmdb_poster_url,
+                               most_likes=most_likes,
+                               most_reviews=most_reviews)
     return render_template("index.html")
 
 
@@ -719,27 +723,11 @@ def admin_controls():
         if "submit-form-4" in request.form:
             unblock_users()
     if check_user_permission() and session["user"] == "admin":
-        number_users = mongo.db.users.count()
-        number_movies = mongo.db.media_details.count()
-        number_reviews = mongo.db.reviews.count()
-        most_likes = list(mongo.db.reviews.aggregate([
-            {
-                "$addFields": {
-                    "sum_likes": {"$size": {"$ifNull": ["$likes", []]}}}
-            },
-            {
-                "$sort": {"sum_likes": -1}
-            },
-            {
-                "$limit": 5
-            }
-        ]))
-        # find media_type for the top 5 most liked reviews
-        for review in most_likes:
-            tmdb_id = review["tmdb_id"]
-            media_detail = mongo.db.media_details.find_one(
-                {"tmdb_id": tmdb_id})
-            review["media_type"] = media_detail["media_type"]
+        number_users = mongo.db.users.count_documents({})
+        number_movies = mongo.db.media_details.count_documents({})
+        number_reviews = mongo.db.reviews.count_documents({})
+        most_likes = get_most_likes()
+        most_reviews = get_review_count()
         genres = mongo.db.genres.find().sort("genre_name", 1)
         user_list = [user["username"] for user in mongo.db.users.find(
             ).sort("username", 1)]
@@ -752,7 +740,8 @@ def admin_controls():
                                number_users=number_users,
                                number_movies=number_movies,
                                number_reviews=number_reviews,
-                               most_likes=most_likes)
+                               most_likes=most_likes,
+                               most_reviews=most_reviews)
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
@@ -983,4 +972,4 @@ def check_user_permission():
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=False)
+            debug=True)

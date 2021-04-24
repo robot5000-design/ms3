@@ -2,8 +2,13 @@
 {% block content %}
 
 <div class="container pt-4 pb-5">
+    <div class="row text-center pb-3">
+        <div class="col">
+            <h1 class="heading">Admin Controls:</h1>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-12 col-lg-6 pb-5">
+        <div class="col-12 col-lg-6 offset-lg-3 pb-5">
             <h3>Website Stats:</h3>
             <ul class="list-group stats-group mt-3">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -20,6 +25,8 @@
                 </li>
             </ul>
         </div>
+    </div>
+    <div class="row">
         <div class="col-12 col-lg-6">
             <h3>Most Popular Reviews:</h3>
             <table class="table table-hover table-secondary table-bordered mt-3 mb-5">
@@ -28,7 +35,7 @@
                         <th scope="col">No.</th>
                         <th scope="col">Username</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Likes</th>
+                        <th scope="col" class="text-center">Likes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,15 +54,85 @@
                                     {{ most_likes[index].original_title }}
                                 </a>
                             </td>
-                            <td>{{ most_likes[index].sum_likes }}</td>
+                            <td class="text-center">{{ most_likes[index].sum_likes }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 col-lg-6">
+            <h3>Review Count:</h3>
+            <table class="table reviews-table table-hover table-secondary table-bordered mt-3 mb-5">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Username</th>
+                        <th scope="col" class="text-center">Review Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index in range(most_reviews | length()) %}
+                        <tr>
+                            <th scope="row">{{ index + 1 }}</th>
+                            <td>
+                                <a class="text-decoration-none"
+                                    href="{{ url_for('my_reviews', user=most_reviews[index]._id, my_reviews_sort='latest', page=0) }}">
+                                    {{ most_reviews[index]._id }}
+                                </a>
+                            </td>
+                            <td class="text-center">{{ most_reviews[index].count }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    <div class="row mb-5">
+        <div class="col-12 col-lg-6 pb-4">
+            <h3>Block User(s):</h3>
+            <form class="" action="{{ url_for('admin_controls') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <select class="form-select select-user mb-2" name="block-selected" size="10"
+                    aria-label="Size 10 Select User" multiple required>
+                    <option value="" disabled>User List:</option>
+                    <option value="">Select None</option>
+                    {% for user in user_list %}
+                        {% if user.lower() != "admin" and user not in blocked_users %}
+                            <option value="{{ user }}">{{ user }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <div class="text-end">
+                    <button type="submit" id="submit-form-3" name="submit-form-3"
+                        class="btn btn-danger confirm-block">
+                        Confirm Block User
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-12 col-lg-6">
+            <h3>Unblock User(s):</h3>
+            <form class="" action="{{ url_for('admin_controls') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <select class="form-select select-user mb-2" name="unblock-selected" size="10"
+                    aria-label="Size 10 Select User" multiple required>
+                    <option value="" disabled>User List:</option>
+                    <option value="">Select None</option>
+                    {% for user in blocked_users %}
+                        <option value="{{ user }}">{{ user }}</option>
+                    {% endfor %}
+                </select>
+                <div class="text-end">
+                    <button type="submit" id="submit-form-4" name="submit-form-4"
+                        class="btn btn-danger confirm-unblock">
+                        Confirm Unblock User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-12 col-lg-6 mb-5">
+        <div class="col-12 col-lg-6 mb-4">
             <h3>Add/Remove Genres:</h3>
             <p>
                 Pick from the list below to remove a genre and/or add a new one in the
@@ -83,44 +160,6 @@
                 <button type="submit" id="submit-form-1" name="submit-form-1"
                     class="btn btn-danger confirm-genre invisible">
                     Confirm Add/Delete Genre
-                </button>
-            </form>
-        </div>
-        <div class="col-12 col-lg-6 mb-5">
-            <h3>Block User(s):</h3>
-            <form class="" action="{{ url_for('admin_controls') }}" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <select class="form-select select-user mb-2" name="block-selected" size="10"
-                    aria-label="Size 10 Select User" multiple required>
-                    <option value="" disabled>User List:</option>
-                    <option value="">Select None</option>
-                    {% for user in user_list %}
-                        {% if user.lower() != "admin" and user not in blocked_users %}
-                            <option value="{{ user }}">{{ user }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <button type="submit" id="submit-form-3" name="submit-form-3"
-                    class="btn btn-danger confirm-block col-6 offset-6">
-                    Confirm Block User
-                </button>
-            </form>
-        </div>
-        <div class="col-12 col-lg-6">
-            <h3>Unblock User(s):</h3>
-            <form class="" action="{{ url_for('admin_controls') }}" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <select class="form-select select-user mb-2" name="unblock-selected" size="10"
-                    aria-label="Size 10 Select User" multiple required>
-                    <option value="" disabled>User List:</option>
-                    <option value="">Select None</option>
-                    {% for user in blocked_users %}
-                        <option value="{{ user }}">{{ user }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit" id="submit-form-4" name="submit-form-4"
-                    class="btn btn-danger confirm-unblock col-6 offset-6">
-                    Confirm Unblock User
                 </button>
             </form>
         </div>

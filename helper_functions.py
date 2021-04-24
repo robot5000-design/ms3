@@ -317,3 +317,55 @@ def unblock_users():
             mongo.db.blocked_users.delete_one(
                 {"username": user})
         flash("User(s) Unblocked")
+
+
+def get_most_likes():
+    """ Gets a list of reviews from mongodb sorted by the most number of likes.
+
+    Inserts the media type (tv or movie) in to the list so detail on the
+    movie/tv can be got.
+
+    Returns:
+        A list of 5 reviews sorted in decending order from the most likes to
+        the least.
+    """
+    most_likes = list(mongo.db.reviews.aggregate([
+            {
+                "$addFields": {
+                    "sum_likes": {"$size": {"$ifNull": ["$likes", []]}}}
+            },
+            {
+                "$sort": {"sum_likes": -1}
+            },
+            {
+                "$limit": 5
+            }
+        ]))
+    # find media_type for the top 5 most liked reviews
+    for review in most_likes:
+        tmdb_id = review["tmdb_id"]
+        media_detail = mongo.db.media_details.find_one(
+            {"tmdb_id": tmdb_id})
+        review["media_type"] = media_detail["media_type"]
+    return most_likes
+
+
+def get_review_count():
+    """ Gets a count from mongodb of the number of reviews by user.
+
+    Returns:
+        A list of 5 users sorted in decending order from the most reviews to
+        the least.
+    """
+    most_reviews = list(mongo.db.reviews.aggregate([
+        {
+            "$group": {"_id": "$created_by", "count": {"$sum": 1}}
+        },
+        {
+            "$sort": {"count": -1}
+        },
+        {
+            "$limit": 5
+        }
+    ]))
+    return most_reviews

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-12">
             <div class="row text-center py-4">
@@ -10,7 +10,7 @@
             <!-- Search within movie list -->
             <div class="row pb-2">
                 <div class="col-12 col-sm-10 col-lg-8 mx-auto">
-                    <form action="{{ url_for('search_movies') }}" method="post" class="" id="search-api">
+                    <form action="{{ url_for('search_movies') }}" method="post" class="api-search-form" id="search-api">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" id="csrf_token" />
                         <div class="row mb-3">
                             <div class="">

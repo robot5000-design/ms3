@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container-fluid">
+<div class="container-fluid pb-3">
     <div class="row text-center py-4">
         <div class="col">
             <h1 class="heading">Search for something to review...</h1>
@@ -10,7 +10,7 @@
     <!-- Search within movie list -->
     <div class="row pb-5">
         <div class="col-12 col-sm-10 col-lg-8 mx-auto">
-            <form action="{{ url_for('search_movies') }}" method="post" class="" id="search-api">
+            <form action="{{ url_for('search_movies') }}" method="post" class="api-search-form" id="search-api">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <div class="row mb-3">
                     <div class="col">
@@ -319,6 +319,67 @@
                         </div>                       
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <h3>Most Popular Reviews:</h3>
+                <table class="table table-hover table-secondary table-bordered mt-3 mb-5">
+                    <thead>
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Title</th>
+                            <th scope="col" class="text-center">Likes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index in range(most_likes | length()) %}
+                            <tr>
+                                <th scope="row">{{ index + 1 }}</th>
+                                <td>
+                                    <a class="text-decoration-none"
+                                        href="{{ url_for('my_reviews', user=most_likes[index].created_by, my_reviews_sort='latest', page=0) }}">
+                                        {{ most_likes[index].created_by }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="text-decoration-none"
+                                        href="{{ url_for('review_detail', tmdb_id=most_likes[index].tmdb_id, media_type=most_likes[index].media_type, review_detail_sort='latest', page=0) }}">
+                                        {{ most_likes[index].original_title }}
+                                    </a>
+                                </td>
+                                <td class="text-center">{{ most_likes[index].sum_likes }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 col-lg-6">
+                <h3>Review Count:</h3>
+                <table class="table reviews-table table-hover table-secondary table-bordered mt-3 mb-5">
+                    <thead>
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Username</th>
+                            <th scope="col" class="text-center">Review Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index in range(most_reviews | length()) %}
+                            <tr>
+                                <th scope="row">{{ index + 1 }}</th>
+                                <td>
+                                    <a class="text-decoration-none"
+                                        href="{{ url_for('my_reviews', user=most_reviews[index]._id, my_reviews_sort='latest', page=0) }}">
+                                        {{ most_reviews[index]._id }}
+                                    </a>
+                                </td>
+                                <td class="text-center">{{ most_reviews[index].count }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     {% else %}

@@ -37,6 +37,10 @@ form .form-control,
   background-color: #eee9e1;
 }
 
+form {
+  max-width: 800px;
+}
+
 .form-text {
   color: #8d949b;
 }
@@ -162,11 +166,16 @@ h2,
   font-size: 3.5vw;
 }
 
+.confirm-block,
+.confirm-unblock {
+  width: 207px;
+}
+
 /*--------------------------------------------------------API Search Form */
 
 .api-search-form {
   color: #eee9e1;
-  max-width: 80vw;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -275,6 +284,10 @@ h2,
 
 .review-links i:hover {
   color: #dd5608;
+}
+
+.review-wrapper {
+  max-width: 1000px;
 }
 
 /*--------------------------------------------------------Register / Contact */

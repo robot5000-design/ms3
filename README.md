@@ -8,7 +8,7 @@
 
 ---
 
-The brief for this project was to build a full-stack website with which users can interact with their own data as well as other users data. Rush Reviews is a movie and tv series review site. The back-end is built using the Flask micro-framework with Jinja templating. A non-relational database MongoDB is used, providing full CRUD operations for users. For the front-end, the Bootstrap 5 framework is used to aid responsiveness and styling. In addition, the site makes use of the TMDB API to allow users to search for movies and ideas of what they would like to review. The design is based on user experience principles. Clean coding and a responsive mobile first method was employed. The purpose of this website is to provide users with:
+The brief for this project was to build a full-stack website with which users can interact with their own data as well as other user's data. Rush Reviews is a movie and tv series review site. The back-end is built using the Flask micro-framework with Jinja templating. A non-relational database MongoDB is used, providing full CRUD operations for users. For the front-end, the Bootstrap 5 framework is used to aid responsiveness and styling. In addition, the site makes use of the TMDB API to allow users to search for movies and ideas of what they would like to review. The design is based on user experience principles. Clean coding and a responsive mobile first method were employed. The purpose of this website is to provide users with:
 
 - an easy and fun to use movie and tv series reviews website.
 - a secure user experiance, even though no user personal data is saved.
@@ -82,7 +82,7 @@ As a user:
 - I want the site to look visually appealing.
 - I want the site navigation between sections to be easy.
 - I want be able to be able to read, search and sort reviews by all users.
-- I want to be able to be able to read a specific user reviews.
+- I want to be able to read a specific users reviews.
 - I want to be able to 'like' other users reviews to show appreciation.
 - I want to be able to leave reviews myself and be able to edit, or delete those reviews.
 - I want to be able to rate movies.
@@ -212,7 +212,7 @@ Used to display error messages such as 404 page not found or 500 internal server
 
 _Other features of the backend of the site:_
 
-__Project File Structure__: The project is structured and folders named as per the Flask documentation. The HTML templates are in a templates folder, styling and javascript are in a static folder. The application backend python code is in 3 files; app.py is the main application, contant variables are in constants.py and helper functions for the main application are in the helper_functions.py file.
+__Project File Structure__: The project is structured and folders named as per the Flask documentation. The HTML templates are in a templates folder, styling and javascript are in a static folder. The application backend python code is split into 3 files; app.py is the main application, constant variables are in constants.py and helper functions for the main application are in the helper_functions.py file.
 
 __Defensive Programming__: As mentioned previously defensive programming was a key consideration. KeyError's, ZeroDivisionError's, IndexError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all considered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message and if blocked users try to do anything they will be kicked out.
 
