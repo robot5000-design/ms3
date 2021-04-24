@@ -345,6 +345,10 @@ was reached. There are no known exisiting issues with the final deployed version
 
     3. Check the navbar submenu admin controls links to the admin controls page. __PASS__
 
+    4. Login as a standard user and verify admin controls menu option is not available. __PASS__
+
+    5. Logout and verify extra menu options for a logged in user are not available. __PASS__
+
 - TC04
 
     Description:
@@ -358,6 +362,8 @@ was reached. There are no known exisiting issues with the final deployed version
     2. Check that all carousel sizes slide automatically. There are 4 sizes at 3 breakpoints, medium, large and extra-large. One image at screen size smaller than medium, two images at screen size smaller than large, three images at screen size smaller than extra-large and four images at screen size greater than extra-large. __PASS__
 
     3. Check that carousel images link to the correct movie at each carousel size. __PASS__
+
+    4. Check links in the tables go to the correct users and reviews. __PASS__
 
 - TC05
 
