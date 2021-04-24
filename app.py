@@ -140,15 +140,15 @@ def search_reviews(query, browse_reviews_sort, page):
         if query:
             search_term = {"$text": {"$search": query}}
         else:
-            search_term = None
+            search_term = {}
             query = ""
     else:
         if query == "all":
-            search_term = None
+            search_term = {}
             query = ""
         else:
             search_term = {"$text": {"$search": query}}
-    review_count = mongo.db.media_details.find(search_term).count()
+    review_count = mongo.db.media_details.count_documents(search_term)
     total_pages = math.ceil(review_count / 12)
     if browse_reviews_sort == "rating":
         media_detail = list(mongo.db.media_details.find(search_term).sort(
@@ -224,7 +224,7 @@ def my_reviews(user, my_reviews_sort, page):
         movie_id_list = []
         for review in my_reviews_search:
             movie_id_list.append(review["tmdb_id"])
-        review_count = mongo.db.reviews.find({"created_by": user}).count()
+        review_count = mongo.db.reviews.count_documents({"created_by": user})
         total_pages = math.ceil(review_count / 12)
         # pick out the movies details that we need
         media_detail = []
@@ -491,7 +491,7 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
             }
         ]))
     if reviews:
-        review_count = mongo.db.reviews.find({"tmdb_id": tmdb_id}).count()
+        review_count = mongo.db.reviews.count_documents({"tmdb_id": tmdb_id})
         total_pages = math.ceil(review_count / 6)
         try:
             media_detail = mongo.db.media_details.find_one(
@@ -913,7 +913,7 @@ def logout():
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
-
+'''
 @app.errorhandler(404)
 def page_not_found(error):
     """ Handles a 404 page not found error
@@ -938,7 +938,7 @@ def all_other_errors(error):
         error = "System Error: Problem connecting with TMDB API."
     else:
         error = f"System Error: {error}"
-    return render_template("error.html", error=error)
+    return render_template("error.html", error=error)'''
 
 
 @app.errorhandler(CSRFError)
