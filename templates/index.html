@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container-fluid pb-3">
+<div class="container-fluid pb-5">
     <div class="row text-center py-4">
         <div class="col">
             <h1 class="heading">Search for something to review...</h1>
@@ -322,7 +322,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-md-10 offset-md-1 col-lg-7 offset-lg-0">
                 <h3>Most Popular Reviews:</h3>
                 <table class="table table-hover table-secondary table-bordered mt-3 mb-5">
                     <thead>
@@ -340,7 +340,7 @@
                                 <td>
                                     <a class="text-decoration-none"
                                         href="{{ url_for('my_reviews', user=most_likes[index].created_by, my_reviews_sort='latest', page=0) }}">
-                                        {{ most_likes[index].created_by }}
+                                        {{ most_likes[index].created_by.title() }}
                                     </a>
                                 </td>
                                 <td>
@@ -355,7 +355,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-md-10 offset-md-1 col-lg-5 offset-lg-0">
                 <h3>Review Count:</h3>
                 <table class="table reviews-table table-hover table-secondary table-bordered mt-3 mb-5">
                     <thead>
@@ -372,7 +372,7 @@
                                 <td>
                                     <a class="text-decoration-none"
                                         href="{{ url_for('my_reviews', user=most_reviews[index]._id, my_reviews_sort='latest', page=0) }}">
-                                        {{ most_reviews[index]._id }}
+                                        {{ most_reviews[index]._id.title() }}
                                     </a>
                                 </td>
                                 <td class="text-center">{{ most_reviews[index].count }}</td>

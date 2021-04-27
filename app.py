@@ -19,7 +19,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from helper_functions import (
     block_users, unblock_users, validate_choice,
     add_remove_genre, insert_new_movie, update_overall_rating,
-    get_choice_detail, api_request, get_most_likes, get_review_count)
+    get_choice_detail, api_request, get_most_likes, get_review_count,
+    reviews_sorted_by_likes)
 from constants import CSP, TMDB_URLS
 if os.path.exists("env.py"):
     import env
@@ -468,28 +469,7 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
             {"tmdb_id": tmdb_id}).sort("review_date", -1).skip(
                 page * 6).limit(6))
     else:
-        # The following aggregate is based on information in this thread
-        # https://stackoverflow.com/questions/9040161/mongo-order-by-length-of-array
-        # finds reviews matched by tmdb_id, returns all fields sorted by number
-        # of likes
-        reviews = list(mongo.db.reviews.aggregate([
-            {
-                "$match": {"tmdb_id": tmdb_id}
-            },
-            {
-                "$addFields": {
-                    "sum_likes": {"$size": {"$ifNull": ["$likes", []]}}}
-            },
-            {
-                "$sort": {"sum_likes": -1}
-            },
-            {
-                "$skip": page * 6
-            },
-            {
-                "$limit": 6
-            }
-        ]))
+        reviews = reviews_sorted_by_likes(tmdb_id, page)
     if reviews:
         review_count = mongo.db.reviews.count_documents({"tmdb_id": tmdb_id})
         total_pages = math.ceil(review_count / 6)

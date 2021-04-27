@@ -61,6 +61,10 @@ function handleMailResponse(responseObject, message) {
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
+                } else {
+                    addLoadingSpinner(".change-pass-btn");
+                    addLoadingSpinner(".login-btn");
+                    addLoadingSpinner("#register");
                 }
                 form.classList.add('was-validated');
             }, false);
@@ -135,7 +139,7 @@ $("#browse-reviews-form").on('submit', function () {
     addLoadingSpinner(".filter-reviews");
 });
 
-// Calls the addLoadingSpinner function when a fliter search is submitted
+// Calls the c when a fliter search is submitted
 // on the my_reviews page
 $("#user-reviews-form").on('submit', function () {
     addLoadingSpinner(".filter-reviews");
@@ -143,6 +147,12 @@ $("#user-reviews-form").on('submit', function () {
 
 // Call the goBack function which goes back to the previous page in history
 $(".go-back").click(goBack);
+
+// Calls the addLoadingSpinner function when the confirm-delete button
+// or all-reviews-btn or review-this button are clicked
+$(".confirm-delete, .all-reviews-btn, .review-this").click(function() {
+    addLoadingSpinner(this);
+});
 
 // Handles modal for confirming deletion of individual reviews
 // adapted from bootstrap docs

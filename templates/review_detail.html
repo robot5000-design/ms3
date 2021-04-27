@@ -176,7 +176,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <span><a href="{{ url_for('delete_all', tmdb_id=media_detail.tmdb_id) }}" class="btn btn-danger">Confirm</a></span>
+                <span><a href="{{ url_for('delete_all', tmdb_id=media_detail.tmdb_id) }}" class="btn btn-danger confirm-delete">Confirm</a></span>
             </div>
         </div>
     </div>
@@ -197,7 +197,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <span>
                     <a href="#" id="reviewConfirmDelete"
-                    class="btn btn-danger">Confirm</a>
+                    class="btn btn-danger confirm-delete">Confirm</a>
                 </span>
             </div>
         </div>

@@ -1,13 +1,17 @@
 '''Helper functions for the main application.
 
-api_request: searches and renders results from the TMDB API
-get_choice_detail: gets media details from the TMDB API
-insert_new_movie: inserts a new movie or series to mongodb collection
-update_overall_rating: adjusts the overall rating after a review is edited
-validate_choice: validates data returned from the TMDB API
-add_remove_genre: used by admin account to add or remove a genre
-block_users: used by admin account to block a user account
-unblock_users: used by admin account to unblock a user account
+api_request: searches and renders results from the TMDB API.
+get_choice_detail: gets media details from the TMDB API.
+insert_new_movie: inserts a new movie or series to mongodb collection.
+update_overall_rating: adjusts the overall rating after a review is edited.
+validate_choice: validates data returned from the TMDB API.
+add_remove_genre: used by admin account to add or remove a genre.
+block_users: used by admin account to block a user account.
+unblock_users: used by admin account to unblock a user account.
+get_most_likes: used to get and sort reviews based on the number of likes.
+get_review_count: used to count the total number of reviews of a user.
+reviews_sorted_by_likes: used to get and sort reviews based on the number
+    of likes, for the review_detail page.
 '''
 import os
 import datetime
@@ -326,7 +330,7 @@ def get_most_likes():
     movie/tv can be got.
 
     Returns:
-        A list of 5 reviews sorted in decending order from the most likes to
+        A list of 5 reviews sorted in descending order from the most likes to
         the least.
     """
     most_likes = list(mongo.db.reviews.aggregate([
@@ -354,7 +358,7 @@ def get_review_count():
     """ Gets a count from mongodb of the number of reviews by user.
 
     Returns:
-        A list of 5 users sorted in decending order from the most reviews to
+        A list of 5 users sorted in descending order from the most reviews to
         the least.
     """
     most_reviews = list(mongo.db.reviews.aggregate([
@@ -369,3 +373,36 @@ def get_review_count():
         }
     ]))
     return most_reviews
+
+
+def reviews_sorted_by_likes(tmdb_id, page):
+    """ Gets reviews sorted by the number of likes for the review detail page
+
+    Finds reviews matched by tmdb_id, returns all fields sorted by number
+    of likes. Reviews are paginated 6 reviews at a time.
+
+    Returns:
+        A paginated list of 6 reviews sorted by the number of likes descending.
+    """
+    # The following aggregate is based on information in this thread
+    # https://stackoverflow.com/questions/9040161/mongo-order-by-length-of-array
+
+    reviews = list(mongo.db.reviews.aggregate([
+        {
+            "$match": {"tmdb_id": tmdb_id}
+        },
+        {
+            "$addFields": {
+                "sum_likes": {"$size": {"$ifNull": ["$likes", []]}}}
+        },
+        {
+            "$sort": {"sum_likes": -1}
+        },
+        {
+            "$skip": page * 6
+        },
+        {
+            "$limit": 6
+        }
+    ]))
+    return reviews

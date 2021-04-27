@@ -69,7 +69,6 @@ h2,
 }
 
 .call-delete,
-.confirm-delete,
 .submit-edit,
 .delete-genre,
 .confirm-genre,
@@ -82,11 +81,21 @@ h2,
 }
 
 .call-delete,
-.confirm-delete,
 .submit-edit,
 .edit-review-btn,
-.all-reviews-btn {
+.all-reviews-btn,
+.filter-reviews {
   width: 164.5px;
+}
+
+.login-btn,
+#register,
+.confirm-delete {
+  width: 130px;
+}
+
+.change-pass-btn {
+  width: 180px;
 }
 
 .page-number {
@@ -162,8 +171,10 @@ h2,
   font-size: 0.9em;
 }
 
-.table {
+.table,
+.table-secondary {
   font-size: 3.5vw;
+  min-height: 80%;
 }
 
 .confirm-block,
