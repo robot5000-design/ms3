@@ -68,39 +68,51 @@ h2,
   line-height: 1.6em;
 }
 
+.page-number {
+  color: #8b8989;
+  text-align: center;
+}
+
+.input-group:not(.has-validation)
+  > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+  border-radius: 0.25rem;
+}
+
+/*--------------Buttons------------*/
 .call-delete,
 .submit-edit,
 .delete-genre,
 .confirm-genre,
 .confirm-block,
 .confirm-unblock,
-.edit-review-btn,
 .get-reviews-btn,
-.all-reviews-btn {
+.all-reviews-btn,
+.edit-review,
+.filter-reviews {
   font-size: 0.9em;
 }
 
 .call-delete,
 .submit-edit,
-.edit-review-btn,
 .all-reviews-btn,
-.filter-reviews {
+.filter-reviews,
+.edit-review {
   width: 164.5px;
 }
 
+.edit-review-btn {
+  width: 100%;
+  font-size: 3.5vw;
+}
+
 .login-btn,
-#register,
+.register,
 .confirm-delete {
   width: 130px;
 }
 
 .change-pass-btn {
   width: 180px;
-}
-
-.page-number {
-  color: #8b8989;
-  text-align: center;
 }
 
 .previous-button,
@@ -112,11 +124,6 @@ h2,
 
 .btn-primary {
   background-color: #316dc6;
-}
-
-.input-group:not(.has-validation)
-  > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
-  border-radius: 0.25rem;
 }
 
 /*--------------------------------------------------------Background Images */
@@ -432,6 +439,13 @@ body .carousel-control-next-icon {
 @media screen and (min-width: 350px) {
   .table {
     font-size: 0.9em;
+  }
+  .edit-review-btn {
+    width: 100%;
+    font-size: .9em;
+  }
+  .filter-reviews {
+    font-size: 1em;
   }
 }
 

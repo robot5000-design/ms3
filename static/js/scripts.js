@@ -64,7 +64,7 @@ function handleMailResponse(responseObject, message) {
                 } else {
                     addLoadingSpinner(".change-pass-btn");
                     addLoadingSpinner(".login-btn");
-                    addLoadingSpinner("#register");
+                    addLoadingSpinner(".register");
                 }
                 form.classList.add('was-validated');
             }, false);
@@ -149,8 +149,8 @@ $("#user-reviews-form").on('submit', function () {
 $(".go-back").click(goBack);
 
 // Calls the addLoadingSpinner function when the confirm-delete button
-// or all-reviews-btn or review-this button are clicked
-$(".confirm-delete, .all-reviews-btn, .review-this").click(function() {
+// or all-reviews-btn or review-this  or edit-review buttons are clicked
+$(".confirm-delete, .all-reviews-btn, .review-this, .edit-review").click(function() {
     addLoadingSpinner(this);
 });
 
