@@ -368,11 +368,10 @@ def edit_review(tmdb_id, my_reviews_sort):
         for edit_reviews.html.
         Upon successful completion of a review edit, it returns a redirect to
         my_reviews.
-        If IndexError or invalid user, it returns a redirect to index.
+        If invalid user, it returns a redirect to index.
 
     Raises:
         ZeroDivisionError: If current_number_reviews = 0
-        IndexError: If the movie or tv series cannot be found in mongodb.
     """
     if check_user_permission() == "valid-user":
         if request.method == "POST":
@@ -411,15 +410,9 @@ def edit_review(tmdb_id, my_reviews_sort):
             flash("Your review has been updated")
             return redirect(url_for('my_reviews', user=session['user'],
                                     my_reviews_sort=my_reviews_sort, page=0))
-        try:
-            media_detail = mongo.db.media_details.find_one(
-                                {"tmdb_id": tmdb_id})
-            review_fields = mongo.db.reviews.find_one(
-                {"tmdb_id": tmdb_id, "created_by": session[
-                    "user"]})
-        except IndexError:
-            flash("That resource does not exist")
-            return redirect(url_for("index"))
+        media_detail = mongo.db.media_details.find_one({"tmdb_id": tmdb_id})
+        review_fields = mongo.db.reviews.find_one(
+            {"tmdb_id": tmdb_id, "created_by": session["user"]})
         if review_fields:
             tmdb_poster_url = TMDB_URLS["tmdb_poster_url"]
             genres = mongo.db.genres.find().sort("genre_name", 1)
@@ -462,9 +455,6 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
         if there are reviews but no movie details in mongodb, this results in
         an index error and returns a redirect to index.
         Otherwise it returns a render of the review_details template.
-
-    Raises:
-        IndexError: If the movie or tv series cannot be found in mongodb.
     """
     if review_detail_sort == "latest":
         reviews = list(mongo.db.reviews.find(
@@ -475,12 +465,8 @@ def review_detail(tmdb_id, media_type, review_detail_sort, page):
     if reviews:
         review_count = mongo.db.reviews.count_documents({"tmdb_id": tmdb_id})
         total_pages = math.ceil(review_count / 6)
-        try:
-            media_detail = mongo.db.media_details.find_one(
-                {"tmdb_id": tmdb_id})
-        except IndexError:
-            flash("That resource does not exist")
-            return redirect(url_for("index"))
+        media_detail = mongo.db.media_details.find_one(
+            {"tmdb_id": tmdb_id})
         tmdb_poster_url = TMDB_URLS["tmdb_poster_url"]
         if "user" in session:
             already_reviewed = mongo.db.reviews.find_one(
@@ -954,4 +940,4 @@ def check_user_permission():
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=True)
+            debug=False)
