@@ -282,12 +282,13 @@ h2,
   margin: 0 auto;
   border: 3px solid #000;
   border-radius: 5%;
+  background-color: #0000007a;
 }
 
 .index-card {
   height: 100%;
   width: 100%;
-  background-color: #19195879;
+  background-color: #0000007a;
   font-size: 0.8em;
   color: #ffa30f;
 }
@@ -353,7 +354,7 @@ h2,
 }
 
 .carousel-inner {
-  background-color: #000000;
+  background-color: #0000007a;
 }
 
 .carousel-review img {

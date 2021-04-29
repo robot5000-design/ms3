@@ -199,7 +199,7 @@ As a user:
 
 - I want a site that is not commonly crashing with errors, or if there is an error it is managed properly.
 
-_These requirements have been met by employing defensive programming. KeyError's, ZeroDivisionError's, IndexError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all catered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message._
+_These requirements have been met by employing defensive programming. KeyError's, ZeroDivisionError's, JSONDecodeError's, ConnectionError's, PyMongoError's and RequestException's are all catered for in the code where they could possibly arise. The check_user_permission function checks if users are valid users and is used throughout the program in other functions. If a user is blocked it logs them out. If a user is valid and logged in, it returns "valid-user" otherwise it returns False. This way no matter what route is typed into the address bar, if a user is not valid this will be handled with an appropriate message._
 
 Example of Invalid User:
 ![InvalidUser][19]
@@ -523,7 +523,7 @@ was reached. There are no known exisiting issues with the final deployed version
 
     3. Type https://rush-reviews-movies-tv.herokuapp.com/login into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
-    4. Type https://rush-reviews-movies-tv.herokuapp.com/register into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+    4. Type https://rush-reviews-movies-tv.herokuapp.com/logout into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
     5. Login. Select a review to Edit/Delete. Then logout. Press the back button on the browser. The page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
@@ -531,7 +531,7 @@ was reached. There are no known exisiting issues with the final deployed version
 
     7. Login. Select Browse Reviews in the navbar and select any review. Examine the reviews on the review detail page and choose one that has not already been 'liked'. Right click and copy link address for the 'like' thumbs-up icon. Logout. Paste the copied url into the browser address bar and press return. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
-    8. Logout, if logged-in. Select Browse Reviews in the navbar and select any review. The url will be something like https://rush-reviews-movies-tv.herokuapp.com/review_detail/299534/movie/popular/0. The number between review detail and movie(or tv) is the tmdb_id. In this example 299534 is the tmdb_id. Record the tmdb_id in the url. Then type https://rush-reviews-movies-tv.herokuapp.com/delete_review/<tmdb_id> with the tmdb_id added to the end. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
+    8. Logout (if logged-in). Select Browse Reviews in the navbar and select any review. The url will be something like https://rush-reviews-movies-tv.herokuapp.com/review_detail/299534/movie/popular/0. The number between review detail and movie(or tv) is the tmdb_id. In this example 299534 is the tmdb_id. Record the tmdb_id in the url. Then type https://rush-reviews-movies-tv.herokuapp.com/delete_review/<tmdb_id> with the tmdb_id added to the end. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
 - TC15
 
@@ -585,7 +585,7 @@ Other errors or exceptions such as Index, JSON, Connection, Zero Division Except
 
 Any exceptions outside of the scope of those tested, are caught by the Internal Server Error 500 or failing that the catch all, all_other_errors(error) function with decorator @app.errorhandler(Exception). This same function is used to deal with potential Pymongo errors associated with mongodb or request exceptions not caught locally in the code.
 
-A duplicate empty mongodb databse was created and this showed that the carousel on the home page was generating index errors. So some conditional statements and appropriate messages for the user were added. Now minimal non-sliding carousels work while reviews are being added until 12 reviews are completed, then carousels function normally. The mobile size carousel will function correctly for any number of reviews.
+A duplicate empty mongodb database was created and this showed that the carousel on the home page was generating index errors. So some conditional statements and appropriate messages for the user were added. Now minimal non-sliding carousels work while reviews are being added until 12 reviews are completed, then carousels function normally. The mobile size carousel will function correctly for any number of reviews.
 
 Chrome Development Tools Lighthouse suggested that some of the buttons had insufficient contrast on the font color, so this text was modified to be more white. It suggested that autocomplete attributes to help password managers were added to all login, register and change password forms, so they were added. It suggested that a hidden username input be added to the change password form to also help password managers.
 
@@ -642,5 +642,13 @@ Although there are no known outstanding bugs, the main problematic bugs were rep
 8. After TC15-4 it was possible for a user to see the edit review page of another user.
 
     - Now it was not possible to actually edit or delete the review, however as a user experience it could be improved so an adjustment was made to the edit_review function.
+
+9. After TC10 Although unlikely it seems that it would be possible to add likes as is.
+
+    - Put another check in the code to see if the current user is in the likes list for that review.
+
+10. After testing discovered reviews without an image did not display properly on the browse reviews or my reviews pages.
+
+    - These images are saved as None in mongodb so solution was to put a conditional jinja in both templates for if the image is saved as None in mongodb.
 
 ---

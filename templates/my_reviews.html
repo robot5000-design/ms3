@@ -61,16 +61,23 @@
         <div class="row">
             {% for movie in media_detail %}
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-0">
-                    <div class="card index-card edit-review-card">
+                    <div class="card index-card">
                         <div class="row">
                             {% if user == session['user'] %}
-                                <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}"
-                                    class="card-img-top">
-                                    <img src="{{ tmdb_poster_url }}{{ movie['poster_path'] }}" class="card-img-top" alt="{{ movie.original_title }}">
+                                <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}">
+                                    {% if movie.poster_path == None %}
+                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top" alt="no image available">
+                                    {% else %}
+                                        <img src="{{ tmdb_poster_url }}{{ movie['poster_path'] }}" class="card-img-top" alt="{{ movie.original_title }}">
+                                    {% endif %}
                                 </a>
                             {% else %}
                                 <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}">
-                                    <img src="{{ tmdb_poster_url }}{{ movie['poster_path'] }}" class="card-img-top" alt="{{ movie.original_title }}">
+                                    {% if movie.poster_path == None %}
+                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top" alt="no image available">
+                                    {% else %}
+                                        <img src="{{ tmdb_poster_url }}{{ movie['poster_path'] }}" class="card-img-top" alt="{{ movie.original_title }}">
+                                    {% endif %}
                                 </a>
                             {% endif %}
                         </div>
