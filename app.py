@@ -513,9 +513,14 @@ def add_like(object_id, tmdb_id, media_type):
         redirect to index.
     """
     if check_user_permission() == "valid-user":
-        mongo.db.reviews.update_one(
-            {"_id": ObjectId(object_id)},
-            {"$addToSet": {"likes": session["user"]}})
+        already_liked = mongo.db.reviews.find_one(
+            {"_id": ObjectId(object_id), "likes": session["user"]})
+        if not already_liked:
+            mongo.db.reviews.update_one(
+                {"_id": ObjectId(object_id)},
+                {"$addToSet": {"likes": session["user"]}})
+        else:
+            flash("You already Liked this!")
         return redirect(url_for('review_detail', tmdb_id=tmdb_id,
                                 review_detail_sort="popular",
                                 media_type=media_type,
@@ -940,4 +945,4 @@ def check_user_permission():
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=False)
+            debug=True)
