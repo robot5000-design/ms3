@@ -1,5 +1,7 @@
 # Testing Report
 
+_* Note all testing was carried out on the deployed version of the site._
+
 ## 1. Compare User Test Cases
 
 The first part of testing was to confirm that all user stories requirements have been met. There is large crossover between both sets of user stories.
@@ -545,7 +547,7 @@ was reached. There are no known exisiting issues with the final deployed version
 
     3. Type https://rush-reviews-movies-tv.herokuapp.com/register into the browser address bar. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
-    4. Select My Reviews from the navbar sub-menu. Click on a movie to edit/delete. Copy the url address. Logout and log-in as a different user. Then either paste the copied url in the address bar or click the browser back button twice. Page should redirect to index with the flash message 'That resource does not exist'. __PASS__
+    4. Select My Reviews from the navbar sub-menu. Click on a movie to edit/delete. Copy the url address. Logout and log-in as a different user. Then either paste the copied url in the address bar or click the browser back button twice. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
     5. Login. Select Browse Reviews in the navbar and select any review. The url will be something like https://rush-reviews-movies-tv.herokuapp.com/review_detail/299534/movie/popular/0. The number between review detail and movie(or tv) is the tmdb_id. In this example 299534 is the tmdb_id. Record the tmdb_id in the url. Then type https://rush-reviews-movies-tv.herokuapp.com/delete_review/<tmdb_id> with the tmdb_id added to the end. Page should redirect to index with the flash message 'You do not have permission to access the requested resource'. __PASS__
 
@@ -636,5 +638,9 @@ Although there are no known outstanding bugs, the main problematic bugs were rep
 7. Carousel causing index errors when database is empty.
 
     - Solved by using some conditional statements and now displays a message to the user.
+
+8. After TC15-4 it was possible for a user to see the edit review page of another user.
+
+    - Now it was not possible to actually edit or delete the review, however as a user experience it could be improved so an adjustment was made to the edit_review function.
 
 ---

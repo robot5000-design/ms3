@@ -420,13 +420,15 @@ def edit_review(tmdb_id, my_reviews_sort):
         except IndexError:
             flash("That resource does not exist")
             return redirect(url_for("index"))
-        tmdb_poster_url = TMDB_URLS["tmdb_poster_url"]
-        genres = mongo.db.genres.find().sort("genre_name", 1)
-        return render_template("edit_review.html", review_fields=review_fields,
-                               media_detail=media_detail,
-                               tmdb_poster_url=tmdb_poster_url,
-                               genres=genres,
-                               my_reviews_sort=my_reviews_sort)
+        if review_fields:
+            tmdb_poster_url = TMDB_URLS["tmdb_poster_url"]
+            genres = mongo.db.genres.find().sort("genre_name", 1)
+            return render_template("edit_review.html",
+                                   review_fields=review_fields,
+                                   media_detail=media_detail,
+                                   tmdb_poster_url=tmdb_poster_url,
+                                   genres=genres,
+                                   my_reviews_sort=my_reviews_sort)
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
@@ -952,4 +954,4 @@ def check_user_permission():
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
-            debug=False)
+            debug=True)
