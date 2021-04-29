@@ -172,11 +172,11 @@ To combat double entries of reviews in the database by an impatient user pressin
 
 Ratings take account of reviews being adjusted or deleted, something which is easy to overlook.
 
-One of the problems which arose, was that when searching the TMDB API for something new to review or searching browse reviews, when the user selects a movie but then changes their mind and goes back, the browsers in-built functionality requests that the page with the search form is reloaded for resubmission. To get around this, when the search is performed the results are presented after a redirect through another route. Now when the user clicks back, the resubmission is not requested. It makes for a much better user experience. Initially attempted to use an AJAX request through Javascript, but although the AJAX request worked and the data was sent from the frontend to the backend, it did not result in solving the form resubmission issue. So, the 'redirect through another route' method was employed instead.
+One of the problems which arose, was that when searching the TMDB API for something new to review or searching browse reviews, when the user selects a movie but then changes their mind and goes back, the browsers in-built functionality requests that the page with the search form is reloaded for resubmission. To get around this, when the search is performed the results are presented after a redirect through another route. Now when the user clicks back, the resubmission is not requested. It makes for a much better user experience. Initially after some research, attempted to use an AJAX request through Javascript, but although the AJAX request worked and the data was sent from the frontend to the backend, it did not result in solving the form resubmission issue. So, the 'redirect through another route' method was employed instead.
 
 _Landing Page:_
 
-The landing page features a simple design and layout with a large CTA to search for something to review. There's also easy access to all the latest reviews through the multi image carousel which features a different number of images at different breakpoints. To acheive this, four seperate carousels are used. There is little explanation of how to use the site as the developer didn't feel it would add anything and because the site is self explanatory with the branding, in addition to being straightforward to use. The navbar gives access to browse reviews or to login. When the user chooses login, a modal appears and if they don't have an account there is a link to the register page.
+The landing page features a simple design and layout with a large CTA to search for something to review. There's also easy access to all the latest reviews through the multi-image carousel which features a different number of images at different breakpoints. To acheive this, four seperate carousels are used. There is little explanation of how to use the site as the developer didn't feel it would add anything and because the site is self explanatory with the branding, in addition to being straightforward to use. The navbar gives access to browse reviews or to login. When the user chooses login, a modal appears and if they don't have an account there is a link to the register page. In an addition from the original wireframe, below the carousel are a couple of tables showing the top reviews and reviewers. Users can check out other users reviews from here.
 
 _Register, Login and Change Password Forms:_
 
@@ -188,7 +188,7 @@ This searches the TMDB API using a python request. As part of defensive programm
 
 _Browse Reviews/My Reviews:_
 
-These pages are similar in that they allow the user to sort and search reviews. Browse reviews gives access to read reviews. If a user clicks in to to read details they have the option to leave a review. My reviews on the other hand allows the user to click in to review detail but this time to edit or delete their own review. The my reviews page is also used to display other users reviews when selected for viewing. A user can only review a title once. Both browse reviews and my reviews paginate the results, showing 12 titles at a time (which works great for different screen sizes).
+These pages are similar in that they allow the user to sort and search reviews. Browse reviews gives access to read reviews. If a user clicks in to read details, they have the option to leave a review. My reviews on the other hand allows the user to click in to review detail but this time to edit or delete their own review, or click a button to see all reviews. The my reviews page is also used to display any other users reviews when selected for viewing. A user can only review a title once. Both browse reviews and my reviews paginate the results, showing 12 titles at a time (which works and splits great for different screen sizes).
 
 _Review Detail:_
 
@@ -196,7 +196,7 @@ This page allows a user to view details about a movie, such as an image, an over
 
 _New Review/Edit Review:_
 
-This page is only accessible to logged in users. It contains a form which is used by a user to submit a new review or to edit an existing review. The user can give a rating to a movie. Ratings are adjusted if a review is deleted or the score adjusted.
+This page is only accessible to logged in users. It contains a form which is used by a user to submit a new review or to edit an existing review. The user can give a rating to a movie. Ratings are adjusted if a review is deleted or the score adjusted by editing a review.
 
 _Admin Controls:_
 
@@ -222,7 +222,7 @@ __Security Considerations__: Security was considered for the site in a number of
 
 - Mainly, Flask Talisman was used for it's CSP policy, which restricts where the site can load a resource from.
 - It tells the browser to convert all HTTP requests to HTTPS which prevents man-in-the-middle attacks.
-- It also helps to prevent XSS cross-site-scripting attacks. The session cookie is set to secure.
+- It also helps to prevent XSS cross-site-scripting attacks. The session cookie is set to secure and times-out after 60 minutes.
 - Cross-Site Request Forgery (CSRF) attacks are dealt with by CSRFProtect imported from Flask-WTF.csrf. This is used to apply a unique CSRF token to every form on the site.
 - All passwords are hashed using werkzeug.security's generate_password_hash. 
 - Certain sensitive information is saved in an env.py environmental variable file which is included in gitignore and so is not pushed to Github. These include, the secret key used to securely sign the session cookie, the TMDB API password and the MongoDB URI.
