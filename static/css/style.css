@@ -222,6 +222,7 @@ h2,
 .img-thumbnail {
   width: 100%;
   padding: 0;
+  background-color: #0000007a;
 }
 
 .thumbnail-title a {
