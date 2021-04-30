@@ -65,7 +65,7 @@
                                 {% if movie.poster_path == None %}
                                     <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top" alt="no image available">
                                 {% else %}
-                                    <img src="{{ tmdb_poster_url }}{{ movie['poster_path'] }}" class="card-img-top" alt="{{ movie.original_title }}">
+                                    <img src="{{ tmdb_poster_url }}{{ movie.poster_path }}" class="card-img-top" alt="{{ movie.original_title }}">
                                 {% endif %}                            
                             </div>
                             <div class="card-body row align-items-start">
