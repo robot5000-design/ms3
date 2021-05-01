@@ -379,7 +379,7 @@ def edit_review(tmdb_id, my_reviews_sort):
             review_update = {
                 "genre": request.form.get("select-genre"),
                 "review": request.form.get("review-text"),
-                "rating": request.form.get("inlineRadioOptions"),
+                "rating": int(request.form.get("inlineRadioOptions")),
                 "review_date": datetime.datetime.now()
             }
             # adjust the overall rating to take account of edited review
@@ -630,7 +630,7 @@ def new_review(tmdb_id, media_type):
                 "original_title": original_title,
                 "genre": request.form.get("select-genre").title(),
                 "review": request.form.get("review-text"),
-                "rating": request.form.get("inlineRadioOptions"),
+                "rating": int(request.form.get("inlineRadioOptions")),
                 "review_date": datetime.datetime.now(),
                 "created_by": session["user"],
                 "likes": []
