@@ -358,9 +358,24 @@ h2,
   background-color: #0000007a;
 }
 
+.carousel a {
+  font-size: 100%;
+  color: #ffa30f;
+  text-decoration: none;
+  position: relative;
+}
+
 .carousel-review img {
   width: 100%;
-  height: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+.no-image-title {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 2%;
 }
 
 body .carousel-control-prev-icon,

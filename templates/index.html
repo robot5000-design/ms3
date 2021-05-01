@@ -80,11 +80,12 @@
                                 <div class="carousel-inner">
                                     <div class="carousel-item active" data-bs-interval="4000">
                                         {% for index in range(4) %}
-                                            <a class="carousel-review col-3"
+                                            <a class="carousel-review text-center col-3"
                                                 href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                                 {% if media_detail[index].poster_path == None %}
                                                     <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                        class="card-img-top" alt="no image available">
+                                                        class="no-image-icon" alt="no image available">
+                                                    <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                                 {% else %}
                                                     <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                         class="card-img-top" alt="{{ media_detail[index].original_title }}">
@@ -96,11 +97,12 @@
                                         {% for outer_index in range(2) %}
                                             <div class="carousel-item" data-bs-interval="4000">
                                                 {% for index in range(4 + (outer_index * 4), 8 + (outer_index * 4)) %}
-                                                    <a class="carousel-review col-3"
+                                                    <a class="carousel-review text-center col-3"
                                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                                     {% if media_detail[index].poster_path == None %}
                                                         <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                            class="card-img-top" alt="no image available">
+                                                            class="no-image-icon" alt="no image available">
+                                                        <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                                     {% else %}
                                                         <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                             class="card-img-top" alt="{{ media_detail[index].original_title }}">
@@ -148,11 +150,12 @@
                                 <div class="carousel-inner">
                                     <div class="carousel-item active" data-bs-interval="4000">
                                         {% for index in range(3) %}
-                                            <a class="carousel-review col-4"
+                                            <a class="carousel-review text-center col-4"
                                                 href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                                 {% if media_detail[index].poster_path == None %}
                                                     <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                        class="card-img-top" alt="no image available">
+                                                        class="no-image-icon" alt="no image available">
+                                                    <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                                 {% else %}
                                                     <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                         class="card-img-top" alt="{{ media_detail[index].original_title }}">
@@ -164,11 +167,12 @@
                                         {% for outer_index in range(3) %}
                                             <div class="carousel-item" data-bs-interval="4000">
                                                 {% for index in range(3 + (outer_index * 3), 6 + (outer_index * 3)) %}
-                                                    <a class="carousel-review col-4"
+                                                    <a class="carousel-review text-center col-4"
                                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                                     {% if media_detail[index].poster_path == None %}
                                                         <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                            class="card-img-top" alt="no image available">
+                                                            class="no-image-icon" alt="no image available">
+                                                        <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                                     {% else %}
                                                         <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                             class="card-img-top" alt="{{ media_detail[index].original_title }}">
@@ -216,11 +220,12 @@
                                 <div class="carousel-inner">
                                     <div class="carousel-item active" data-bs-interval="4000">
                                         {% for index in range(2) %}
-                                            <a class="carousel-review col-6"
+                                            <a class="carousel-review text-center col-6"
                                                 href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                                 {% if media_detail[index].poster_path == None %}
                                                     <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                        class="card-img-top" alt="no image available">
+                                                        class="no-image-icon" alt="no image available">
+                                                    <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                                 {% else %}
                                                     <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                         class="card-img-top" alt="{{ media_detail[index].original_title }}">
@@ -232,11 +237,12 @@
                                         {% for outer_index in range(5) %}
                                             <div class="carousel-item" data-bs-interval="4000">
                                                 {% for index in range(2 + (outer_index * 2), 4 + (outer_index * 2)) %}
-                                                    <a class="carousel-review col-6"
+                                                    <a class="carousel-review text-center col-6"
                                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                                         {% if media_detail[index].poster_path == None %}
                                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                                class="card-img-top" alt="no image available">
+                                                                class="no-image-icon" alt="no image available">
+                                                            <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                                         {% else %}
                                                             <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                                 class="card-img-top" alt="{{ media_detail[index].original_title }}">
@@ -280,11 +286,12 @@
                             </div>
                             <div class="carousel-inner">
                                 <div class="carousel-item active" data-bs-interval="4000">
-                                    <a class="carousel-review col-12"
+                                    <a class="carousel-review text-center col-12"
                                         href="{{ url_for('review_detail', tmdb_id=media_detail[0].tmdb_id, media_type=media_detail[0].media_type, review_detail_sort='popular', page=0) }}">
                                         {% if media_detail[0].poster_path == None %}
                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                class="card-img-top" alt="no image available">
+                                                class="no-image-icon" alt="no image available">
+                                            <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                         {% else %}
                                             <img src="{{ tmdb_poster_url }}{{ media_detail[0].poster_path }}"
                                                 class="card-img-top" alt="{{ media_detail[0].original_title }}">
@@ -293,11 +300,12 @@
                                 </div>
                                 {% for index in range(1, media_detail | length()) %}
                                     <div class="carousel-item" data-bs-interval="4000">
-                                        <a class="carousel-review col-12"
+                                        <a class="carousel-review text-center col-12"
                                             href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                             {% if media_detail[index].poster_path == None %}
                                                 <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                    class="card-img-top" alt="no image available">
+                                                    class="no-image-icon" alt="no image available">
+                                                <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                             {% else %}
                                                 <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                     class="card-img-top" alt="{{ media_detail[index].original_title }}">
