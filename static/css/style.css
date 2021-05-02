@@ -118,7 +118,7 @@ h2,
 .previous-button,
 .next-button {
   margin-top: 10px;
-  width: 100px;
+  width: 130px;
   font-size: 0.9em;
 }
 
@@ -492,7 +492,6 @@ body .carousel-control-next-icon {
   .previous-button,
   .next-button {
     margin-top: 10px;
-    width: 120px;
     font-size: 1em;
   }
   .img-thumbnail {

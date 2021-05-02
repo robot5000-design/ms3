@@ -149,8 +149,10 @@ $("#user-reviews-form").on('submit', function () {
 $(".go-back").click(goBack);
 
 // Calls the addLoadingSpinner function when the confirm-delete button
-// or all-reviews-btn or review-this  or edit-review buttons are clicked
-$(".confirm-delete, .all-reviews-btn, .review-this, .edit-review").click(function() {
+// or all-reviews-btn or review-this or edit-review or next-button or
+// previous-button buttons are clicked
+$(".confirm-delete, .all-reviews-btn, .review-this, .edit-review,\
+    .next-button, .previous-button").click(function() {
     addLoadingSpinner(this);
 });
 
