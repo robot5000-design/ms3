@@ -222,7 +222,7 @@ __Security Considerations__: Security was considered for the site in a number of
 
 - Mainly, Flask Talisman was used for it's CSP policy, which restricts where the site can load a resource from.
 - It tells the browser to convert all HTTP requests to HTTPS which prevents man-in-the-middle attacks.
-- It also helps to prevent XSS cross-site-scripting attacks. The session cookie is set to secure and times-out after 60 minutes.
+- It also helps to prevent XSS cross-site-scripting attacks. The session cookie is set to secure and times-out after 3 hours.
 - Cross-Site Request Forgery (CSRF) attacks are dealt with by CSRFProtect imported from Flask-WTF.csrf. This is used to apply a unique CSRF token to every form on the site.
 - All passwords are hashed using werkzeug.security's generate_password_hash. 
 - Certain sensitive information is saved in an env.py environmental variable file which is included in gitignore and so is not pushed to Github. These include, the secret key used to securely sign the session cookie, the TMDB API password and the MongoDB URI.

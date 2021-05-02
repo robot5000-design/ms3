@@ -36,8 +36,7 @@ app.config.update(
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax',
-    PERMANENT_SESSION_LIFETIME=3600
-)
+    PERMANENT_SESSION_LIFETIME=10800)
 
 # Applies Talisman CSP protection to the app
 talisman = Talisman(app,
