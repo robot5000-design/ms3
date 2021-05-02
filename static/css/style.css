@@ -509,9 +509,6 @@ body .carousel-control-next-icon {
   .heading {
     font-size: 1.8em;
   }
-}
-
-@media screen and (min-width: 768px) {
   #carousel-12X1 {
     display: none;
   }
@@ -519,6 +516,9 @@ body .carousel-control-next-icon {
     width: 100%;
     display: block;
   }
+}
+
+@media screen and (min-width: 768px) {
   .search-box {
     width: 65%;
   }

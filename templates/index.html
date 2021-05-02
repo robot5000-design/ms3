@@ -78,7 +78,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="carousel-inner">
-                                    <div class="carousel-item active" data-bs-interval="4000">
+                                    <div class="carousel-item active" data-bs-interval="8000">
                                         {% for index in range(4) %}
                                             <a class="carousel-review text-center col-3"
                                                 href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -95,7 +95,7 @@
                                     </div>
                                     {% if media_detail | length() > 11 %}
                                         {% for outer_index in range(2) %}
-                                            <div class="carousel-item" data-bs-interval="4000">
+                                            <div class="carousel-item" data-bs-interval="8000">
                                                 {% for index in range(4 + (outer_index * 4), 8 + (outer_index * 4)) %}
                                                     <a class="carousel-review text-center col-3"
                                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -148,7 +148,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="carousel-inner">
-                                    <div class="carousel-item active" data-bs-interval="4000">
+                                    <div class="carousel-item active" data-bs-interval="7000">
                                         {% for index in range(3) %}
                                             <a class="carousel-review text-center col-4"
                                                 href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -165,7 +165,7 @@
                                     </div>
                                     {% if media_detail | length() > 11 %}
                                         {% for outer_index in range(3) %}
-                                            <div class="carousel-item" data-bs-interval="4000">
+                                            <div class="carousel-item" data-bs-interval="7000">
                                                 {% for index in range(3 + (outer_index * 3), 6 + (outer_index * 3)) %}
                                                     <a class="carousel-review text-center col-4"
                                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -218,7 +218,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="carousel-inner">
-                                    <div class="carousel-item active" data-bs-interval="4000">
+                                    <div class="carousel-item active" data-bs-interval="6000">
                                         {% for index in range(2) %}
                                             <a class="carousel-review text-center col-6"
                                                 href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -235,7 +235,7 @@
                                     </div>
                                     {% if media_detail | length() > 11 %}
                                         {% for outer_index in range(5) %}
-                                            <div class="carousel-item" data-bs-interval="4000">
+                                            <div class="carousel-item" data-bs-interval="6000">
                                                 {% for index in range(2 + (outer_index * 2), 4 + (outer_index * 2)) %}
                                                     <a class="carousel-review text-center col-6"
                                                         href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
@@ -285,7 +285,7 @@
                                 {% endfor %}
                             </div>
                             <div class="carousel-inner">
-                                <div class="carousel-item active" data-bs-interval="4000">
+                                <div class="carousel-item active" data-bs-interval="5000">
                                     <a class="carousel-review text-center col-12"
                                         href="{{ url_for('review_detail', tmdb_id=media_detail[0].tmdb_id, media_type=media_detail[0].media_type, review_detail_sort='popular', page=0) }}">
                                         {% if media_detail[0].poster_path == None %}
@@ -299,7 +299,7 @@
                                     </a>
                                 </div>
                                 {% for index in range(1, media_detail | length()) %}
-                                    <div class="carousel-item" data-bs-interval="4000">
+                                    <div class="carousel-item" data-bs-interval="5000">
                                         <a class="carousel-review text-center col-12"
                                             href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                             {% if media_detail[index].poster_path == None %}
