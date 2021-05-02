@@ -126,6 +126,11 @@ h2,
   background-color: #316dc6;
 }
 
+.go-back {
+  width: 48px;
+  height: 48px;
+}
+
 /*--------------------------------------------------------Background Images */
 
 .backing-image {
@@ -492,7 +497,6 @@ body .carousel-control-next-icon {
   .previous-button,
   .next-button {
     margin-top: 10px;
-    font-size: 1em;
   }
   .img-thumbnail {
     margin-right: 20px;
