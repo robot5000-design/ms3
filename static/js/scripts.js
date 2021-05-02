@@ -165,7 +165,7 @@ $(".index-card").on('click', function () {
 
 // Add a spinner to the back button
 $(".go-back").on('click', function () {
-    $(this).html("<span class='spinner-border text-warning' role='status' aria-hidden='true'></span>");
+    $(this).html("<span class='spinner-border spinner-border-sm text-warning' role='status' aria-hidden='true'></span>");
     $(this).prop("disabled", true);
 });
 

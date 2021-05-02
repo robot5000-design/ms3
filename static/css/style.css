@@ -126,6 +126,10 @@ h2,
   background-color: #316dc6;
 }
 
+.go-back .spinner-border {
+  margin: .3em;
+}
+
 /*--------------------------------------------------------Background Images */
 
 .backing-image {
