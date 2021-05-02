@@ -160,13 +160,11 @@ $(".confirm-delete, .all-reviews-btn, .review-this, .edit-review,\
 // reviews or my_reviews pages
 $(".index-card").on('click', function () {
     $(this).find(".card-title").html("<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Loading...");
-    $(this).prop("disabled", true);
 });
 
 // Add a spinner to the back button
 $(".go-back").on('click', function () {
     $(this).html("<span class='spinner-border spinner-border-sm text-warning' role='status' aria-hidden='true'></span>");
-    $(this).prop("disabled", true);
 });
 
 // Handles modal for confirming deletion of individual reviews

@@ -314,6 +314,14 @@ h2,
   max-width: 1000px;
 }
 
+.review-card-title {
+  min-height: 40px;
+}
+
+.review-images-row {
+  height: 80%;
+}
+
 /*--------------------------------------------------------Register / Contact */
 
 .register-wrapper,

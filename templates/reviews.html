@@ -61,7 +61,7 @@
                     <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}"
                         class="text-decoration-none">
                         <div class="card index-card">
-                            <div class="row">                            
+                            <div class="row review-images-row">                            
                                 {% if movie.poster_path == None %}
                                     <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top" alt="no image available">
                                 {% else %}
@@ -70,7 +70,7 @@
                             </div>
                             <div class="card-body row align-items-start">
                                 <div class="col-12 text-center">
-                                    <div class="card-title">{{ movie.original_title }}</div>
+                                    <div class="card-title review-card-title">{{ movie.original_title }}</div>
                                 </div>                            
                             </div>
                         </div>
