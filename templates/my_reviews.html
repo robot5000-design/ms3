@@ -61,40 +61,48 @@
         <div class="row">
             {% for movie in media_detail %}
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 p-0">
-                    <div class="card index-card">
-                        <div class="row review-images-row">
-                            {% if user == session['user'] %}
-                                <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}">
+                    {% if user == session['user'] %}
+                        <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}"
+                            class="text-decoration-none">
+                            <div class="card index-card text-decoration-none">
+                                <div class="row review-images-row">
                                     {% if movie.poster_path == None %}
                                         <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top" alt="no image available">
                                     {% else %}
                                         <img src="{{ tmdb_poster_url }}{{ movie.poster_path }}" class="card-img-top" alt="{{ movie.original_title }}">
                                     {% endif %}
-                                </a>
-                            {% else %}
-                                <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}">
+                                </div>
+                                <div class="card-body row align-items-end">
+                                    <div class="col-12 text-center">
+                                        <div class="card-title review-card-title">{{ movie.original_title }}</div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <div class="btn btn-primary edit-review-btn">Edit/Delete
+                                            Review
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}"
+                            class="text-decoration-none">
+                            <div class="card index-card">
+                                <div class="row review-images-row">
                                     {% if movie.poster_path == None %}
                                         <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top" alt="no image available">
                                     {% else %}
                                         <img src="{{ tmdb_poster_url }}{{ movie.poster_path }}" class="card-img-top" alt="{{ movie.original_title }}">
                                     {% endif %}
-                                </a>
-                            {% endif %}
-                        </div>
-                        <div class="card-body row align-items-end">
-                            <div class="col-12 text-center">
-                                <div class="card-title review-card-title">{{ movie.original_title }}</div>
+                                </div>
+                                <div class="card-body row align-items-end">
+                                    <div class="col-12 text-center">
+                                        <div class="card-title review-card-title">{{ movie.original_title }}</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-12 text-center">
-                                {% if user == session['user'] %}
-                                    <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}"
-                                        class="btn btn-primary edit-review-btn">Edit/Delete
-                                        Review
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+                        </a>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
