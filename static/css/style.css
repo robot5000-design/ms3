@@ -293,15 +293,18 @@ h2,
   margin: 0 auto;
   border: 3px solid #000;
   border-radius: 5%;
-  background-color: #0000007a;
 }
 
 .index-card {
   height: 100%;
   width: 100%;
-  background-color: #0000007a;
   font-size: 0.8em;
   color: #ffa30f;
+  background-color: #00000000;
+}
+
+.review-card {
+  background-color: #0000007a;
 }
 
 .select-genre {
