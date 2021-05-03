@@ -229,11 +229,12 @@ h2,
   background-color: #0000007a;
 }
 
-.thumbnail-title a {
+.thumbnail-title div {
   font-family: "Alfa Slab One", cursive;
-  font-size: 1.2em;
+  font-size: 1em;
   color: #ffa30f;
   padding-top: 7px;
+  min-height: 60px;
 }
 
 .api-results-card {
@@ -250,6 +251,11 @@ h2,
 
 .tmdb-result-list {
   font-size: 0.8em;
+}
+
+.api-search-title .spinner-border-sm {
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 /*--------------------------------------------------------Reviews */
@@ -494,7 +500,6 @@ body .carousel-control-next-icon {
     font-size: 4.4em;
   }
   .api-results-card {
-    font-size: 1em;
     width: 100%;
   }
   .previous-button,
@@ -539,6 +544,13 @@ body .carousel-control-next-icon {
 @media screen and (min-width: 992px) {
   .search-api-button {
     width: 85%;
+  }
+  .api-results-card {
+    font-size: 1.2em;
+  }
+  .api-search-title .spinner-border-sm {
+    width: 1.5rem;
+    height: 1.5rem;
   }
   .register-wrapper,
   .contact-wrapper {

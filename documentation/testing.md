@@ -651,4 +651,8 @@ Although there are no known outstanding bugs, the main problematic bugs were rep
 
     - These images are saved as None in mongodb so solution was to put a conditional jinja in both templates for if the image is saved as None in mongodb.
 
+11. Next page on browse reviews page resets sort order to latest.
+
+    - Solved by adding query and sort order to the route.
+
 ---

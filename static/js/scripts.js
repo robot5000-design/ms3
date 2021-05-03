@@ -139,10 +139,15 @@ $("#browse-reviews-form").on('submit', function () {
     addLoadingSpinner(".filter-reviews");
 });
 
-// Calls the c when a fliter search is submitted
+// Calls the addLoadingSpinner function when a fliter search is submitted
 // on the my_reviews page
 $("#user-reviews-form").on('submit', function () {
     addLoadingSpinner(".filter-reviews");
+});
+
+// Add a loading spinner to search review results when clicked
+$(".api-search-result").on('click', function () {
+    $(this).find(".api-search-title").html("<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Loading...");;
 });
 
 // Call the goBack function which goes back to the previous page in history
