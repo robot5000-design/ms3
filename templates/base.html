@@ -18,7 +18,9 @@
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='favicon.ico') }}" />
     {% block styles %}
     {% endblock %}
-    <title>Rush Reviews - TV & Movie Reviews</title>
+    {% block title %}
+        <title>Rush Reviews - TV & Movie Reviews</title>
+    {% endblock %}
 </head>
 
 <body>
