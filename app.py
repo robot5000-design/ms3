@@ -81,13 +81,16 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/browse_reviews/<int:page>", methods=[
-           "GET", "POST"])
-def browse_reviews(page):
+@app.route(
+    "/browse_reviews/<query>/<browse_reviews_sort>/<int:page>", methods=[
+        "GET", "POST"])
+def browse_reviews(query, browse_reviews_sort, page):
     """ Used to facilitate a redirect to the search_reviews function
     to prevent form resubmission requests in browser on page back.
 
     Args:
+        query (str): Search input if POST request.
+        browse_reviews_sort (str): Describes sort order.
         page (int): A page number to facilate pagination of the reviews
         template.
 
@@ -100,14 +103,12 @@ def browse_reviews(page):
         query = request.form.get("search-box")
         browse_reviews_sort = request.form.get("browse_reviews_sort")
         if not query:
-            query = "all"
+            query = "---"
         return redirect(url_for("search_reviews", query=query,
                                 browse_reviews_sort=browse_reviews_sort,
                                 page=page))
-    query = "all"
-    browse_reviews_sort = "latest"
     return redirect(url_for("search_reviews", query=query,
-                            browse_reviews_sort="browse_reviews_sort",
+                            browse_reviews_sort=browse_reviews_sort,
                             page=page))
 
 
@@ -138,15 +139,13 @@ def search_reviews(query, browse_reviews_sort, page):
     if request.method == "POST":
         query = request.form.get("search-box")
         browse_reviews_sort = request.form.get("browse_reviews_sort")
-        if query:
-            search_term = {"$text": {"$search": query}}
+        if query == "---":
+            search_term = {}
         else:
-            search_term = {}
-            query = ""
+            search_term = {"$text": {"$search": query}}
     else:
-        if query == "all":
+        if query == "---":
             search_term = {}
-            query = ""
         else:
             search_term = {"$text": {"$search": query}}
     review_count = mongo.db.media_details.count_documents(search_term)
@@ -173,7 +172,7 @@ def search_reviews(query, browse_reviews_sort, page):
                                review_count=review_count,
                                total_pages=total_pages,
                                query=query)
-    return render_template("reviews.html",
+    return render_template("reviews.html", query=query,
                            browse_reviews_sort=browse_reviews_sort, page=page)
 
 
@@ -341,7 +340,8 @@ def delete_all(tmdb_id):
             mongo.db.media_details.delete_one(
                 {"tmdb_id": tmdb_id})
             flash("Movie & Reviews Successfully Deleted")
-            return redirect(url_for('browse_reviews', page=0))
+            return redirect(url_for('browse_reviews', query='---',
+                                    browse_reviews_sort='latest', page=0))
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
@@ -640,7 +640,8 @@ def new_review(tmdb_id, media_type):
             session.pop("media_type", None)
             session.pop("overall_rating", None)
             flash("Review Posted Successfully!")
-            return redirect(url_for("browse_reviews", page=0))
+            return redirect(url_for("browse_reviews", query='---',
+                                    browse_reviews_sort='latest', page=0))
     # check if media details are already in db
     if "user" in session:
         already_reviewed = mongo.db.reviews.find_one(

@@ -9,7 +9,7 @@
     </div>
     <div class="row search-box">
         <div class="col-12">
-            <form action="{{ url_for('browse_reviews', page=0) }}" method="post" id="browse-reviews-form" class="mx-auto">
+            <form action="{{ url_for('browse_reviews', query=query, browse_reviews_sort='latest', page=0) }}" method="post" id="browse-reviews-form" class="mx-auto">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" id="csrf_token" />
                 <div class="row pb-4">
                     <div class="col">
@@ -88,12 +88,12 @@
         <div class="row mx-auto pb-5">
             <div class="col">
                 {% if page > 0 %}
-                    <a href="{{ url_for('browse_reviews', page=page-1) }}"
+                    <a href="{{ url_for('browse_reviews', query=query, browse_reviews_sort=browse_reviews_sort, page=page-1) }}"
                         class="btn btn-secondary previous-button">Previous
                     </a>
                 {% endif %}
                 {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %}
-                    <a href="{{ url_for('browse_reviews', page=page+1) }}"
+                    <a href="{{ url_for('browse_reviews', query=query, browse_reviews_sort=browse_reviews_sort, page=page+1) }}"
                         class="btn btn-secondary next-button">Next                
                     </a>
                 {% endif %}

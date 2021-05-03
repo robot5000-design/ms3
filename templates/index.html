@@ -126,7 +126,7 @@
                             {% else %}
                                 <div class="row text-center">
                                     <div class="col">
-                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', page=0) }}">Browse Reviews</a>
+                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
                                     </div>
                                 </div>
                             {% endif %}
@@ -196,7 +196,7 @@
                             {% else %}
                                 <div class="row text-center">
                                     <div class="col">
-                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', page=0) }}">Browse Reviews</a>
+                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
                                     </div>
                                 </div>
                             {% endif %}
@@ -266,7 +266,7 @@
                             {% else %}
                                 <div class="row text-center">
                                     <div class="col">
-                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', page=0) }}">Browse Reviews</a>
+                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
                                     </div>
                                 </div>
                             {% endif %}
