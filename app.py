@@ -176,9 +176,9 @@ def search_reviews(query, browse_reviews_sort, page):
                            browse_reviews_sort=browse_reviews_sort, page=page)
 
 
-@app.route("/my_reviews/<user>/<my_reviews_sort>/<int:page>", methods=[
+@app.route("/my_reviews/<user>/<query>/<my_reviews_sort>/<int:page>", methods=[
            "GET", "POST"])
-def my_reviews(user, my_reviews_sort, page):
+def my_reviews(user, query, my_reviews_sort, page):
     """ Handles paginated display of a users reviews.
 
     Displays 12 reviews at a time sorted from the database by latest,
@@ -187,6 +187,7 @@ def my_reviews(user, my_reviews_sort, page):
 
     Args:
         user (str): Username of results to be displayed.
+        query (str): Search input if POST request.
         my_reviews_sort (str): Describes sort order.
         page (int): A page number to facilate pagination of the my_reviews
         template.
@@ -203,13 +204,14 @@ def my_reviews(user, my_reviews_sort, page):
     if request.method == "POST":
         query = request.form.get("search-box")
         my_reviews_sort = request.form.get("my_reviews_sort")
-        if query:
-            search_term = {"$text": {"$search": query}, "created_by": user}
-        else:
+        search_term = {"$text": {"$search": query}, "created_by": user}
+        if not query or query == "---":
+            query = "---"
             search_term = {"created_by": user}
     else:
-        search_term = {"created_by": user}
-        query = ""
+        search_term = {"$text": {"$search": query}, "created_by": user}
+        if query == "---":
+            search_term = {"created_by": user}
     if my_reviews_sort == "alphabetically":
         my_reviews_search = list(mongo.db.reviews.find(search_term).sort(
             "original_title", 1).skip(page * 12).limit(12))
@@ -224,7 +226,7 @@ def my_reviews(user, my_reviews_sort, page):
         movie_id_list = []
         for review in my_reviews_search:
             movie_id_list.append(review["tmdb_id"])
-        review_count = mongo.db.reviews.count_documents({"created_by": user})
+        review_count = mongo.db.reviews.count_documents(search_term)
         total_pages = math.ceil(review_count / 12)
         # pick out the movies details that we need
         media_detail = []
@@ -246,7 +248,7 @@ def my_reviews(user, my_reviews_sort, page):
                                review_count=review_count,
                                total_pages=total_pages,
                                user=user, query=query)
-    return render_template("my_reviews.html", user=user,
+    return render_template("my_reviews.html", user=user, query=query,
                            my_reviews_sort=my_reviews_sort, page=page)
 
 
@@ -311,8 +313,9 @@ def delete_review(tmdb_id, user):
                     {"tmdb_id": tmdb_id},
                     {"$set": update_items})
             if session["user"] == "admin":
-                return redirect(url_for('browse_reviews', page=0))
-            return redirect(url_for('my_reviews', user=user,
+                return redirect(url_for('browse_reviews', query='---',
+                                        browse_reviews_sort='latest', page=0))
+            return redirect(url_for('my_reviews', user=user, query='---',
                                     my_reviews_sort='latest', page=0))
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
@@ -409,6 +412,7 @@ def edit_review(tmdb_id, my_reviews_sort):
                 {"$set": review_update})
             flash("Your review has been updated")
             return redirect(url_for('my_reviews', user=session['user'],
+                                    query='---',
                                     my_reviews_sort=my_reviews_sort, page=0))
         media_detail = mongo.db.media_details.find_one({"tmdb_id": tmdb_id})
         review_fields = mongo.db.reviews.find_one(
@@ -766,7 +770,8 @@ def login():
                 flash(f"Welcome, {username.capitalize()}")
                 if username.lower() != "admin":
                     return redirect(url_for("my_reviews", user=session[
-                        'user'], my_reviews_sort='latest', page=0))
+                        'user'], query='---', my_reviews_sort='latest',
+                        page=0))
                 return redirect(url_for("admin_controls"))
             # invalid password match
             flash("Incorrect Username and/or Password")

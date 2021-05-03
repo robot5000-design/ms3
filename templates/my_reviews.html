@@ -13,7 +13,7 @@
     </div>
     <div class="row search-box">
         <div class="col">
-            <form action="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=0) }}" method="post"
+            <form action="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=0) }}" method="post"
                 id="user-reviews-form" class="mx-auto">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <div class="pb-4 row">
@@ -116,11 +116,11 @@
         <div class="row mx-auto pb-5">
             <div class="col">
                 {% if page > 0 %}
-                <a href="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=page-1) }}"
+                <a href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page-1) }}"
                     class="btn btn-secondary previous-button">Previous</a>
                 {% endif %}
                 {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %} <a
-                    href="{{ url_for('my_reviews', user=user, my_reviews_sort=my_reviews_sort, page=page+1) }}"
+                    href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page+1) }}"
                     class="btn btn-secondary next-button">Next</a>
                     {% endif %}
             </div>

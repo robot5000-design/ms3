@@ -9,7 +9,7 @@
     </div>
     <div class="row search-box">
         <div class="col-12">
-            <form action="{{ url_for('browse_reviews', query=query, browse_reviews_sort='latest', page=0) }}" method="post" id="browse-reviews-form" class="mx-auto">
+            <form action="{{ url_for('browse_reviews', query=query, browse_reviews_sort=browse_reviews_sort, page=0) }}" method="post" id="browse-reviews-form" class="mx-auto">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" id="csrf_token" />
                 <div class="row pb-4">
                     <div class="col">

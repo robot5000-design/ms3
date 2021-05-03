@@ -655,4 +655,8 @@ Although there are no known outstanding bugs, the main problematic bugs were rep
 
     - Solved by adding query and sort order to the route.
 
+12. Next page on my reviews page does not save the search query and the page count is calculated incorrectly.
+
+    - Solved by adding query to the route and modifying the page count statement.
+
 ---
