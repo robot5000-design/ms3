@@ -495,6 +495,8 @@ was reached. There are no known exisiting issues with the final deployed version
 
     3. Verify that the Sort dropdown values give the expected sort order. __PASS__
 
+    4. Verify that the search query and sort order are saved after clicking to the next page. __PASS__
+
 - TC13
 
     Description:
@@ -508,6 +510,8 @@ was reached. There are no known exisiting issues with the final deployed version
     2. Click Go Back to return to My Reviews. Verify that a search input gives the appropriate result. __PASS__
 
     3. Verify that the Sort dropdown values give the expected sort order. __PASS__
+
+    4. Verify that the search query and sort order are saved after clicking to the next page. __PASS__
 
 - TC14
 
