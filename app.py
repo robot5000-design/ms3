@@ -336,15 +336,14 @@ def delete_all(tmdb_id):
         If no user in session or user is not admin, returns a redirect to
         index.
     """
-    if check_user_permission() == "valid-user":
-        if session["user"] == "admin":
-            mongo.db.reviews.delete_many(
-                {"tmdb_id": tmdb_id})
-            mongo.db.media_details.delete_one(
-                {"tmdb_id": tmdb_id})
-            flash("Movie & Reviews Successfully Deleted")
-            return redirect(url_for('browse_reviews', query='---',
-                                    browse_reviews_sort='latest', page=0))
+    if check_user_permission() == "valid-user" and session["user"] == "admin":
+        mongo.db.reviews.delete_many(
+            {"tmdb_id": tmdb_id})
+        mongo.db.media_details.delete_one(
+            {"tmdb_id": tmdb_id})
+        flash("Movie & Reviews Successfully Deleted")
+        return redirect(url_for('browse_reviews', query='---',
+                                browse_reviews_sort='latest', page=0))
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
 
@@ -693,14 +692,14 @@ def admin_controls():
         If user is in session and is admin, returns render of admin_controls.
         If user is not admin returns redirect to index route.
     """
-    if request.method == "POST":
-        if "submit-form-1" in request.form:
-            add_remove_genre()
-        if "submit-form-3" in request.form:
-            block_users()
-        if "submit-form-4" in request.form:
-            unblock_users()
-    if check_user_permission() and session["user"] == "admin":
+    if check_user_permission() == "valid-user" and session["user"] == "admin":
+        if request.method == "POST":
+            if "submit-form-1" in request.form:
+                add_remove_genre()
+            if "submit-form-3" in request.form:
+                block_users()
+            if "submit-form-4" in request.form:
+                unblock_users()
         number_users = mongo.db.users.count_documents({})
         number_movies = mongo.db.media_details.count_documents({})
         number_reviews = mongo.db.reviews.count_documents({})
