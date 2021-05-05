@@ -147,7 +147,7 @@ $("#user-reviews-form").on('submit', function () {
 
 // Add a loading spinner to search review results when clicked
 $(".api-search-result").on('click', function () {
-    $(this).find(".api-search-title").html("<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Loading...");;
+    $(this).find(".api-search-title").html("<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Loading...");
 });
 
 // Call the goBack function which goes back to the previous page in history
@@ -156,8 +156,8 @@ $(".go-back").click(goBack);
 // Calls the addLoadingSpinner function when the confirm-delete button
 // or all-reviews-btn or review-this or edit-review or next-button or
 // previous-button buttons are clicked
-$(".confirm-delete, .all-reviews-btn, .review-this, .edit-review,\
-    .next-button, .previous-button").click(function() {
+$(`.confirm-delete, .all-reviews-btn, .review-this, .edit-review,
+    .next-button, .previous-button`).click(function() {
     addLoadingSpinner(this);
 });
 
