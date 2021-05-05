@@ -51,9 +51,9 @@
                             </a>
                             <ul class="dropdown-menu text-end" aria-labelledby="navbarDropdown">
                                 <li>
-                                    <a class="dropdown-item"
-                                        href="{{ url_for('my_reviews', user=session['user'], query='---', my_reviews_sort='latest', page=0) }}">My
-                                        Reviews</a>
+                                    <a href="{{ url_for('my_reviews', user=session['user'], query='---', my_reviews_sort='latest', page=0) }}"
+                                        class="dropdown-item">My Reviews
+                                    </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a>
@@ -72,8 +72,7 @@
                             </ul>
                         </div>
                     {% else %}
-                        <a class="nav-link login-modal" data-bs-toggle="modal" href="#logInModal">Log
-                            In</a>
+                        <a class="nav-link login-modal" data-bs-toggle="modal" href="#logInModal">Log In</a>
                     {% endif %}
                 </div>
             </div>
@@ -164,8 +163,10 @@
                         </div>
                     </form>
                     <div>
-                        <span><a href="{{ url_for('register') }}" id="show-register" class="show-register">No
-                                Account? Register Here</a>
+                        <span>
+                            <a href="{{ url_for('register') }}" id="show-register" class="show-register">No
+                                Account? Register Here
+                            </a>
                         </span>
                     </div>
                 </div>

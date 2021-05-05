@@ -124,8 +124,8 @@
                     <div class="row">
                         <div class="col mb-5">
                             <a class="btn btn-primary all-reviews-btn"
-                                href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort='popular', page=0) }}">See
-                                    All Reviews
+                                href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort='popular', page=0) }}">
+                                See All Reviews
                             </a>
                         </div>
                     </div>
@@ -148,7 +148,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <span><a href="{{ url_for('delete_review', tmdb_id=review_fields.tmdb_id, user=session['user']) }}" class="btn btn-danger confirm-delete">Confirm</a></span>
+                <span>
+                    <a href="{{ url_for('delete_review', tmdb_id=review_fields.tmdb_id, user=session['user']) }}" class="btn btn-danger confirm-delete">Confirm</a>
+                </span>
             </div>
         </div>
     </div>

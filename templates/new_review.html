@@ -44,7 +44,7 @@
             {% if media_detail.overview != None %}
                 <div class="pb-5 pt-3 overview">{{ media_detail.overview }}</div>
             {% endif %}
-                <div class="pb-5 pt-1">
+            <div class="pb-5 pt-1">
                 {% if not session.user %}
                     <a href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to submit a Review</a>
                 {% elif already_reviewed %}

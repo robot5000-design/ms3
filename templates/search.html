@@ -21,48 +21,30 @@
                             <div class="">
                                 {% if session["media_type"] == "tv" %}
                                     <div class="form-check form-check-tv">
-                                        <input name="media_type" value="tv" class="form-check-input" type="radio"
-                                            id="media-type-tv" checked>
-                                        <label class="form-check-label" for="media-type-tv">
-                                            TV
-                                        </label>
+                                        <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv" checked>
+                                        <label class="form-check-label" for="media-type-tv">TV</label>
                                     </div>
                                     <div class="form-check form-check-movie">
-                                        <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                            id="media-type-movie">
-                                        <label class="form-check-label" for="media-type-movie">
-                                            Movie
-                                        </label>
+                                        <input name="media_type" value="movie" class="form-check-input" type="radio" id="media-type-movie">
+                                        <label class="form-check-label" for="media-type-movie">Movie</label>
                                     </div>
                                 {% elif session["media_type"] == "movie" %}
                                     <div class="form-check form-check-tv">
-                                        <input name="media_type" value="tv" class="form-check-input" type="radio"
-                                            id="media-type-tv">
-                                        <label class="form-check-label" for="media-type-tv">
-                                            TV
-                                        </label>
+                                        <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv">
+                                        <label class="form-check-label" for="media-type-tv">TV</label>
                                     </div>
                                     <div class="form-check form-check-movie">
-                                        <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                            id="media-type-movie" checked>
-                                        <label class="form-check-label" for="media-type-movie">
-                                            Movie
-                                        </label>
+                                        <input name="media_type" value="movie" class="form-check-input" type="radio" id="media-type-movie" checked>
+                                        <label class="form-check-label" for="media-type-movie">Movie</label>
                                     </div>
                                 {% else %}
                                     <div class="form-check form-check-tv">
-                                        <input name="media_type" value="tv" class="form-check-input" type="radio"
-                                            id="media-type-tv" required>
-                                        <label class="form-check-label" for="media-type-tv">
-                                            TV
-                                        </label>
+                                        <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv" required>
+                                        <label class="form-check-label" for="media-type-tv">TV</label>
                                     </div>
                                     <div class="form-check form-check-movie">
-                                        <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                            id="media-type-movie" required>
-                                        <label class="form-check-label" for="media-type-movie">
-                                            Movie
-                                        </label>
+                                        <input name="media_type" value="movie" class="form-check-input" type="radio" id="media-type-movie" required>
+                                        <label class="form-check-label" for="media-type-movie">Movie</label>
                                     </div>
                                 {% endif %}
                             </div>

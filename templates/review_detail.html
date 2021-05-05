@@ -86,7 +86,8 @@
                                     Sort by: Most Popular
                                 </div>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item"
+                                    <li>
+                                        <a class="dropdown-item"
                                             href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort='latest', page=0) }}">
                                             Sort by: Latest
                                         </a>
@@ -201,8 +202,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <span>
-                    <a href="#" id="reviewConfirmDelete"
-                    class="btn btn-danger confirm-delete">Confirm</a>
+                    <a href="#" id="reviewConfirmDelete" class="btn btn-danger confirm-delete">Confirm</a>
                 </span>
             </div>
         </div>

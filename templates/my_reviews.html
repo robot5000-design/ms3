@@ -114,20 +114,22 @@
         <div class="row mx-auto pt-5 pb-3">
             <div class="col">
                 {% if review_count > 12 %}
-                <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
+                    <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
                 {% endif %}
             </div>
         </div>
         <div class="row mx-auto pb-5">
             <div class="col">
                 {% if page > 0 %}
-                <a href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page-1) }}"
-                    class="btn btn-secondary previous-button">Previous</a>
+                    <a href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page-1) }}"
+                        class="btn btn-secondary previous-button">Previous
+                    </a>
                 {% endif %}
-                {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %} <a
-                    href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page+1) }}"
-                    class="btn btn-secondary next-button">Next</a>
-                    {% endif %}
+                {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %}
+                    <a href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page+1) }}"
+                        class="btn btn-secondary next-button">Next
+                    </a>
+                {% endif %}
             </div>
         </div>
     {% else %}
