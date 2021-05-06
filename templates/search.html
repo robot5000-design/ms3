@@ -73,11 +73,11 @@
             </div>
         </div>
     </div>
-    <div class="row api-results-card mt-3">
-        <div class="col-12">
-            {% if request.method == "POST" or search_results %}
-                {% if search_results %}
-                    {% if search_results.results %}
+    {% if request.method == "POST" or search_results %}
+        {% if search_results %}
+            {% if search_results.results %}
+                <div class="row api-results-card mt-3">
+                    <div class="col-12">            
                         <div class="row">
                             <div class="col">
                                 <div class="page-number pb-5">Page {{ search_results.page }} / {{ search_results.total_pages }}
@@ -143,39 +143,39 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mx-auto pb-4">
-                            <div class="col">
-                                {% if search_results.total_pages > 1 %}
-                                    <div class="page-number">Page {{ search_results.page }} / {{ search_results.total_pages }}
-                                    </div>
-                                {% endif %}
+                    </div>
+                </div>
+                <div class="row pb-4">
+                    <div class="col">
+                        {% if search_results.total_pages > 1 %}
+                            <div class="page-number">Page {{ search_results.page }} / {{ search_results.total_pages }}
                             </div>
-                        </div>
-                        <div class="row mx-auto pb-5">
-                            <div class="col">
-                                {% if search_results.page > 1 %}
-                                    <a href="{{ url_for('search_pagination', page=search_results.page-1) }}"
-                                        class="btn btn-secondary previous-button">Previous
-                                    </a>
-                                {% endif %}
-                                {% if search_results.total_pages > 1 and search_results.page < search_results.total_pages %}
-                                    <a href="{{ url_for('search_pagination', page=search_results.page+1) }}"
-                                        class="btn btn-secondary next-button">Next
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="row">
-                            <div class="col">
-                                <h3 class="p-5">No Results!</h3>
-                            </div>                                
-                        </div>
-                    {% endif %}
-                {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row pb-5">
+                    <div class="col text-center">
+                        {% if search_results.page > 1 %}
+                            <a href="{{ url_for('search_pagination', page=search_results.page-1) }}"
+                                class="btn btn-secondary previous-button">Previous
+                            </a>
+                        {% endif %}
+                        {% if search_results.total_pages > 1 and search_results.page < search_results.total_pages %}
+                            <a href="{{ url_for('search_pagination', page=search_results.page+1) }}"
+                                class="btn btn-secondary next-button">Next
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col text-center">
+                        <h3 class="p-5">No Results!</h3>
+                    </div>                                
+                </div>
             {% endif %}
-        </div>
-    </div>
+        {% endif %}
+    {% endif %}
 </div>
 
 {% endblock %}
