@@ -36,7 +36,7 @@ app.config.update(
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax',
-)
+    PERMANENT_SESSION_LIFETIME=10800)
 
 mongo = PyMongo(app)
 

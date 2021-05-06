@@ -806,11 +806,9 @@ def register():
         # check if username already exists in db
         existing_user = mongo.db.users.find_one(
             {"username": username.lower()})
-
         if existing_user:
             flash("Username already exists")
             return redirect(url_for("register"))
-
         password1 = request.form.get("password2")
         password2 = request.form.get("confirm-password2")
         if password1 != password2:
@@ -822,7 +820,6 @@ def register():
             "password": generate_password_hash(request.form.get("password2"))
         }
         mongo.db.users.insert_one(new_user)
-
         # put the new user into 'session' cookie
         session["user"] = username.lower()
         flash("Registration Successful!")
