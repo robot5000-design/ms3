@@ -295,7 +295,8 @@ def delete_review(tmdb_id, user):
                 current_rating = details_exist["overall_rating"]
                 current_number_reviews = details_exist["number_reviews"]
                 deleted_rating = float(review_to_delete["rating"])
-                updated_number_reviews = current_number_reviews - 1
+                updated_number_reviews = mongo.db.reviews.count_documents(
+                    {"tmdb_id": tmdb_id})
                 try:
                     updated_overall_rating = (
                         (current_rating * current_number_reviews) -
