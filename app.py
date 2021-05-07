@@ -384,8 +384,7 @@ def edit_review(tmdb_id, my_reviews_sort):
             review_update = {
                 "genre": request.form.get("select-genre"),
                 "review": request.form.get("review-text"),
-                "rating": int(request.form.get("inlineRadioOptions")),
-                "review_date": datetime.datetime.now()
+                "rating": int(request.form.get("inlineRadioOptions"))
             }
             # adjust the overall rating to take account of edited review
             media_detail = mongo.db.media_details.find_one(
