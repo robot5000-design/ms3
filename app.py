@@ -308,7 +308,7 @@ def delete_review(tmdb_id, user):
                     updated_overall_rating = 5
                 # update last review date
                 last_review_date = list(mongo.db.reviews.find(
-                    {"tmdb_id": '63639'}).sort("review_date", -1).limit(1))[0]
+                    {"tmdb_id": tmdb_id}).sort("review_date", -1).limit(1))[0]
                 update_items = {
                     "overall_rating": round(updated_overall_rating, 2),
                     "number_reviews": updated_number_reviews,
