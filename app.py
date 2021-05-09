@@ -280,7 +280,6 @@ def delete_review(tmdb_id, user):
             review_to_delete = mongo.db.reviews.find_one(
                 {"tmdb_id": tmdb_id, "created_by": user.lower()})
             mongo.db.reviews.delete_one(review_to_delete)
-            flash("Review Successfully Deleted")
             # check if there are other reviews, otherwise delete movie
             # details in the db
             other_reviews = mongo.db.reviews.find_one(
@@ -288,7 +287,9 @@ def delete_review(tmdb_id, user):
             if not other_reviews:
                 mongo.db.media_details.delete_one(
                     {"tmdb_id": tmdb_id})
+                flash("Movie & Reviews Successfully Deleted")
             else:
+                flash("Review Successfully Deleted")
                 # adjust the overall rating to take account of deleted review
                 details_exist = mongo.db.media_details.find_one(
                     {"tmdb_id": tmdb_id})
