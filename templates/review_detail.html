@@ -5,209 +5,206 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="container-fluid reviews-container">
-    <div class="row">
-        <div class="col-2 px-0 pt-4 mt-1">
-            <a href="#" class="btn btn-secondary go-back fs-2 px-2 py-0" aria-label="go-back"><i class="fas fa-chevron-circle-left"></i></a>
+    <div class="container-fluid reviews-container">
+        <div class="row">
+            <div class="col-2 px-0 pt-4 mt-1">
+                <a href="#" class="btn btn-secondary go-back fs-2 px-2 py-0" aria-label="go-back"><i class="fas fa-chevron-circle-left"></i></a>
+            </div>
+            <div class="col-9 text-center">
+                <h2 class="pt-4 mt-2 pe-4 reviews-heading">Reviews for:</h2>
+            </div>
         </div>
-        <div class="col-9 text-center">
-            <h2 class="pt-4 mt-2 pe-4 reviews-heading">Reviews for:</h2>
-        </div>
-    </div>
-    <div class="row">
-        <!-- Image -->
-        <div class="col-12 col-md-6 px-0 pb-5 pt-5 text-center">
-            {% if media_detail.poster_path == None %}
-                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="no image available">
-            {% else %}
-                <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="{{ media_detail.original_title }}">
-            {% endif %}
-        </div>
-        <!-- movie details -->
-        <div class="col-12 col-md-6 review-wrapper">
-            {% if "user" in session %}
-                {% if session["user"].lower() == "admin" %}
-                    <div class="pb-3 pt-2">
-                        <a class="btn btn-danger call-delete" data-bs-toggle="modal" href="#movieDeleteModal">
-                            Delete Movie
-                        </a>
-                    </div>
-                {% endif %}
-            {% endif %}
-            <h1 class="heading py-3">{{ media_detail.original_title }}</h1>
-            <div class="pb-2">
-                {% if media_detail.release_date == "" %}
-                    <div>Released: Not available.</div>
+        <div class="row">
+            <!-- Image -->
+            <div class="col-12 col-md-6 px-0 pb-5 pt-5 text-center">
+                {% if media_detail.poster_path == None %}
+                    <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="review-image" alt="no image available">
                 {% else %}
-                    <div>Released: {{ media_detail.release_date }}</div>
+                    <img src="{{ tmdb_poster_url }}{{ media_detail.poster_path }}" class="review-image" alt="{{ media_detail.original_title }}">
                 {% endif %}
             </div>
-            <div class="pb-2">Overall Rating: {{ overall_rating }} / 5</div>
-            {% if media_detail.overview != None %}
-                <div class="pb-5 pt-3 overview">{{ media_detail.overview }}</div>
-            {% endif %}
-            <!-- reviews section -->
-            <div class="reviews">
-                <div class="pb-4 pt-2">
-                    {% if not session["user"] %}
-                        <a class="login-modal" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to
-                            submit a Review
-                        </a>
-                    {% elif already_reviewed %}
-                        <div class="already-reviewed">You've already reviewed this.</div>
+            <!-- movie details -->
+            <div class="col-12 col-md-6 review-wrapper">
+                {% if "user" in session %}
+                    {% if session["user"].lower() == "admin" %}
+                        <div class="pb-3 pt-2">
+                            <a class="btn btn-danger call-delete" data-bs-toggle="modal" href="#movieDeleteModal">
+                                Delete Movie
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                <h1 class="heading py-3">{{ media_detail.original_title }}</h1>
+                <div class="pb-2">
+                    {% if media_detail.release_date == "" %}
+                        <div>Released: Not available.</div>
                     {% else %}
-                        <a href="{{ url_for('new_review', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type) }}"
-                            class="btn btn-primary review-this">Review This
-                        </a>
+                        <div>Released: {{ media_detail.release_date }}</div>
                     {% endif %}
                 </div>
-                <hr>
-                <hr>
-                {% if reviews %}
-                    <div class="row py-2">
-                        <div class="dropdown col">
-                            {% if review_detail_sort == "latest" %}
-                                <div class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                                    aria-expanded="false" role="button">
-                                    Sort by: Latest
-                                </div>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li>
-                                        <a class="dropdown-item"
-                                            href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort='popular', page=0) }}">
-                                            Sort by: Most Popular
-                                        </a>
-                                    </li>
-                                </ul>
-                            {% elif review_detail_sort == "popular" %}
-                                <div class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                                    aria-expanded="false" role="button">
-                                    Sort by: Most Popular
-                                </div>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li>
-                                        <a class="dropdown-item"
-                                            href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort='latest', page=0) }}">
-                                            Sort by: Latest
-                                        </a>
-                                    </li>
-                                </ul>
-                            {% endif %}
-                        </div>
+                <div class="pb-2">Overall Rating: {{ overall_rating }} / 5</div>
+                {% if media_detail.overview != None %}
+                    <div class="pb-5 pt-3 overview">{{ media_detail.overview }}</div>
+                {% endif %}
+                <!-- reviews section -->
+                <div class="reviews">
+                    <div class="pb-4 pt-2">
+                        {% if not session["user"] %}
+                            <a class="login-modal" href="#" data-bs-toggle="modal" data-bs-target="#logInModal">Please Log-In to
+                                submit a Review
+                            </a>
+                        {% elif already_reviewed %}
+                            <div class="already-reviewed">You've already reviewed this.</div>
+                        {% else %}
+                            <a href="{{ url_for('new_review', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type) }}"
+                                class="btn btn-primary review-this">Review This
+                            </a>
+                        {% endif %}
                     </div>
-                <hr>
-                {% for review in reviews %}
-                    {% if "user" in session %}
-                        <div class="pb-3">
-                            {% if session["user"] == review.created_by %}
-                                <div class="py-2">
-                                    <a class="btn btn-primary edit-review"
-                                        href="{{ url_for('edit_review', tmdb_id=media_detail.tmdb_id, my_reviews_sort='latest') }}">
-                                        Edit Review
-                                    </a>
-                                </div>
-                            {% endif %}
-                            {% if session["user"].lower() == "admin" %}
-                                <div>
-                                    <a class="btn btn-danger call-delete" id="reviewDelete" 
-                                        data-bs-review="{{ url_for('delete_review', tmdb_id=media_detail.tmdb_id, user=review.created_by) }}" 
-                                        data-bs-toggle="modal" href="#reviewDeleteModal">
-                                        Delete Review
-                                    </a>
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                    <div class="pb-2">
-                        Reviewed by: 
-                        <a class="text-decoration-none review-links"
-                            href="{{ url_for('my_reviews', user=review.created_by, query='---', my_reviews_sort='latest', page=0) }}">
-                            {{ review.created_by }}
-                        </a>
-                        {{ review.review_date }}
-                    </div>
-                    <div class="review-text pb-2">{{ review.review }}</div>
-                    <div>Genre: {{ review.genre }}</div>
-                    <div class="pb-2">Rating: {{ review.rating }} / 5</div>
-                    {% if "user" in session and session["user"] != review.created_by and session["user"] not in review.likes %}
-                        <a class="review-links" href="{{ url_for('add_like', object_id=review._id, tmdb_id=review.tmdb_id, media_type=media_detail.media_type) }}">
-                            <i class="fas fa-thumbs-up fs-5 pe-2"></i>
-                            {{ review.likes | length }}
-                        </a>
-                    {% else %}
-                        <div><i class="fas fa-thumbs-up fs-5 pe-2"></i> {{ review.likes|length }}</div>
-                    {% endif %}
                     <hr>
-                {% endfor %}
-                <div class="row mx-auto pt-3">
-                    <div class="col">
-                        {% if review_count > 6 %}
-                            <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
+                    <hr>
+                    {% if reviews %}
+                        <div class="row py-2">
+                            <div class="dropdown col">
+                                {% if review_detail_sort == "latest" %}
+                                    <div class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                                        aria-expanded="false" role="button">
+                                        Sort by: Latest
+                                    </div>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort='popular', page=0) }}">
+                                                Sort by: Most Popular
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {% elif review_detail_sort == "popular" %}
+                                    <div class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                                        aria-expanded="false" role="button">
+                                        Sort by: Most Popular
+                                    </div>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort='latest', page=0) }}">
+                                                Sort by: Latest
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    <hr>
+                    {% for review in reviews %}
+                        {% if "user" in session %}
+                            <div class="pb-3">
+                                {% if session["user"] == review.created_by %}
+                                    <div class="py-2">
+                                        <a class="btn btn-primary edit-review"
+                                            href="{{ url_for('edit_review', tmdb_id=media_detail.tmdb_id, my_reviews_sort='latest') }}">
+                                            Edit Review
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                {% if session["user"].lower() == "admin" %}
+                                    <div>
+                                        <a class="btn btn-danger call-delete" id="reviewDelete" 
+                                            data-bs-review="{{ url_for('delete_review', tmdb_id=media_detail.tmdb_id, user=review.created_by) }}" 
+                                            data-bs-toggle="modal" href="#reviewDeleteModal">
+                                            Delete Review
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
                         {% endif %}
-                    </div>
-                </div>
-                <div class="row text-center pb-5 pt-3">
-                    <div class="col">
-                        {% if page > 0 %}
-                            <a href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort=review_detail_sort, page=page-1) }}"
-                                class="btn btn-secondary previous-button">Previous
+                        <div class="pb-2">
+                            Reviewed by: 
+                            <a class="text-decoration-none review-links"
+                                href="{{ url_for('my_reviews', user=review.created_by, query='---', my_reviews_sort='latest', page=0) }}">
+                                {{ review.created_by }}
                             </a>
-                        {% endif %}
-                        {% if (review_count > 6) and ((page + 1) < (review_count / 6)) %}
-                            <a href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort=review_detail_sort, page=page+1) }}"
-                                class="btn btn-secondary next-button">Next
+                            {{ review.review_date }}
+                        </div>
+                        <div class="review-text pb-2">{{ review.review }}</div>
+                        <div>Genre: {{ review.genre }}</div>
+                        <div class="pb-2">Rating: {{ review.rating }} / 5</div>
+                        {% if "user" in session and session["user"] != review.created_by and session["user"] not in review.likes %}
+                            <a class="review-links" href="{{ url_for('add_like', object_id=review._id, tmdb_id=review.tmdb_id, media_type=media_detail.media_type) }}">
+                                <i class="fas fa-thumbs-up fs-5 pe-2"></i>
+                                {{ review.likes | length }}
                             </a>
+                        {% else %}
+                            <div><i class="fas fa-thumbs-up fs-5 pe-2"></i> {{ review.likes|length }}</div>
                         {% endif %}
+                        <hr>
+                    {% endfor %}
+                    <div class="row mx-auto pt-3">
+                        <div class="col">
+                            {% if review_count > 6 %}
+                                <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
+                            {% endif %}
+                        </div>
                     </div>
+                    <div class="row text-center pb-5 pt-3">
+                        <div class="col">
+                            {% if page > 0 %}
+                                <a href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort=review_detail_sort, page=page-1) }}"
+                                    class="btn btn-secondary previous-button">Previous
+                                </a>
+                            {% endif %}
+                            {% if (review_count > 6) and ((page + 1) < (review_count / 6)) %}
+                                <a href="{{ url_for('review_detail', tmdb_id=media_detail.tmdb_id, media_type=media_detail.media_type, review_detail_sort=review_detail_sort, page=page+1) }}"
+                                    class="btn btn-secondary next-button">Next
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                        <h3>No reviews found</h3>
+                    {% endif %}
                 </div>
-                {% else %}
-                    <h3>No reviews found</h3>
-                {% endif %}
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal confirm movie delete -->
-<div class="modal fade" id="movieDeleteModal" tabindex="-1" aria-labelledby="movieDeleteModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="movieDeleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <span>Are you sure you want to delete?</span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <span><a href="{{ url_for('delete_all', tmdb_id=media_detail.tmdb_id) }}" class="btn btn-danger confirm-delete">Confirm</a></span>
+    <!-- Modal confirm movie delete -->
+    <div class="modal fade" id="movieDeleteModal" tabindex="-1" aria-labelledby="movieDeleteModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="movieDeleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <span>Are you sure you want to delete?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <span><a href="{{ url_for('delete_all', tmdb_id=media_detail.tmdb_id) }}" class="btn btn-danger confirm-delete">Confirm</a></span>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal confirm review delete -->
-<div class="modal fade" id="reviewDeleteModal" tabindex="-1" aria-labelledby="reviewDeleteModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reviewDeleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <span>Are you sure you want to delete?</span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <span>
-                    <a href="#" id="reviewConfirmDelete" class="btn btn-danger confirm-delete">Confirm</a>
-                </span>
+    <!-- Modal confirm review delete -->
+    <div class="modal fade" id="reviewDeleteModal" tabindex="-1" aria-labelledby="reviewDeleteModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewDeleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <span>Are you sure you want to delete?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <span>
+                        <a href="#" id="reviewConfirmDelete" class="btn btn-danger confirm-delete">Confirm</a>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-</div>
-{{already_liked}}
-
 {% endblock %}

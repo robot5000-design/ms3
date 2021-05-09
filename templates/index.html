@@ -5,105 +5,87 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="container-fluid pb-5">
-    <div class="row text-center py-4">
-        <div class="col">
-            <h1 class="heading">Search for something to review...</h1>
+    <div class="container-fluid pb-5">
+        <div class="row text-center py-4">
+            <div class="col">
+                <h1 class="heading">Search for something to review...</h1>
+            </div>
         </div>
-    </div>
-    <!-- Search within movie list -->
-    <div class="row pb-5">
-        <div class="col-12 col-sm-10 col-lg-8 mx-auto">
-            <form action="{{ url_for('search_movies') }}" method="post" class="api-search-form" id="search-api">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <div class="row mb-3">
-                    <div class="col">
-                        <div class="form-check form-check-tv">
-                            <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv"
-                                required>
-                            <label class="form-check-label" for="media-type-tv">
-                                TV
-                            </label>
-                        </div>
-                        <div class="form-check form-check-movie">
-                            <input name="media_type" value="movie" class="form-check-input" type="radio"
-                                id="media-type-movie" required>
-                            <label class="form-check-label" for="media-type-movie">
-                                Movie
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row pt-2">
-                    <div class="col-12 col-md-8">
-                        <div class="row">
-                            <div class="col-sm-1 d-none d-sm-block search-icon">
-                                <i class="fas fa-search"></i>
+        <!-- Search within movie list -->
+        <div class="row pb-5">
+            <div class="col-12 col-sm-10 col-lg-8 mx-auto">
+                <form action="{{ url_for('search_movies') }}" method="post" class="api-search-form" id="search-api">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-check form-check-tv">
+                                <input name="media_type" value="tv" class="form-check-input" type="radio" id="media-type-tv"
+                                    required>
+                                <label class="form-check-label" for="media-type-tv">
+                                    TV
+                                </label>
                             </div>
-                            <div class="col-12 col-sm-10 offset-sm-1 px-0 pb-4">
-                                <input type="text" name="query" id="query" minlength="3" maxlength="30"
-                                    class="form-control" required>
-                                <label for="query" class="form-label">Search Movies or TV Series</label>
+                            <div class="form-check form-check-movie">
+                                <input name="media_type" value="movie" class="form-check-input" type="radio"
+                                    id="media-type-movie" required>
+                                <label class="form-check-label" for="media-type-movie">
+                                    Movie
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4 mx-auto px-1">
-                        <button type="submit" class="btn btn-primary search-api-button">
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="row text-center py-5">
-        <div class="col">
-            <h1 class="heading">...or Check the Latest Reviews:</h1>
-        </div>
-    </div>
-    {% if media_detail %}
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col">
-                        <!-- 3 X 4 Carousel -->                        
-                        <div id="carousel-3X4" class="carousel slide" data-bs-ride="carousel">
-                            {% if media_detail | length() > 3 %}
-                                <div class="carousel-indicators">
-                                    <button type="button" data-bs-target="#carousel-3X4" data-bs-slide-to="0" class="active"
-                                        aria-current="true" aria-label="Slide 0">
-                                    </button>
-                                    {% if media_detail | length() > 11 %}
-                                        {% for index in range(1, (media_detail | length() / 4) | int()) %}
-                                            <button type="button" data-bs-target="#carousel-3X4" data-bs-slide-to="{{ index }}"
-                                                aria-current="true" aria-label="Slide {{ index }}">
-                                            </button>
-                                        {% endfor %}
-                                    {% endif %}
+                    <div class="row pt-2">
+                        <div class="col-12 col-md-8">
+                            <div class="row">
+                                <div class="col-sm-1 d-none d-sm-block search-icon">
+                                    <i class="fas fa-search"></i>
                                 </div>
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active" data-bs-interval="8000">
-                                        {% for index in range(4) %}
-                                            <a class="carousel-review text-center col-3"
-                                                href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
-                                                {% if media_detail[index].poster_path == None %}
-                                                    <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                        class="no-image-icon" alt="no image available">
-                                                    <div class="no-image-title">{{ media_detail[index].original_title }}</div>
-                                                {% else %}
-                                                    <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                        class="card-img-top" alt="{{ media_detail[index].original_title }}">
-                                                {% endif %}
-                                            </a>
-                                        {% endfor %}
+                                <div class="col-12 col-sm-10 offset-sm-1 px-0 pb-4">
+                                    <input type="text" name="query" id="query" minlength="3" maxlength="30"
+                                        class="form-control" required>
+                                    <label for="query" class="form-label">Search Movies or TV Series</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 mx-auto px-1">
+                            <button type="submit" class="btn btn-primary search-api-button">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row text-center py-5">
+            <div class="col">
+                <h1 class="heading">...or Check the Latest Reviews:</h1>
+            </div>
+        </div>
+        {% if media_detail %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col">
+                            <!-- 3 X 4 Carousel -->                        
+                            <div id="carousel-3X4" class="carousel slide" data-bs-ride="carousel">
+                                {% if media_detail | length() > 3 %}
+                                    <div class="carousel-indicators">
+                                        <button type="button" data-bs-target="#carousel-3X4" data-bs-slide-to="0" class="active"
+                                            aria-current="true" aria-label="Slide 0">
+                                        </button>
+                                        {% if media_detail | length() > 11 %}
+                                            {% for index in range(1, (media_detail | length() / 4) | int()) %}
+                                                <button type="button" data-bs-target="#carousel-3X4" data-bs-slide-to="{{ index }}"
+                                                    aria-current="true" aria-label="Slide {{ index }}">
+                                                </button>
+                                            {% endfor %}
+                                        {% endif %}
                                     </div>
-                                    {% if media_detail | length() > 11 %}
-                                        {% for outer_index in range(2) %}
-                                            <div class="carousel-item" data-bs-interval="8000">
-                                                {% for index in range(4 + (outer_index * 4), 8 + (outer_index * 4)) %}
-                                                    <a class="carousel-review text-center col-3"
-                                                        href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active" data-bs-interval="8000">
+                                            {% for index in range(4) %}
+                                                <a class="carousel-review text-center col-3"
+                                                    href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                                     {% if media_detail[index].poster_path == None %}
                                                         <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
                                                             class="no-image-icon" alt="no image available">
@@ -112,138 +94,15 @@
                                                         <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                             class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                                     {% endif %}
-                                                    </a>
-                                                {% endfor %}
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-3X4"
-                                    data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-3X4"
-                                    data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-                            {% else %}
-                                <div class="row text-center">
-                                    <div class="col">
-                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- 4 X 3 Carousel -->                        
-                        <div id="carousel-4X3" class="carousel slide" data-bs-ride="carousel">
-                            {% if media_detail | length() > 2 %}
-                                <div class="carousel-indicators">
-                                    <button type="button" data-bs-target="#carousel-4X3" data-bs-slide-to="0" class="active"
-                                        aria-current="true" aria-label="Slide 0">
-                                    </button>
-                                    {% if media_detail | length() > 11 %}
-                                        {% for index in range(1, (media_detail | length() / 3) | int()) %}
-                                            <button type="button" data-bs-target="#carousel-4X3" data-bs-slide-to="{{ index }}"
-                                                aria-current="true" aria-label="Slide {{ index }}">
-                                            </button>
-                                        {% endfor %}
-                                    {% endif %}
-                                </div>
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active" data-bs-interval="7000">
-                                        {% for index in range(3) %}
-                                            <a class="carousel-review text-center col-4"
-                                                href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
-                                                {% if media_detail[index].poster_path == None %}
-                                                    <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                        class="no-image-icon" alt="no image available">
-                                                    <div class="no-image-title">{{ media_detail[index].original_title }}</div>
-                                                {% else %}
-                                                    <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                        class="card-img-top" alt="{{ media_detail[index].original_title }}">
-                                                {% endif %}
-                                            </a>
-                                        {% endfor %}
-                                    </div>
-                                    {% if media_detail | length() > 11 %}
-                                        {% for outer_index in range(3) %}
-                                            <div class="carousel-item" data-bs-interval="7000">
-                                                {% for index in range(3 + (outer_index * 3), 6 + (outer_index * 3)) %}
-                                                    <a class="carousel-review text-center col-4"
-                                                        href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
-                                                    {% if media_detail[index].poster_path == None %}
-                                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                            class="no-image-icon" alt="no image available">
-                                                        <div class="no-image-title">{{ media_detail[index].original_title }}</div>
-                                                    {% else %}
-                                                        <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                            class="card-img-top" alt="{{ media_detail[index].original_title }}">
-                                                    {% endif %}
-                                                    </a>
-                                                {% endfor %}
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-4X3"
-                                    data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-4X3"
-                                    data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-                            {% else %}
-                                <div class="row text-center">
-                                    <div class="col">
-                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </div>                        
-
-                        <!-- 6 X 2 Carousel -->                        
-                        <div id="carousel-6X2" class="carousel slide" data-bs-ride="carousel">
-                            {% if media_detail | length() > 1 %}
-                                <div class="carousel-indicators">
-                                    <button type="button" data-bs-target="#carousel-6X2" data-bs-slide-to="0" class="active"
-                                        aria-current="true" aria-label="Slide 0">
-                                    </button>
-                                    {% if media_detail | length() > 11 %}
-                                        {% for index in range(1, (media_detail | length() / 2) | int()) %}
-                                            <button type="button" data-bs-target="#carousel-6X2" data-bs-slide-to="{{ index }}"
-                                                aria-current="true" aria-label="Slide {{ index }}">
-                                            </button>
-                                        {% endfor %}
-                                    {% endif %}
-                                </div>
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active" data-bs-interval="6000">
-                                        {% for index in range(2) %}
-                                            <a class="carousel-review text-center col-6"
-                                                href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
-                                                {% if media_detail[index].poster_path == None %}
-                                                    <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                        class="no-image-icon" alt="no image available">
-                                                    <div class="no-image-title">{{ media_detail[index].original_title }}</div>
-                                                {% else %}
-                                                    <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                        class="card-img-top" alt="{{ media_detail[index].original_title }}">
-                                                {% endif %}
-                                            </a>
-                                        {% endfor %}
-                                    </div>
-                                    {% if media_detail | length() > 11 %}
-                                        {% for outer_index in range(5) %}
-                                            <div class="carousel-item" data-bs-interval="6000">
-                                                {% for index in range(2 + (outer_index * 2), 4 + (outer_index * 2)) %}
-                                                    <a class="carousel-review text-center col-6"
-                                                        href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                        {% if media_detail | length() > 11 %}
+                                            {% for outer_index in range(2) %}
+                                                <div class="carousel-item" data-bs-interval="8000">
+                                                    {% for index in range(4 + (outer_index * 4), 8 + (outer_index * 4)) %}
+                                                        <a class="carousel-review text-center col-3"
+                                                            href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
                                                         {% if media_detail[index].poster_path == None %}
                                                             <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
                                                                 class="no-image-icon" alt="no image available">
@@ -252,156 +111,295 @@
                                                             <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
                                                                 class="card-img-top" alt="{{ media_detail[index].original_title }}">
                                                         {% endif %}
-                                                    </a>
-                                                {% endfor %}
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-6X2"
-                                    data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-6X2"
-                                    data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-                            {% else %}
-                                <div class="row text-center">
-                                    <div class="col">
-                                        <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </div>                        
-
-                        <!-- 12 X 1 Carousel -->                        
-                        <div id="carousel-12X1" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#carousel-12X1" data-bs-slide-to="0" class="active"
-                                    aria-current="true" aria-label="Slide 0">
-                                </button>
-                                {% for index in range(1, media_detail | length()) %}
-                                    <button type="button" data-bs-target="#carousel-12X1" data-bs-slide-to="{{ index }}"
-                                        aria-current="true" aria-label="Slide {{ index }}">
-                                    </button>
-                                {% endfor %}
-                            </div>
-                            <div class="carousel-inner">
-                                <div class="carousel-item active" data-bs-interval="5000">
-                                    <a class="carousel-review text-center col-12"
-                                        href="{{ url_for('review_detail', tmdb_id=media_detail[0].tmdb_id, media_type=media_detail[0].media_type, review_detail_sort='popular', page=0) }}">
-                                        {% if media_detail[0].poster_path == None %}
-                                            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
-                                                class="no-image-icon" alt="no image available">
-                                            <div class="no-image-title">{{ media_detail[index].original_title }}</div>
-                                        {% else %}
-                                            <img src="{{ tmdb_poster_url }}{{ media_detail[0].poster_path }}"
-                                                class="card-img-top" alt="{{ media_detail[0].original_title }}">
+                                                        </a>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endfor %}
                                         {% endif %}
-                                    </a>
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-3X4"
+                                        data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-3X4"
+                                        data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                {% else %}
+                                    <div class="row text-center">
+                                        <div class="col">
+                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- 4 X 3 Carousel -->                        
+                            <div id="carousel-4X3" class="carousel slide" data-bs-ride="carousel">
+                                {% if media_detail | length() > 2 %}
+                                    <div class="carousel-indicators">
+                                        <button type="button" data-bs-target="#carousel-4X3" data-bs-slide-to="0" class="active"
+                                            aria-current="true" aria-label="Slide 0">
+                                        </button>
+                                        {% if media_detail | length() > 11 %}
+                                            {% for index in range(1, (media_detail | length() / 3) | int()) %}
+                                                <button type="button" data-bs-target="#carousel-4X3" data-bs-slide-to="{{ index }}"
+                                                    aria-current="true" aria-label="Slide {{ index }}">
+                                                </button>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active" data-bs-interval="7000">
+                                            {% for index in range(3) %}
+                                                <a class="carousel-review text-center col-4"
+                                                    href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
+                                                    {% if media_detail[index].poster_path == None %}
+                                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                            class="no-image-icon" alt="no image available">
+                                                        <div class="no-image-title">{{ media_detail[index].original_title }}</div>
+                                                    {% else %}
+                                                        <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
+                                                            class="card-img-top" alt="{{ media_detail[index].original_title }}">
+                                                    {% endif %}
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                        {% if media_detail | length() > 11 %}
+                                            {% for outer_index in range(3) %}
+                                                <div class="carousel-item" data-bs-interval="7000">
+                                                    {% for index in range(3 + (outer_index * 3), 6 + (outer_index * 3)) %}
+                                                        <a class="carousel-review text-center col-4"
+                                                            href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
+                                                        {% if media_detail[index].poster_path == None %}
+                                                            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                                class="no-image-icon" alt="no image available">
+                                                            <div class="no-image-title">{{ media_detail[index].original_title }}</div>
+                                                        {% else %}
+                                                            <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
+                                                                class="card-img-top" alt="{{ media_detail[index].original_title }}">
+                                                        {% endif %}
+                                                        </a>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-4X3"
+                                        data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-4X3"
+                                        data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                {% else %}
+                                    <div class="row text-center">
+                                        <div class="col">
+                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>                        
+
+                            <!-- 6 X 2 Carousel -->                        
+                            <div id="carousel-6X2" class="carousel slide" data-bs-ride="carousel">
+                                {% if media_detail | length() > 1 %}
+                                    <div class="carousel-indicators">
+                                        <button type="button" data-bs-target="#carousel-6X2" data-bs-slide-to="0" class="active"
+                                            aria-current="true" aria-label="Slide 0">
+                                        </button>
+                                        {% if media_detail | length() > 11 %}
+                                            {% for index in range(1, (media_detail | length() / 2) | int()) %}
+                                                <button type="button" data-bs-target="#carousel-6X2" data-bs-slide-to="{{ index }}"
+                                                    aria-current="true" aria-label="Slide {{ index }}">
+                                                </button>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active" data-bs-interval="6000">
+                                            {% for index in range(2) %}
+                                                <a class="carousel-review text-center col-6"
+                                                    href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
+                                                    {% if media_detail[index].poster_path == None %}
+                                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                            class="no-image-icon" alt="no image available">
+                                                        <div class="no-image-title">{{ media_detail[index].original_title }}</div>
+                                                    {% else %}
+                                                        <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
+                                                            class="card-img-top" alt="{{ media_detail[index].original_title }}">
+                                                    {% endif %}
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                        {% if media_detail | length() > 11 %}
+                                            {% for outer_index in range(5) %}
+                                                <div class="carousel-item" data-bs-interval="6000">
+                                                    {% for index in range(2 + (outer_index * 2), 4 + (outer_index * 2)) %}
+                                                        <a class="carousel-review text-center col-6"
+                                                            href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
+                                                            {% if media_detail[index].poster_path == None %}
+                                                                <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                                    class="no-image-icon" alt="no image available">
+                                                                <div class="no-image-title">{{ media_detail[index].original_title }}</div>
+                                                            {% else %}
+                                                                <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
+                                                                    class="card-img-top" alt="{{ media_detail[index].original_title }}">
+                                                            {% endif %}
+                                                        </a>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-6X2"
+                                        data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-6X2"
+                                        data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                {% else %}
+                                    <div class="row text-center">
+                                        <div class="col">
+                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>                        
+
+                            <!-- 12 X 1 Carousel -->                        
+                            <div id="carousel-12X1" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    <button type="button" data-bs-target="#carousel-12X1" data-bs-slide-to="0" class="active"
+                                        aria-current="true" aria-label="Slide 0">
+                                    </button>
+                                    {% for index in range(1, media_detail | length()) %}
+                                        <button type="button" data-bs-target="#carousel-12X1" data-bs-slide-to="{{ index }}"
+                                            aria-current="true" aria-label="Slide {{ index }}">
+                                        </button>
+                                    {% endfor %}
                                 </div>
-                                {% for index in range(1, media_detail | length()) %}
-                                    <div class="carousel-item" data-bs-interval="5000">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active" data-bs-interval="5000">
                                         <a class="carousel-review text-center col-12"
-                                            href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
-                                            {% if media_detail[index].poster_path == None %}
+                                            href="{{ url_for('review_detail', tmdb_id=media_detail[0].tmdb_id, media_type=media_detail[0].media_type, review_detail_sort='popular', page=0) }}">
+                                            {% if media_detail[0].poster_path == None %}
                                                 <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
                                                     class="no-image-icon" alt="no image available">
                                                 <div class="no-image-title">{{ media_detail[index].original_title }}</div>
                                             {% else %}
-                                                <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
-                                                    class="card-img-top" alt="{{ media_detail[index].original_title }}">
+                                                <img src="{{ tmdb_poster_url }}{{ media_detail[0].poster_path }}"
+                                                    class="card-img-top" alt="{{ media_detail[0].original_title }}">
                                             {% endif %}
                                         </a>
                                     </div>
-                                {% endfor %}
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-12X1"
-                                data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carousel-12X1"
-                                data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>                       
+                                    {% for index in range(1, media_detail | length()) %}
+                                        <div class="carousel-item" data-bs-interval="5000">
+                                            <a class="carousel-review text-center col-12"
+                                                href="{{ url_for('review_detail', tmdb_id=media_detail[index].tmdb_id, media_type=media_detail[index].media_type, review_detail_sort='popular', page=0) }}">
+                                                {% if media_detail[index].poster_path == None %}
+                                                    <img src="{{ url_for('static', filename='images/no-image-icon.png') }}"
+                                                        class="no-image-icon" alt="no image available">
+                                                    <div class="no-image-title">{{ media_detail[index].original_title }}</div>
+                                                {% else %}
+                                                    <img src="{{ tmdb_poster_url }}{{ media_detail[index].poster_path }}"
+                                                        class="card-img-top" alt="{{ media_detail[index].original_title }}">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-12X1"
+                                    data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-12X1"
+                                    data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>                       
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-md-10 offset-md-1 col-lg-7 offset-lg-0">
-                <h3>Most Popular Reviews:</h3>
-                <table class="table table-hover table-secondary table-bordered mt-3 mb-5">
-                    <thead>
-                        <tr>
-                            <th scope="col">No.</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Title</th>
-                            <th scope="col" class="text-center">Likes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for index in range(most_likes | length()) %}
+            <div class="row">
+                <div class="col-12 col-md-10 offset-md-1 col-lg-7 offset-lg-0">
+                    <h3>Most Popular Reviews:</h3>
+                    <table class="table table-hover table-secondary table-bordered mt-3 mb-5">
+                        <thead>
                             <tr>
-                                <th scope="row">{{ index + 1 }}</th>
-                                <td>
-                                    <a class="text-decoration-none"
-                                        href="{{ url_for('my_reviews', user=most_likes[index].created_by, query='---', my_reviews_sort='latest', page=0) }}">
-                                        {{ most_likes[index].created_by.title() }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <a class="text-decoration-none"
-                                        href="{{ url_for('review_detail', tmdb_id=most_likes[index].tmdb_id, media_type=most_likes[index].media_type, review_detail_sort='latest', page=0) }}">
-                                        {{ most_likes[index].original_title }}
-                                    </a>
-                                </td>
-                                <td class="text-center">{{ most_likes[index].sum_likes }}</td>
+                                <th scope="col">No.</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Title</th>
+                                <th scope="col" class="text-center">Likes</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-12 col-md-10 offset-md-1 col-lg-5 offset-lg-0">
-                <h3>Review Count:</h3>
-                <table class="table reviews-table table-hover table-secondary table-bordered mt-3 mb-5">
-                    <thead>
-                        <tr>
-                            <th scope="col">No.</th>
-                            <th scope="col">Username</th>
-                            <th scope="col" class="text-center">Review Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for index in range(most_reviews | length()) %}
+                        </thead>
+                        <tbody>
+                            {% for index in range(most_likes | length()) %}
+                                <tr>
+                                    <th scope="row">{{ index + 1 }}</th>
+                                    <td>
+                                        <a class="text-decoration-none"
+                                            href="{{ url_for('my_reviews', user=most_likes[index].created_by, query='---', my_reviews_sort='latest', page=0) }}">
+                                            {{ most_likes[index].created_by.title() }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class="text-decoration-none"
+                                            href="{{ url_for('review_detail', tmdb_id=most_likes[index].tmdb_id, media_type=most_likes[index].media_type, review_detail_sort='latest', page=0) }}">
+                                            {{ most_likes[index].original_title }}
+                                        </a>
+                                    </td>
+                                    <td class="text-center">{{ most_likes[index].sum_likes }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12 col-md-10 offset-md-1 col-lg-5 offset-lg-0">
+                    <h3>Review Count:</h3>
+                    <table class="table reviews-table table-hover table-secondary table-bordered mt-3 mb-5">
+                        <thead>
                             <tr>
-                                <th scope="row">{{ index + 1 }}</th>
-                                <td>
-                                    <a class="text-decoration-none"
-                                        href="{{ url_for('my_reviews', user=most_reviews[index]._id, query='---', my_reviews_sort='latest', page=0) }}">
-                                        {{ most_reviews[index]._id.title() }}
-                                    </a>
-                                </td>
-                                <td class="text-center">{{ most_reviews[index].count }}</td>
+                                <th scope="col">No.</th>
+                                <th scope="col">Username</th>
+                                <th scope="col" class="text-center">Review Count</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for index in range(most_reviews | length()) %}
+                                <tr>
+                                    <th scope="row">{{ index + 1 }}</th>
+                                    <td>
+                                        <a class="text-decoration-none"
+                                            href="{{ url_for('my_reviews', user=most_reviews[index]._id, query='---', my_reviews_sort='latest', page=0) }}">
+                                            {{ most_reviews[index]._id.title() }}
+                                        </a>
+                                    </td>
+                                    <td class="text-center">{{ most_reviews[index].count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    {% else %}
-        <div class="row text-center">
-            <div class="col">
-                <h3 class="p-5">No Results at Present!</h3>
+        {% else %}
+            <div class="row text-center">
+                <div class="col">
+                    <h3 class="p-5">No Results at Present!</h3>
+                </div>
             </div>
-        </div>
-    {% endif %}
-</div>
-
+        {% endif %}
+    </div>
 {% endblock %}

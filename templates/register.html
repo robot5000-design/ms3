@@ -5,40 +5,38 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="container register-wrapper">
-    <h1 class="heading mb-3">Register New User:</h1>
-    <form class="needs-validation" action="{{ url_for('register') }}" method="POST" novalidate>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <div class="mb-3">
-            <label for="username2" class="form-label">Username</label>
-            <input id="username2" name="username2" type="text" class="form-control" minlength="5"
-                pattern="^[a-zA-Z0-9]{5,15}$" maxlength="15" autocomplete="username" required>
-            <span class="invalid-feedback">must be 5-15 alphanumeric characters (no spaces)</span>
+    <div class="container register-wrapper">
+        <h1 class="heading mb-3">Register New User:</h1>
+        <form class="needs-validation" action="{{ url_for('register') }}" method="POST" novalidate>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="mb-3">
+                <label for="username2" class="form-label">Username</label>
+                <input id="username2" name="username2" type="text" class="form-control" minlength="5"
+                    pattern="^[a-zA-Z0-9]{5,15}$" maxlength="15" autocomplete="username" required>
+                <span class="invalid-feedback">must be 5-15 alphanumeric characters (no spaces)</span>
+            </div>
+            <div class="mb-3">
+                <label for="password2" class="form-label">Password</label>
+                <input id="password2" name="password2" type="password" class="form-control" minlength="5"
+                    pattern="^[a-zA-Z0-9]{5,15}$" maxlength="15" autocomplete="new-password" required>
+                <span class="invalid-feedback">must be 5-15 alphanumeric characters (no spaces)</span>
+            </div>
+            <div class="mb-5">
+                <label for="confirm-password2" class="form-label">Confirm Password</label>
+                <input id="confirm-password2" name="confirm-password2" type="password" class="form-control" minlength="5"
+                    pattern="^[a-zA-Z0-9]{5,15}$" maxlength="15" autocomplete="new-password" required>
+                <span class="invalid-feedback">must be 5-15 alphanumeric characters (no spaces)</span>
+            </div>
+            <div class="">
+                <button type="submit" class="btn btn-danger register">Register</button>
+            </div>
+        </form>
+        <div class="mt-4">
+            <span>
+                <a class="login-modal" data-bs-toggle="modal" href="#logInModal">Already have an
+                    Account? Log-In Here
+                </a>
+            </span>
         </div>
-        <div class="mb-3">
-            <label for="password2" class="form-label">Password</label>
-            <input id="password2" name="password2" type="password" class="form-control" minlength="5"
-                pattern="^[a-zA-Z0-9]{5,15}$" maxlength="15" autocomplete="new-password" required>
-            <span class="invalid-feedback">must be 5-15 alphanumeric characters (no spaces)</span>
-        </div>
-        <div class="mb-5">
-            <label for="confirm-password2" class="form-label">Confirm Password</label>
-            <input id="confirm-password2" name="confirm-password2" type="password" class="form-control" minlength="5"
-                pattern="^[a-zA-Z0-9]{5,15}$" maxlength="15" autocomplete="new-password" required>
-            <span class="invalid-feedback">must be 5-15 alphanumeric characters (no spaces)</span>
-        </div>
-        <div class="">
-            <button type="submit" class="btn btn-danger register">Register</button>
-        </div>
-    </form>
-    <div class="mt-4">
-        <span>
-            <a class="login-modal" data-bs-toggle="modal" href="#logInModal">Already have an
-                Account? Log-In Here
-            </a>
-        </span>
     </div>
-</div>
-
 {% endblock %}

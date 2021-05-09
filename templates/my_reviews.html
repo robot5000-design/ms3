@@ -5,140 +5,138 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="container-fluid text-center my-reviews-container">
-    <div class="row py-4">
-        <div class="col">
-            {% if user == session["user"] %}
-                <h1 class="heading">My Reviews</h1>
-            {% else %}
-                <h1 class="heading">{{ user.title() }}'s Reviews</h1>
-            {% endif %}
+    <div class="container-fluid text-center my-reviews-container">
+        <div class="row py-4">
+            <div class="col">
+                {% if user == session["user"] %}
+                    <h1 class="heading">My Reviews</h1>
+                {% else %}
+                    <h1 class="heading">{{ user.title() }}'s Reviews</h1>
+                {% endif %}
+            </div>
         </div>
-    </div>
-    <div class="row search-box">
-        <div class="col">
-            <form action="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=0) }}" method="post"
-                id="user-reviews-form" class="mx-auto">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                <div class="pb-4 row">
-                    <div class="col">
-                        <label for="search-box" class="form-label pb-4">Search</label>
-                        <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
-                            aria-describedby="search-box-text">
-                        <div id="search-box-text" class="form-text">Search by Name/Title. Complete words only.</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="dropdown">
-                            {% if my_reviews_sort == "alphabetically" %}
-                                <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
-                                    <option value="alphabetically" selected>Sort-by: Alphabetically</option>
-                                    <option value="latest">Sort-by: Latest</option>
-                                    <option value="oldest">Sort-by: Oldest</option>
-                                </select>
-                            {% elif my_reviews_sort == "oldest" %}
-                                <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
-                                    <option value="oldest" selected>Sort-by: Oldest</option>
-                                    <option value="latest">Sort-by: Latest</option>
-                                    <option value="alphabetically">Sort-by: Alphabetically</option>
-                                </select>
-                            {% else %}
-                                <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
-                                    <option value="latest" selected>Sort-by: Latest</option>
-                                    <option value="alphabetically">Sort-by: Alphabetically</option>
-                                    <option value="oldest">Sort-by: Oldest</option>
-                                </select>
-                            {% endif %}
+        <div class="row search-box">
+            <div class="col">
+                <form action="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=0) }}" method="post"
+                    id="user-reviews-form" class="mx-auto">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <div class="pb-4 row">
+                        <div class="col">
+                            <label for="search-box" class="form-label pb-4">Search</label>
+                            <input type="text" value="{{ query }}" name="search-box" class="form-control" id="search-box"
+                                aria-describedby="search-box-text">
+                            <div id="search-box-text" class="form-text">Search by Name/Title. Complete words only.</div>
                         </div>
                     </div>
-                </div>
-                <div class="row py-5">
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary filter-reviews">Update Results</button>
+                    <div class="row">
+                        <div class="col">
+                            <div class="dropdown">
+                                {% if my_reviews_sort == "alphabetically" %}
+                                    <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
+                                        <option value="alphabetically" selected>Sort-by: Alphabetically</option>
+                                        <option value="latest">Sort-by: Latest</option>
+                                        <option value="oldest">Sort-by: Oldest</option>
+                                    </select>
+                                {% elif my_reviews_sort == "oldest" %}
+                                    <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
+                                        <option value="oldest" selected>Sort-by: Oldest</option>
+                                        <option value="latest">Sort-by: Latest</option>
+                                        <option value="alphabetically">Sort-by: Alphabetically</option>
+                                    </select>
+                                {% else %}
+                                    <select name="my_reviews_sort" class="form-select" aria-label="Default select example">
+                                        <option value="latest" selected>Sort-by: Latest</option>
+                                        <option value="alphabetically">Sort-by: Alphabetically</option>
+                                        <option value="oldest">Sort-by: Oldest</option>
+                                    </select>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <div class="row py-5">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary filter-reviews">Update Results</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-    {% if media_detail | length() > 0 %}
-        <div class="row">
-            {% for movie in media_detail %}
-                <div class="col-6 col-sm-4 col-md-3 col-lg-2 review-card">
-                    {% if user == session['user'] %}
-                        <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}"
-                            class="text-decoration-none">
-                            <div class="card index-card text-decoration-none">
-                                <div class="row review-images-row">
-                                    {% if movie.poster_path == None %}
-                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top px-0" alt="no image available">
-                                    {% else %}
-                                        <img src="{{ tmdb_poster_url }}{{ movie.poster_path }}" class="card-img-top px-0" alt="{{ movie.original_title }}">
-                                    {% endif %}
-                                </div>
-                                <div class="card-body row align-items-end">
-                                    <div class="col-12 text-center">
-                                        <div class="card-title review-card-title">{{ movie.original_title }}</div>
+        {% if media_detail | length() > 0 %}
+            <div class="row">
+                {% for movie in media_detail %}
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2 review-card">
+                        {% if user == session['user'] %}
+                            <a href="{{ url_for('edit_review', tmdb_id=movie.tmdb_id, my_reviews_sort=my_reviews_sort) }}"
+                                class="text-decoration-none">
+                                <div class="card index-card text-decoration-none">
+                                    <div class="row review-images-row">
+                                        {% if movie.poster_path == None %}
+                                            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top px-0" alt="no image available">
+                                        {% else %}
+                                            <img src="{{ tmdb_poster_url }}{{ movie.poster_path }}" class="card-img-top px-0" alt="{{ movie.original_title }}">
+                                        {% endif %}
                                     </div>
-                                    <div class="col-12 text-center">
-                                        <div class="btn btn-primary edit-review-btn">Edit/Delete
-                                            Review
+                                    <div class="card-body row align-items-end">
+                                        <div class="col-12 text-center">
+                                            <div class="card-title review-card-title">{{ movie.original_title }}</div>
+                                        </div>
+                                        <div class="col-12 text-center">
+                                            <div class="btn btn-primary edit-review-btn">Edit/Delete
+                                                Review
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
-                    {% else %}
-                        <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}"
-                            class="text-decoration-none">
-                            <div class="card index-card">
-                                <div class="row review-images-row">
-                                    {% if movie.poster_path == None %}
-                                        <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top px-0" alt="no image available">
-                                    {% else %}
-                                        <img src="{{ tmdb_poster_url }}{{ movie.poster_path }}" class="card-img-top px-0" alt="{{ movie.original_title }}">
-                                    {% endif %}
-                                </div>
-                                <div class="card-body row align-items-end">
-                                    <div class="col-12 text-center">
-                                        <div class="card-title review-card-title">{{ movie.original_title }}</div>
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('review_detail', tmdb_id=movie.tmdb_id, media_type=movie.media_type, review_detail_sort='popular', page=0) }}"
+                                class="text-decoration-none">
+                                <div class="card index-card">
+                                    <div class="row review-images-row">
+                                        {% if movie.poster_path == None %}
+                                            <img src="{{ url_for('static', filename='images/no-image-icon.png') }}" class="card-img-top px-0" alt="no image available">
+                                        {% else %}
+                                            <img src="{{ tmdb_poster_url }}{{ movie.poster_path }}" class="card-img-top px-0" alt="{{ movie.original_title }}">
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-body row align-items-end">
+                                        <div class="col-12 text-center">
+                                            <div class="card-title review-card-title">{{ movie.original_title }}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row mx-auto pt-5 pb-3">
+                <div class="col">
+                    {% if review_count > 12 %}
+                        <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mx-auto pb-5">
+                <div class="col">
+                    {% if page > 0 %}
+                        <a href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page-1) }}"
+                            class="btn btn-secondary previous-button">Previous
+                        </a>
+                    {% endif %}
+                    {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %}
+                        <a href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page+1) }}"
+                            class="btn btn-secondary next-button">Next
                         </a>
                     {% endif %}
                 </div>
-            {% endfor %}
-        </div>
-        <div class="row mx-auto pt-5 pb-3">
-            <div class="col">
-                {% if review_count > 12 %}
-                    <div class="page-number">Page {{ page + 1 }} / {{ total_pages }}</div>
-                {% endif %}
             </div>
-        </div>
-        <div class="row mx-auto pb-5">
-            <div class="col">
-                {% if page > 0 %}
-                    <a href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page-1) }}"
-                        class="btn btn-secondary previous-button">Previous
-                    </a>
-                {% endif %}
-                {% if (review_count > 12) and ((page + 1) < (review_count / 12)) %}
-                    <a href="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=page+1) }}"
-                        class="btn btn-secondary next-button">Next
-                    </a>
-                {% endif %}
+        {% else %}
+            <div class="row">
+                <div class="col">
+                    <h3 class="p-5">No Results!</h3>
+                </div>
             </div>
-        </div>
-    {% else %}
-        <div class="row">
-            <div class="col">
-                <h3 class="p-5">No Results!</h3>
-            </div>
-        </div>
-    {% endif %}
-</div>
-
+        {% endif %}
+    </div>
 {% endblock %}
