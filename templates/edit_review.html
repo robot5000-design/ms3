@@ -47,10 +47,10 @@
                     <div>You've already reviewed this.</div>
                 {% else %}
                     <select class="select-genre mb-3 py-1" name="select-genre" aria-label="Select Genre" required>
-                        <option disabled>Choose a Genre:</option>
+                        <option value="" disabled>Choose a Genre:</option>
                         <option value="{{ review_fields.genre }}" selected>{{ review_fields.genre }}</option>
                         {% for genre in genres %}
-                            <option required>{{ genre.genre_name.title() }}</option>
+                            <option value="{{ genre.genre_name }}">{{ genre.genre_name.title() }}</option>
                         {% endfor %}
                     </select>
                     <div class="mb-4">
