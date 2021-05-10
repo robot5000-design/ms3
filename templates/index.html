@@ -12,7 +12,7 @@
             </div>
         </div>
         <!-- Search within movie list -->
-        <div class="row pb-5">
+        <div class="row pb-4">
             <div class="col-12 col-sm-10 col-lg-8 mx-auto">
                 <form action="{{ url_for('search_movies') }}" method="post" class="api-search-form" id="search-api">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
@@ -334,9 +334,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-10 offset-md-1 col-lg-7 offset-lg-0">
+                <div class="col-12 col-md-10 offset-md-1 col-lg-7 offset-lg-0 my-3">
                     <h2>Most Popular Reviews:</h2>
-                    <table class="table table-hover table-secondary table-bordered mt-3 mb-5">
+                    <table class="table table-hover table-secondary table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">No.</th>
@@ -367,9 +367,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-12 col-md-10 offset-md-1 col-lg-5 offset-lg-0">
+                <div class="col-12 col-md-10 offset-md-1 col-lg-5 offset-lg-0 my-3">
                     <h2>Review Count:</h2>
-                    <table class="table reviews-table table-hover table-secondary table-bordered mt-3 mb-5">
+                    <table class="table reviews-table table-hover table-secondary table-bordered">
                         <thead>
                             <tr>
                                 <th scope="col">No.</th>

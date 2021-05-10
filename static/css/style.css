@@ -132,6 +132,10 @@ h2 {
   margin: .3em;
 }
 
+.go-back {
+  width: auto;
+}
+
 /*--------------------------------------------------------Background Images */
 
 .backing-image {
@@ -339,7 +343,6 @@ h2 {
 .register-wrapper,
 .contact-wrapper {
   width: 100%;
-  margin-top: 50px;
 }
 
 /*--------------------------------------------------------Browse Reviews / My Reviews */
@@ -521,11 +524,9 @@ body .carousel-control-next-icon {
     width: 100%;
   }
   .register-wrapper,
-  .contact-wrapper {
-    width: 60%;
-  }
+  .contact-wrapper,
   .search-box {
-    width: 80%;
+    width: 85%;
   }
   .heading {
     font-size: 1.8em;
@@ -549,6 +550,10 @@ body .carousel-control-next-icon {
   .review-wrapper {
     padding-top: 30px;
   }
+  .register-wrapper,
+  .contact-wrapper {
+    width: 70%;
+  }
 }
 
 @media screen and (min-width: 992px) {
@@ -564,7 +569,7 @@ body .carousel-control-next-icon {
   }
   .register-wrapper,
   .contact-wrapper {
-    width: 40%;
+    width: 60%;
   }
   #carousel-12X1 {
     display: none;
@@ -603,5 +608,9 @@ body .carousel-control-next-icon {
   }
   .review-wrapper {
     padding-right: 60px;
+  }
+  .register-wrapper,
+  .contact-wrapper {
+    width: 40%;
   }
 }

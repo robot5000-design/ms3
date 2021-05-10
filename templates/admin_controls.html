@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container pt-4 pb-5">
+    <div class="container">
         <div class="row text-center pb-3">
             <div class="col">
                 <h1 class="heading">Admin Controls:</h1>
@@ -31,9 +31,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-lg-6 my-3">
                 <h2>Most Popular Reviews:</h2>
-                <table class="table table-hover table-secondary table-bordered mt-3 mb-5">
+                <table class="table table-hover table-secondary table-bordered">
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
@@ -64,9 +64,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-lg-6 my-3">
                 <h2>Review Count:</h2>
-                <table class="table reviews-table table-hover table-secondary table-bordered mt-3 mb-5">
+                <table class="table reviews-table table-hover table-secondary table-bordered">
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
@@ -91,7 +91,7 @@
                 </table>
             </div>
         </div>
-        <div class="row mb-5 mt-4">
+        <div class="row my-4">
             <div class="col-12 col-lg-6 pb-4">
                 <h2>Block User(s):</h2>
                 <form class="" action="{{ url_for('admin_controls') }}" method="POST">

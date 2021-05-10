@@ -5,9 +5,15 @@
 
 {% block content %}
     <div class="container contact-wrapper">
-        <h1 class="heading">Contact Us:</h1>
-        <a href="#" class="btn btn-secondary go-back fs-2 px-2 py-0 mb-3" aria-label="go-back"><i class="fas fa-chevron-circle-left"></i></a>
         <div class="row">
+            <div class="col-2">
+                <a href="#" class="btn btn-secondary go-back fs-2 py-0 mb-3" aria-label="go-back">
+                    <i class="fas fa-chevron-circle-left"></i>
+                </a>
+            </div>
+            <h1 class="col-8 heading text-center">Contact Us:</h1>
+        </div>
+        <div class="row px-0">
             <form class="col contact-form">
                 <input type="text" name="name" class="form-control" id="fullname" placeholder="Name" required />
                 <input type="email" name="emailaddress" class="form-control mt-1" id="emailaddress" placeholder="email"
