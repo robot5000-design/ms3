@@ -50,7 +50,7 @@ i {
 }
 
 .primary-brand {
-  font-size: 1.7em;
+  font-size: 1.8em;
   line-height: 1.2em;
 }
 
@@ -166,7 +166,7 @@ h2 {
 }
 
 .navbar-brand i {
-  font-size: 16vw;
+  font-size: 16.5vw;
   padding-right: 7px;
   color: #ffa30f;
 }
@@ -495,7 +495,7 @@ body .carousel-control-next-icon {
     font-size: 3.3vw;
   }
   .navbar-brand i {
-    font-size: 15vw;
+    font-size: 15.5vw;
   }
   .review-image {
     width: 80%;
@@ -507,7 +507,7 @@ body .carousel-control-next-icon {
     font-size: 1.2em;
   }
   .navbar-brand i {
-    font-size: 4.4em;
+    font-size: 4.55em;
   }
   .api-results-card {
     width: 100%;
