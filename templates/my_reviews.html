@@ -17,8 +17,8 @@
         </div>
         <div class="row search-box">
             <div class="col">
-                <form action="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=0) }}" method="post"
-                    id="user-reviews-form" class="mx-auto">
+                <form action="{{ url_for('my_reviews', user=user, query=query, my_reviews_sort=my_reviews_sort, page=0) }}"
+                        method="post" id="user-reviews-form" class="mx-auto mb-4">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <div class="pb-4 row">
                         <div class="col">
