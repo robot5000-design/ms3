@@ -13,7 +13,7 @@
         </div>
         <div class="row">
             <div class="col-12 col-lg-6 offset-lg-3 pb-5">
-                <h3>Website Stats:</h3>
+                <h2>Website Stats:</h2>
                 <ul class="list-group stats-group mt-3">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Total Number of Users:
@@ -32,7 +32,7 @@
         </div>
         <div class="row">
             <div class="col-12 col-lg-6">
-                <h3>Most Popular Reviews:</h3>
+                <h2>Most Popular Reviews:</h2>
                 <table class="table table-hover table-secondary table-bordered mt-3 mb-5">
                     <thead>
                         <tr>
@@ -65,7 +65,7 @@
                 </table>
             </div>
             <div class="col-12 col-lg-6">
-                <h3>Review Count:</h3>
+                <h2>Review Count:</h2>
                 <table class="table reviews-table table-hover table-secondary table-bordered mt-3 mb-5">
                     <thead>
                         <tr>
@@ -93,7 +93,7 @@
         </div>
         <div class="row mb-5 mt-4">
             <div class="col-12 col-lg-6 pb-4">
-                <h3>Block User(s):</h3>
+                <h2>Block User(s):</h2>
                 <form class="" action="{{ url_for('admin_controls') }}" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <select class="form-select select-user mb-2" name="block-selected" size="10"
@@ -115,7 +115,7 @@
                 </form>
             </div>
             <div class="col-12 col-lg-6">
-                <h3>Unblock User(s):</h3>
+                <h2>Unblock User(s):</h2>
                 <form class="" action="{{ url_for('admin_controls') }}" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <select class="form-select select-user mb-2" name="unblock-selected" size="10"
@@ -137,7 +137,7 @@
         </div>
         <div class="row">
             <div class="col-12 col-lg-6 mb-4">
-                <h3>Add/Remove Genres:</h3>
+                <h2>Add/Remove Genres:</h2>
                 <p>
                     Pick from the list below to remove a genre and/or add a new one in the
                     input box

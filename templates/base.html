@@ -78,22 +78,20 @@
             </div>
         </div>
     </nav>
-    <section class="flash text-center">
+    <aside class="flash text-center">
         <!-- flash messages -->
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
-                    <h4 class="py-3">{{ message }}</h4>                   
+                    <div class="flash-msg py-3">{{ message }}</div>                   
                 {% endfor %}
             {% endif %}
         {% endwith %}
-    </section>
-
+    </aside>
     <main class="container-fluid backing-image">
         {% block content %}
         {% endblock %}
     </main>
-
     <!-- Footer with Social Links and Feedback Form -->
     <footer>
         <div class="container-fluid footer-container">
@@ -133,7 +131,6 @@
             </div>
         </div>
     </footer>
-
     <!-- Modal -->
     <div class="modal fade" id="logInModal" tabindex="-1" aria-labelledby="logInModalLabel" aria-hidden="true">
         <div class="modal-dialog">

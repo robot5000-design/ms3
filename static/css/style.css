@@ -49,16 +49,18 @@ i {
   color: #ffa30f;
 }
 
-h1,
 .primary-brand {
   font-size: 1.7em;
   line-height: 1.2em;
 }
 
-h2,
 .secondary-brand {
   font-size: 1.2em;
   line-height: 1.2em;
+}
+
+h2 {
+  font-size: calc(1.2rem + .5vw);
 }
 
 .heading {
@@ -171,6 +173,10 @@ h2,
 
 .flash {
   background-color: #ffa30f;
+}
+
+.flash-msg {
+  font-size: calc(1.275rem + .3vw);
   font-weight: 700;
   color: #281594;
 }
@@ -415,7 +421,7 @@ body .carousel-control-next-icon {
 /*--------------------------------------------------------Modal */
 
 .modal {
-  color: #8b8989;
+  color: #51585e;
 }
 
 /*--------------------------------------------------------Footer */
