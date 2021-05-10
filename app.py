@@ -287,7 +287,10 @@ def delete_review(tmdb_id, user):
             if not other_reviews:
                 mongo.db.media_details.delete_one(
                     {"tmdb_id": tmdb_id})
-                flash("Movie & Reviews Successfully Deleted")
+                if session["user"] == "admin":
+                    flash("Movie & Review Successfully Deleted")
+                else:
+                    flash("Review Successfully Deleted")
             else:
                 flash("Review Successfully Deleted")
                 # adjust the overall rating to take account of deleted review
