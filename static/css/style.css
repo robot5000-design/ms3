@@ -175,6 +175,10 @@ h2 {
   color: #ffa30f;
 }
 
+.nav-item li {
+  padding-bottom: .5em;
+}
+
 .flash {
   background-color: #ffa30f;
 }
