@@ -176,7 +176,8 @@ h2 {
 }
 
 .nav-item li {
-  padding-bottom: .5em;
+  padding-top: .25em;
+  padding-bottom: .25em;
 }
 
 .flash {
