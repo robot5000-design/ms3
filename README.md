@@ -406,6 +406,56 @@ The live site is deployed to [Heroku](https://www.heroku.com), a cloud applicati
 
 ---
 
+_For this website to be run locally it can downloaded as a ZIP file or it can be cloned, however it needs access to a database schema named "movie_review" as highlighted in the earlier section:_
+
+- To download ZIP copy:
+
+1. On GitHub, navigate to the main page of the repository.
+2. Above the list of files, click Code.
+3. Click Download ZIP.
+4. Navigate to the local Downloads folder and un-zip the project_one-master folder.
+
+- To Clone using Command Line:
+
+1. On GitHub, navigate to the main page of the repository.
+2. Above the list of files, click Code.
+3. To clone the repository using HTTPS, under "Clone with HTTPS", copy the URL.
+To clone the repository using an SSH key, including a certificate issued by your organization's
+SSH certificate authority, click Use SSH, then copy the URL.
+4. Open Git Bash.
+5. Change the current working directory to the location where you want the cloned directory.
+6. Type git clone, and then paste the URL you copied earlier: \$ git clone url-copied-earlier
+7. Press Enter to create your local clone.
+
+- To Clone using GitHub Desktop:
+
+1. On GitHub, navigate to the main page of the repository.
+2. Above the list of files, click Code.
+3. Click "Open with GitHub Desktop" to clone and open the repository with GitHub Desktop.
+4. Follow the prompts in GitHub Desktop to complete the clone.
+
+Once the local project directory is in place, create a virtual python environment and an env.py file with the entries:
+
+    - import os
+    - ("IP", "0.0.0.0")
+    - ("PORT", "5000")
+    - ("SECRET_KEY", "\<your secret key\>")
+    - ("API_KEY", "\<your api access key\>")
+    - ("MONGO_URI", "\<your mongodb uri\>")
+    - ("MONGO_DBNAME", "movie_review")
+
+Install the required packages with:
+
+    `pip install -r requirements.txt`
+
+Run the app: 
+
+    `python3 app.py`
+
+The website should be available at http://127.0.0.1:5000
+
+---
+
 ### **6. Credits and Notes**
 
 - All code in this project is completely the authors unless otherwise indicated in the code.
