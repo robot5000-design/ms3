@@ -434,7 +434,7 @@ SSH certificate authority, click Use SSH, then copy the URL.
 3. Click "Open with GitHub Desktop" to clone and open the repository with GitHub Desktop.
 4. Follow the prompts in GitHub Desktop to complete the clone.
 
-Once the local project directory is in place, create a virtual python environment and an env.py file with the entries:
+Once the local project directory is in place, create a virtual python environment. Make an env.py file with the following entries:
 
     - import os
     - ("IP", "0.0.0.0")
@@ -446,11 +446,11 @@ Once the local project directory is in place, create a virtual python environmen
 
 Install the required packages with:
 
-    `pip install -r requirements.txt`
+- `pip install -r requirements.txt`
 
 Run the app: 
 
-    `python3 app.py`
+- `python3 app.py`
 
 The website should be available at http://127.0.0.1:5000
 
