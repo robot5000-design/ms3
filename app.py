@@ -103,7 +103,7 @@ def browse_reviews(query, browse_reviews_sort, page):
         query = request.form.get("search-box")
         browse_reviews_sort = request.form.get("browse_reviews_sort")
         if not query:
-            query = "---"
+            query = " "
         return redirect(url_for("search_reviews", query=query,
                                 browse_reviews_sort=browse_reviews_sort,
                                 page=page))
@@ -139,12 +139,12 @@ def search_reviews(query, browse_reviews_sort, page):
     if request.method == "POST":
         query = request.form.get("search-box")
         browse_reviews_sort = request.form.get("browse_reviews_sort")
-        if query == "---":
+        if query == " ":
             search_term = {}
         else:
             search_term = {"$text": {"$search": query}}
     else:
-        if query == "---":
+        if query == " ":
             search_term = {}
         else:
             search_term = {"$text": {"$search": query}}
@@ -205,12 +205,12 @@ def my_reviews(user, query, my_reviews_sort, page):
         query = request.form.get("search-box")
         my_reviews_sort = request.form.get("my_reviews_sort")
         search_term = {"$text": {"$search": query}, "created_by": user}
-        if not query or query == "---":
-            query = "---"
+        if not query or query == " ":
+            query = " "
             search_term = {"created_by": user}
     else:
         search_term = {"$text": {"$search": query}, "created_by": user}
-        if query == "---":
+        if query == " ":
             search_term = {"created_by": user}
     if my_reviews_sort == "alphabetically":
         my_reviews_search = list(mongo.db.reviews.find(search_term).sort(
@@ -322,9 +322,9 @@ def delete_review(tmdb_id, user):
                     {"tmdb_id": tmdb_id},
                     {"$set": update_items})
             if session["user"] == "admin":
-                return redirect(url_for('browse_reviews', query='---',
+                return redirect(url_for('browse_reviews', query=' ',
                                         browse_reviews_sort='latest', page=0))
-            return redirect(url_for('my_reviews', user=user, query='---',
+            return redirect(url_for('my_reviews', user=user, query=' ',
                                     my_reviews_sort='latest', page=0))
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
@@ -351,7 +351,7 @@ def delete_all(tmdb_id):
         mongo.db.media_details.delete_one(
             {"tmdb_id": tmdb_id})
         flash("Movie & Reviews Successfully Deleted")
-        return redirect(url_for('browse_reviews', query='---',
+        return redirect(url_for('browse_reviews', query=' ',
                                 browse_reviews_sort='latest', page=0))
     flash("You do not have permission to access the requested resource")
     return redirect(url_for("index"))
@@ -419,7 +419,7 @@ def edit_review(tmdb_id, my_reviews_sort):
                 {"$set": review_update})
             flash("Your review has been updated")
             return redirect(url_for('my_reviews', user=session['user'],
-                                    query='---',
+                                    query=' ',
                                     my_reviews_sort=my_reviews_sort, page=0))
         media_detail = mongo.db.media_details.find_one({"tmdb_id": tmdb_id})
         review_fields = mongo.db.reviews.find_one(
@@ -651,7 +651,7 @@ def new_review(tmdb_id, media_type):
             session.pop("media_type", None)
             session.pop("overall_rating", None)
             flash("Review Posted Successfully!")
-            return redirect(url_for("browse_reviews", query='---',
+            return redirect(url_for("browse_reviews", query=' ',
                                     browse_reviews_sort='latest', page=0))
     # check if media details are already in db
     if "user" in session:
@@ -777,7 +777,7 @@ def login():
                 flash(f"Welcome, {username.capitalize()}")
                 if username.lower() != "admin":
                     return redirect(url_for("my_reviews", user=session[
-                        'user'], query='---', my_reviews_sort='latest',
+                        'user'], query=' ', my_reviews_sort='latest',
                         page=0))
                 return redirect(url_for("admin_controls"))
             # invalid password match

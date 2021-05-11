@@ -121,7 +121,7 @@
                         <div class="pb-2">
                             Reviewed by: 
                             <a class="text-decoration-none review-links"
-                                href="{{ url_for('my_reviews', user=review.created_by, query='---', my_reviews_sort='latest', page=0) }}">
+                                href="{{ url_for('my_reviews', user=review.created_by, query=' ', my_reviews_sort='latest', page=0) }}">
                                 {{ review.created_by }}
                             </a>
                             {{ review.review_date }}

@@ -48,7 +48,7 @@
                                 <th scope="row">{{ index + 1 }}</th>
                                 <td>
                                     <a class="text-decoration-none"
-                                        href="{{ url_for('my_reviews', user=most_likes[index].created_by, query='---', my_reviews_sort='latest', page=0) }}">
+                                        href="{{ url_for('my_reviews', user=most_likes[index].created_by, query=' ', my_reviews_sort='latest', page=0) }}">
                                         {{ most_likes[index].created_by }}
                                     </a>
                                 </td>
@@ -80,7 +80,7 @@
                                 <th scope="row">{{ index + 1 }}</th>
                                 <td>
                                     <a class="text-decoration-none"
-                                        href="{{ url_for('my_reviews', user=most_reviews[index]._id, query='---', my_reviews_sort='latest', page=0) }}">
+                                        href="{{ url_for('my_reviews', user=most_reviews[index]._id, query=' ', my_reviews_sort='latest', page=0) }}">
                                         {{ most_reviews[index]._id }}
                                     </a>
                                 </td>

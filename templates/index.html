@@ -130,7 +130,7 @@
                                 {% else %}
                                     <div class="row text-center">
                                         <div class="col">
-                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
+                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query=' ', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -200,7 +200,7 @@
                                 {% else %}
                                     <div class="row text-center">
                                         <div class="col">
-                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
+                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query=' ', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -270,7 +270,7 @@
                                 {% else %}
                                     <div class="row text-center">
                                         <div class="col">
-                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query='---', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
+                                            <a class="btn btn-primary" href="{{ url_for('browse_reviews', query=' ', browse_reviews_sort='latest', page=0) }}">Browse Reviews</a>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -351,7 +351,7 @@
                                     <th scope="row">{{ index + 1 }}</th>
                                     <td>
                                         <a class="text-decoration-none"
-                                            href="{{ url_for('my_reviews', user=most_likes[index].created_by, query='---', my_reviews_sort='latest', page=0) }}">
+                                            href="{{ url_for('my_reviews', user=most_likes[index].created_by, query=' ', my_reviews_sort='latest', page=0) }}">
                                             {{ most_likes[index].created_by.title() }}
                                         </a>
                                     </td>
@@ -383,7 +383,7 @@
                                     <th scope="row">{{ index + 1 }}</th>
                                     <td>
                                         <a class="text-decoration-none"
-                                            href="{{ url_for('my_reviews', user=most_reviews[index]._id, query='---', my_reviews_sort='latest', page=0) }}">
+                                            href="{{ url_for('my_reviews', user=most_reviews[index]._id, query=' ', my_reviews_sort='latest', page=0) }}">
                                             {{ most_reviews[index]._id.title() }}
                                         </a>
                                     </td>
